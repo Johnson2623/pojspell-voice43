@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v21 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v24 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v21</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v24</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -718,9 +718,9 @@
   <!-- 4 Mode Tabs -->
   <div class="mode-tabs" id="modeTabs">
     <button class="mode-tab active" data-mode="lyric_basic" onclick="setMode('lyric_basic')">含歌詞初階</button>
-    <button class="mode-tab" data-mode="inst_basic" onclick="setMode('inst_basic')">僅音樂初階</button>
+    <button class="mode-tab" data-mode="inst_basic" onclick="setMode('inst_basic')">純音樂初階</button>
     <button class="mode-tab" data-mode="lyric_adv" onclick="setMode('lyric_adv')">含歌詞高階</button>
-    <button class="mode-tab" data-mode="inst_adv" onclick="setMode('inst_adv')">僅音樂高階</button>
+    <button class="mode-tab" data-mode="inst_adv" onclick="setMode('inst_adv')">純音樂高階</button>
   </div>
 
   <!-- Progress Bar -->
@@ -1327,9 +1327,9 @@
     });
     const modeNames = {
       lyric_basic: "含歌詞初階",
-      inst_basic: "僅音樂初階",
+      inst_basic: "純音樂初階",
       lyric_adv: "含歌詞高階",
-      inst_adv: "僅音樂高階"
+      inst_adv: "純音樂高階"
     };
     document.getElementById("modeLabelTag").textContent = modeNames[mode];
     const step1LabelMap = {
@@ -1763,9 +1763,9 @@
     if (!uploadedAudio.lastAppliedReport) return;
     const modeLabelMap = {
       lyric_basic: "含歌詞初階",
-      inst_basic: "僅音樂初階",
+      inst_basic: "純音樂初階",
       lyric_adv: "含歌詞高階",
-      inst_adv: "僅音樂高階"
+      inst_adv: "純音樂高階"
     };
     const isInst = !isLyricMode();
 
@@ -1788,7 +1788,7 @@
       { id: 13, item: "13. 核心和弦進行級數", value: `${state.chordProgression}（${state.harmonyTags.join(" / ")}）`, location: "步驟 2「核心和弦進行級數」框", step: 2 },
       { id: 14, item: "14. 旋律輪廓與音程跳進", value: state.melodyContour, location: "步驟 2「旋律線條與跳進」框", step: 2 },
 
-      // Group 3: Step 3 (Indices 14 - 21) -> Mode-aware between 含歌詞高階 vs 僅音樂高階
+      // Group 3: Step 3 (Indices 14 - 21) -> Mode-aware between 含歌詞高階 vs 純音樂高階
       isInst
         ? { id: 15, item: "15. 核心主奏樂器與音色", value: state.leadInstrument, location: "步驟 3「核心主奏樂器與音色」框", step: 3 }
         : { id: 15, item: "15. 人聲聲部與音色特質", value: state.vocalStyle, location: "步驟 3「人聲聲線與演唱技巧」框", step: 3 },
@@ -2173,14 +2173,14 @@
               `).join("")}
             </div>
 
-            <div class="section-label" style="margin-top:12px;">選擇該體系的經典編曲子流派（或匯入 JSON）</div>
+            <div class="section-label" style="margin-top:12px;">${!isAdvMode() ? '選擇該體系的經典編曲子流派' : '選擇該體系的經典編曲子流派（或匯入 JSON）'}</div>
             <div class="pill-group">
               ${sys.presets.map(p => `
                 <button class="pill-btn ${state.presetId === p.id ? 'active' : ''}" onclick="loadGenrePreset('${sys.id}', false, '${p.id}')">
                   ${p.label}
                 </button>
               `).join("")}
-              <button class="pill-btn" onclick="openJsonModal()">📥 匯入 / 檢視 JSON 元素</button>
+              ${isAdvMode() ? '<button class="pill-btn" onclick="openJsonModal()">📥 匯入 / 檢視 JSON 元素</button>' : ''}
             </div>
           </div>
 
@@ -2400,7 +2400,7 @@
             </div>
           ` : `
             <div class="section-block info-card">
-              <h4>🎻 核心主奏樂器、演奏技法與聲部對位（僅音樂模式專屬）</h4>
+              <h4>🎻 核心主奏樂器、演奏技法與聲部對位（純音樂模式專屬）</h4>
               ${renderOptionAiBadge([14, 15, 16, 17])}
               <div class="two-col">
                 <div>
