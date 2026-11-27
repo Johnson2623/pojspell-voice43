@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v16 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v18 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v16</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v18</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -1143,7 +1143,8 @@
     geminiModel: localStorage.getItem("gemini_music_dna_model") || "gemini-3-flash-preview",
     isAnalyzingGemini: false,
     lastAppliedReport: null,
-    reportExpanded: true
+    reportExpanded: true,
+    geminiAppliedTitle: null
   };
 
   let fileAudioElement = null;
@@ -1683,6 +1684,7 @@
       state.sourceLabel = dna.sourceSongDescription || `${selectedModel} 解析：${uploadedAudio.fileName.slice(0, 12)}`;
       if (dna.eraAndAesthetics) state.eraAesthetics = dna.eraAndAesthetics;
       if (dna.suggestedNewTitle) state.songTitle = dna.suggestedNewTitle;
+      uploadedAudio.geminiAppliedTitle = state.songTitle;
 
       if (dna.musicTheory) {
         const mt = dna.musicTheory;
@@ -2179,18 +2181,20 @@
               <div class="two-col">
                 <div>
                   <div class="section-label" style="font-size:13px;">原曲風格與魅力簡述</div>
-                  <input type="text" class="text-input" value="${escapeHtml(state.sourceLabel)}" oninput="state.sourceLabel=this.value; updateSummaryBox();" />
+                  <textarea class="textarea-input" rows="3" style="min-height:92px; line-height:1.55;" oninput="state.sourceLabel=this.value; updateSummaryBox();">${escapeHtml(state.sourceLabel)}</textarea>
                 </div>
                 <div>
                   <div class="section-label" style="font-size:13px;">時代美學與製作流派</div>
-                  <input type="text" class="text-input" value="${escapeHtml(state.eraAesthetics)}" oninput="state.eraAesthetics=this.value;" />
+                  <textarea class="textarea-input" rows="3" style="min-height:92px; line-height:1.55;" oninput="state.eraAesthetics=this.value;">${escapeHtml(state.eraAesthetics)}</textarea>
                 </div>
               </div>
             </div>
           ` : ''}
 
           <div class="section-block">
-            <div class="section-label">${isLyricMode() ? '新歌名' : '新曲名稱'}${(state.systemId === 'kpop' && isLyricMode()) ? ' <span class="section-hint">（已為韓國 K-Pop 全部選項附上中文歌名翻譯）</span>' : ''}</div>
+            <div class="section-label">${(isAdvMode() && uploadedAudio.geminiAppliedTitle)
+              ? `新歌名 已經套用Gemini AI 深度解析 <span style="color:var(--accent); font-weight:700;">${escapeHtml(uploadedAudio.geminiAppliedTitle)}</span>`
+              : (isLyricMode() ? '新歌名' : '新曲名稱')}${(state.systemId === 'kpop' && isLyricMode()) ? ' <span class="section-hint">（已為韓國 K-Pop 全部選項附上中文歌名翻譯）</span>' : ''}</div>
             ${renderOptionAiBadge([4, 5])}
             <input type="text" class="text-input" value="${escapeHtml(state.songTitle)}"
                    placeholder="輸入新歌名，或點選下方靈感標籤"
