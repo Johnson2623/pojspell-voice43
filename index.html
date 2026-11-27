@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v29 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v31 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +708,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v29</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v31</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -1299,6 +1301,20 @@
     reportExpanded: true,
     geminiAppliedTitle: null,
     geminiAppliedKeywords: null
+  };
+
+  let articleSource = {
+    activeTab: "file", // "file" | "paste" | "url"
+    sourceName: "",
+    rawText: "",
+    pdfBase64: null,
+    pdfMimeType: "",
+    urlInput: "",
+    conversionMode: "adapt_article", // "adapt_article" | "rewrite_rhyme"
+    isExtracting: false,
+    isGenerating: false,
+    lastSummary: "",
+    lastEngineUsed: ""
   };
 
   let fileAudioElement = null;
@@ -2088,82 +2104,563 @@
     const k1 = kw[0] || "夜色";
     const k2 = kw[1] || "微光";
     const k3 = kw[2] || "記憶";
+    const k4 = kw[3] || k1;
+    const parts = (Array.isArray(state.formStructure) && state.formStructure.length)
+      ? state.formStructure
+      : ["前奏 Intro", "主歌 A1", "副歌 B1", "尾奏 Outro"];
 
-    let lyrics = "";
-    if (sysId === "mandopop") {
-      lyrics = `[Intro - 鋼琴與獨奏弦樂鋪陳 ${state.bpm} BPM]\n\n` +
-        `[Verse A1 - 敘事低吟]\n` +
-        `數不盡 ${k1}明滅\n` +
-        `留不住 ${k2}更迭\n` +
-        `寫不完 關於${k3}的長夜\n` +
-        `風吹過 寂寞的街\n` +
-        `誰還在 原地徘徊\n` +
-        `獨自面對 散場後的冷卻\n\n` +
-        `[Chorus B1 - 情感爆發]\n` +
-        `我也曾 沉醉 在「${title}」的瞬間\n` +
-        `像飛舞在夜空裡的蝴蝶\n` +
-        `我也曾 心碎 在轉身的邊緣\n` +
-        `把所有的溫柔都妥協\n` +
-        `燈火將滅 夢也醒\n` +
-        `此刻該向 過去告別\n` +
-        `曲終人散 回頭一瞥\n` +
-        `這就是 我們的${title}\n\n` +
-        `[Outro - 小提琴漸弱收尾]`;
-    } else if (sysId === "kpop") {
-      lyrics = `[Intro - Signature Synth & Vocal Chop (${state.bpm} BPM)]\n` +
-        `Yeah, turn the lights up... (${title})\n\n` +
-        `[Verse 1 - 韓文酷感敘事]\n` +
-        `${k1} 속에 번지는 midnight vibe\n` +
-        `숨길 수 없는 ${k2}의 borderline\n` +
-        `멈추지 마 더 깊이 dive in\n` +
-        `우리만의 비밀을 깨워봐 tonight\n\n` +
-        `[Pre-Chorus - 情緒懸吊]\n` +
-        `심장이 뛰는 소리 louder now\n` +
-        `No gravity, we're floating off the ground\n\n` +
-        `[Chorus - 洗腦英文 + 韓文 Hook]\n` +
-        `Welcome to my ${title}, feel the rush\n` +
-        `빛나는 ${k3} 속으로 crush\n` +
-        `Oh my, oh my, we never slow it down\n` +
-        `이 밤의 주인공은 바로 나 (Right now!)\n\n` +
-        `[Dance Break - 808 Bass & Trap Drop]`;
-    } else if (sysId === "uspop") {
-      lyrics = `[Intro - Analog Synth & Groove (${state.bpm} BPM)]\n\n` +
-        `[Verse 1]\n` +
-        `Tracing shadows through the ${k1} glow\n` +
-        `Every radio playing songs we used to know\n` +
-        `Got ${k2} tangled in my midnight mind\n` +
-        `Leaving all the heavy days behind\n\n` +
-        `[Pre-Chorus]\n` +
-        `And I can feel the rhythm taking over me\n` +
-        `Caught between the static and the melody\n\n` +
-        `[Chorus]\n` +
-        `We're living in the ${title}\n` +
-        `Chasing ${k3} till the morning light\n` +
-        `Hold me close, don't let the feeling fade\n` +
-        `Dancing through the neon masquerade\n\n` +
-        `[Outro - Falsetto Ad-libs & Fade Out]`;
-    } else if (sysId === "classical") {
-      lyrics = `[Introduzione - 交響弦樂與鋼琴呈示部 (${state.bpm} BPM)]\n\n` +
-        `[Recitativo - 宣敘調｜主題：${k1}與${k2}]\n` +
-        `Nel silenzio della sera, splende la luce di "${title}",\n` +
-        `(在暮色的靜謐之中，「${title}」的光芒悄然綻放，)\n` +
-        `Dove il vento porta i ricordi lontano.\n` +
-        `(微風將關於「${k3}」的記憶吹向遠方。)\n\n` +
-        `[Aria - 美聲詠嘆調｜高潮再現]\n` +
-        `O notte eterna, ascolta il mio canto,\n` +
-        `(啊，永恆的夜啊，請聆聽我的歌唱，)\n` +
-        `Tra le stelle e l'onda del destino,\n` +
-        `(在星辰與命運的波濤之間，)\n` +
-        `L'amore vive per sempre nell'armonia.\n` +
-        `(愛將在和諧的樂章中永存。)\n\n` +
-        `[Coda - 管弦樂輝煌終止式]`;
-    }
+    let verseCount = 0;
+    let chorusCount = 0;
 
-    state.generatedLyrics = lyrics;
+    const blocks = parts.map((partLabel, idx) => {
+      const lower = partLabel.toLowerCase();
+      const tagHeader = `[${idx + 1}. ${partLabel}]`;
+
+      // 1. Intro / 序奏 / 前奏
+      if (lower.includes("intro") || partLabel.includes("前奏") || partLabel.includes("序奏")) {
+        if (sysId === "mandopop") return `${tagHeader}\n（${state.bpm} BPM｜${state.leadInstrument}緩緩鋪陳，帶出「${k1}」的夜色氛圍）`;
+        if (sysId === "kpop") return `${tagHeader}\n(Signature Synth & Vocal Chop · ${state.bpm} BPM)\nYeah, turn the lights up... (${title})`;
+        if (sysId === "uspop") return `${tagHeader}\n(Analog Synth Arpeggio & Groove · ${state.bpm} BPM)`;
+        return `${tagHeader}\n（交響弦樂與鋼琴呈示部主題動機鋪陳 · ${state.bpm} BPM）`;
+      }
+
+      // 2. Outro / 尾奏 / 尾聲 / Coda
+      if (lower.includes("outro") || lower.includes("coda") || partLabel.includes("尾奏") || partLabel.includes("尾聲")) {
+        if (sysId === "mandopop") return `${tagHeader}\n（音樂漸弱收束，餘韻停留在「${k3}」與「${title}」的回聲中）`;
+        if (sysId === "kpop") return `${tagHeader}\n(Fade out with dreamy vocal chops & 808 sub tail — ${title})`;
+        if (sysId === "uspop") return `${tagHeader}\n(Falsetto ad-libs fading into midnight static — ${title})`;
+        return `${tagHeader}\n（管弦樂輝煌終止式後漸弱歸於寧靜）`;
+      }
+
+      // 3. Interlude / 間奏 / Dance Break / 舞蹈 / 華彩 Cadenza
+      if (lower.includes("interlude") || lower.includes("dance") || lower.includes("cadenza") || lower.includes("solo") ||
+          partLabel.includes("間奏") || partLabel.includes("舞蹈") || partLabel.includes("華彩") || partLabel.includes("獨奏")) {
+        if (sysId === "kpop") return `${tagHeader}\n(Half-Time Heavy 808 Drop & Dance Break — 密集鼓點與合成器重擊)`;
+        if (sysId === "classical") return `${tagHeader}\n（獨奏樂器華彩炫技樂段 Cadenza，半音階快速跑動推升張力）`;
+        return `${tagHeader}\n（器樂對話間奏：${state.leadInstrument}與伴奏聲部交織呼應）`;
+      }
+
+      // 4. Pre-Chorus / 導歌
+      if (lower.includes("pre-chorus") || lower.includes("prechorus") || partLabel.includes("導歌")) {
+        if (sysId === "mandopop") {
+          return `${tagHeader}\n當心跳 隨著${k2}慢慢失控\n所有壓抑 在這一秒翻湧\n我們都站在 命運的十字路口`;
+        }
+        if (sysId === "kpop") {
+          return `${tagHeader}\n심장이 뛰는 소리 louder now (${k2})\nNo gravity, we're floating off the ground`;
+        }
+        if (sysId === "uspop") {
+          return `${tagHeader}\nAnd I can feel the rhythm taking over me\nCaught between the ${k2} and the melody`;
+        }
+        return `${tagHeader}\nCresce la tensione nell'ombra della notte,\n（張力在夜影之中層層攀升，）`;
+      }
+
+      // 5. Bridge / 橋段 / 發展部
+      if (lower.includes("bridge") || lower.includes("development") || partLabel.includes("橋段") || partLabel.includes("發展")) {
+        if (sysId === "mandopop") {
+          return `${tagHeader}\n就算世界 突然安靜下來\n穿過${k3}與${k4}的人海\n這一次 我不再選擇離開`;
+        }
+        if (sysId === "kpop") {
+          return `${tagHeader}\n모든 빛이 사라져도 (Even in the dark)\n다시 태어나는 ${title} — high note climax!`;
+        }
+        if (sysId === "uspop") {
+          return `${tagHeader}\nStrip it down to the heartbeat in the dark\nEvery ${k3} igniting a brand new spark`;
+        }
+        return `${tagHeader}\nNel silenzio eterno, l'anima si risveglia,\n（在永恆的靜默中，靈魂悄然甦醒，）`;
+      }
+
+      // 6. Rap Verse / 饒舌
+      if (lower.includes("rap") || partLabel.includes("饒舌")) {
+        return `${tagHeader}\nYeah, check the tempo, ${k1} flashing in my eyes\n打破所有規則 we never compromise\n${k2} 訊號鎖定全場 spotlight\nStep into the ${title}, own the night`;
+      }
+
+      // 7. Chorus / 副歌 / 詠嘆 Aria / 再現部
+      if (lower.includes("chorus") || lower.includes("aria") || lower.includes("recapitulation") ||
+          partLabel.includes("副歌") || partLabel.includes("詠嘆") || partLabel.includes("再現")) {
+        chorusCount++;
+        if (sysId === "mandopop") {
+          return chorusCount === 1
+            ? `${tagHeader}\n我也曾 沉醉 在「${title}」的瞬間\n像飛舞在${k1}裡的蝴蝶\n我也曾 心碎 在轉身的邊緣\n把所有的${k2}都妥協`
+            : `${tagHeader}\n燈火將滅 夢也醒（全弦樂張力爆發）\n此刻該向 ${k3}告別\n曲終人散 回頭一瞥\n這就是 我們的「${title}」`;
+        }
+        if (sysId === "kpop") {
+          return chorusCount === 1
+            ? `${tagHeader}\nWelcome to my ${title}, feel the rush\n빛나는 ${k3} 속으로 crush\nOh my, oh my, we never slow it down\n이 밤의 주인공은 바로 나 (Right now!)`
+            : `${tagHeader}\nBreak the rules, shine into the ${title}\n끝없이 번져가는 ${k4} mirage\nHands up high, we own the spotlight tonight!`;
+        }
+        if (sysId === "uspop") {
+          return chorusCount === 1
+            ? `${tagHeader}\nWe're living in the ${title}\nChasing ${k3} till the morning light\nHold me close, don't let the feeling fade\nDancing through the neon masquerade`
+            : `${tagHeader}\nTurn it up inside the ${title}\nEvery ${k4} burning twice as bright\nNo looking back, we're wide awake tonight!`;
+        }
+        return `${tagHeader}\nO luna d'argento, porta via il mio dolore (${title}),\n（啊，銀色的月亮，帶走我的哀傷吧，）\nL'anima mia canta nell'ombra e nella luce.\n（我的靈魂在暗影與光芒中歌唱。）`;
+      }
+
+      // 8. Verse / 主歌 / 宣敘 / 主題呈示 OR Custom Segment Name!
+      verseCount++;
+      const isCustom = !(lower.includes("verse") || lower.includes("recitativo") || lower.includes("subject") ||
+                         partLabel.includes("主歌") || partLabel.includes("宣敘") || partLabel.includes("主題"));
+      if (sysId === "mandopop") {
+        if (isCustom) {
+          return `${tagHeader}\n（自訂段落「${partLabel}」專屬詞句）\n在${k1}與${k2}交錯的節拍裡\n把「${title}」寫進每一次呼吸\n留下屬於${k3}的深刻印記`;
+        }
+        return verseCount === 1
+          ? `${tagHeader}\n數不盡 ${k1}明滅\n留不住 ${k2}更迭\n寫不完 關於${k3}的長夜`
+          : `${tagHeader}\n風吹過 寂寞的街\n誰還在 ${k4}裡徘徊\n獨自面對 散場後的冷卻`;
+      }
+      if (sysId === "kpop") {
+        if (isCustom) {
+          return `${tagHeader}\n(Custom Section: ${partLabel})\n${k1} 위로 번지는 ${title} vibe\n멈출 수 없는 순간 feel alive`;
+        }
+        return verseCount === 1
+          ? `${tagHeader}\n${k1} 속에 번지는 midnight vibe\n숨길 수 없는 ${k2}의 borderline`
+          : `${tagHeader}\n멈추지 마 더 깊이 dive in\n우리만의 ${k3}를 깨워봐 tonight`;
+      }
+      if (sysId === "uspop") {
+        if (isCustom) {
+          return `${tagHeader}\n(Custom Section: ${partLabel})\nWalking through the ${k1} under ${title}\nEvery beat pulls ${k2} closer in sight`;
+        }
+        return verseCount === 1
+          ? `${tagHeader}\nTracing shadows through the ${k1} glow\nEvery radio playing songs we used to know`
+          : `${tagHeader}\nGot ${k2} tangled in my midnight mind\nLeaving all the ${k3} days behind`;
+      }
+      return `${tagHeader}\nNel silenzio della sera, splende "${title}" (${k1}),\n（在暮色的靜謐之中，「${title}」的光芒悄然綻放，）`;
+    });
+
+    state.generatedLyrics = blocks.join("\n\n");
+    state.formOrderModified = false;
     if (notify) {
       renderPanel();
-      showToast("✨ 已依據原曲格律與關鍵詞生成全新歌詞");
+      showToast(`✨ 已依照最新 ${parts.length} 個曲式段落順序重新生成對應歌詞！`);
     }
+  }
+
+  // =========================================================================
+  // 8B. ARTICLE / DOCX / PDF / URL TO LYRICS ENGINE (ONLINE GEMINI + OFFLINE)
+  // =========================================================================
+  function setArticleTab(tab) {
+    articleSource.activeTab = tab;
+    renderPanel();
+  }
+
+  async function handleArticleFileUpload(file) {
+    if (!file) return;
+    const ext = file.name.split(".").pop().toLowerCase();
+    articleSource.isExtracting = true;
+    articleSource.sourceName = file.name;
+    articleSource.pdfBase64 = null;
+    articleSource.pdfMimeType = "";
+    renderPanel();
+
+    try {
+      if (ext === "txt" || ext === "md" || ext === "csv") {
+        const text = await file.text();
+        articleSource.rawText = text.trim();
+        articleSource.isExtracting = false;
+        renderPanel();
+        showToast(`✅ 已讀取純文字檔「${file.name}」（共 ${articleSource.rawText.length} 字）`);
+      } else if (ext === "docx") {
+        if (typeof mammoth === "undefined") {
+          throw new Error("Word 解析模組尚未載入完成，請確認網路連線後重試，或先將內容複製貼上至「貼上文章／文案」分頁。");
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        articleSource.rawText = (result.value || "").trim();
+        articleSource.isExtracting = false;
+        renderPanel();
+        showToast(`✅ 已萃取 Word 文件「${file.name}」（共 ${articleSource.rawText.length} 字）`);
+      } else if (ext === "pdf") {
+        // Store base64 for native Gemini multimodal PDF reading when API Key is provided
+        if (file.size <= 18 * 1024 * 1024) {
+          articleSource.pdfBase64 = await fileToBase64(file);
+          articleSource.pdfMimeType = "application/pdf";
+        }
+        // Also extract plain text via PDF.js so offline mode & preview work seamlessly
+        let extractedPages = [];
+        if (typeof pdfjsLib !== "undefined") {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+          const arrayBuffer = await file.arrayBuffer();
+          const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          const maxPages = Math.min(pdfDoc.numPages, 25);
+          for (let p = 1; p <= maxPages; p++) {
+            const page = await pdfDoc.getPage(p);
+            const content = await page.getTextContent();
+            const pageText = content.items.map(item => item.str).join(" ");
+            extractedPages.push(pageText);
+          }
+        }
+        const combined = extractedPages.join("\n\n").trim();
+        articleSource.rawText = combined || (articleSource.pdfBase64
+          ? `【已載入 PDF 原始檔案：${file.name}（掃描或特殊排版 PDF，輸入 Gemini API Key 後可直接由 AI 視覺閱讀全文並生成歌詞）】`
+          : "");
+        articleSource.isExtracting = false;
+        renderPanel();
+        showToast(`✅ 已載入 PDF「${file.name}」${combined ? `（萃取出 ${combined.length} 字）` : ""}`);
+      } else if (ext === "doc") {
+        throw new Error("瀏覽器僅支援新版 Word (.docx)，請先用 Word 或 Google 文件另存為 .docx 再上傳。");
+      } else {
+        throw new Error("不支援的檔案格式，請上傳 .txt、.docx 或 .pdf 檔案。");
+      }
+    } catch (err) {
+      articleSource.isExtracting = false;
+      renderPanel();
+      alert("文件讀取失敗：" + err.message);
+    }
+  }
+
+  async function fetchArticleFromUrl() {
+    const rawUrl = (articleSource.urlInput || "").trim();
+    if (!rawUrl) {
+      showToast("⚠️ 請先輸入網址連結（例如 https://...）");
+      return;
+    }
+    const normalizedUrl = /^https?:\/\//i.test(rawUrl) ? rawUrl : "https://" + rawUrl;
+    articleSource.isExtracting = true;
+    articleSource.sourceName = normalizedUrl;
+    articleSource.pdfBase64 = null;
+    renderPanel();
+    showToast("🌐 正在擷取網頁文章內容...");
+
+    try {
+      // Primary: Jina Reader markdown extractor (CORS-friendly & strips nav/ads)
+      let extractedText = "";
+      try {
+        const jinaRes = await fetch(`https://r.jina.ai/${normalizedUrl}`);
+        if (jinaRes.ok) {
+          extractedText = await jinaRes.text();
+        }
+      } catch (_) {}
+
+      // Fallback: AllOrigins public CORS proxy + DOM text extraction
+      if (!extractedText || extractedText.length < 60) {
+        const proxyRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(normalizedUrl)}`);
+        if (proxyRes.ok) {
+          const data = await proxyRes.json();
+          if (data && data.contents) {
+            const doc = new DOMParser().parseFromString(data.contents, "text/html");
+            doc.querySelectorAll("script, style, nav, footer, header").forEach(el => el.remove());
+            extractedText = (doc.body?.innerText || "").replace(/\n{3,}/g, "\n\n").trim();
+          }
+        }
+      }
+
+      if (!extractedText || extractedText.length < 30) {
+        throw new Error("無法自動讀取該網址內容（可能為需登入頁面、YouTube 影音或防爬蟲網站），請直接複製網頁文字貼入「貼上文章／文案」分頁。");
+      }
+
+      articleSource.rawText = extractedText.slice(0, 15000);
+      articleSource.isExtracting = false;
+      renderPanel();
+      showToast(`✅ 成功擷取網頁文章（共 ${articleSource.rawText.length} 字）`);
+    } catch (err) {
+      articleSource.isExtracting = false;
+      renderPanel();
+      alert("網址擷取失敗：" + err.message);
+    }
+  }
+
+  function extractKeywordsOfflineFromArticle(text) {
+    // Extract meaningful 2-4 char Chinese phrases or English words
+    const zhMatches = text.match(/[\u4e00-\u9fa5]{2,4}/g) || [];
+    const stopWords = new Set(["我們", "你們", "他們", "這個", "那個", "一個", "可以", "因為", "所以", "如果", "但是", "已經", "沒有", "自己", "什麼", "這樣", "時候", "以及", "透過", "進行", "內容", "文章", "就是", "還是", "如何"]);
+    const freq = {};
+    zhMatches.forEach(w => {
+      if (!stopWords.has(w)) freq[w] = (freq[w] || 0) + 1;
+    });
+    const sortedZh = Object.entries(freq).sort((a, b) => b[1] - a[1]).map(e => e[0]);
+    if (sortedZh.length >= 3) return sortedZh.slice(0, 4);
+
+    const enMatches = (text.toLowerCase().match(/\b[a-z]{4,12}\b/g) || [])
+      .filter(w => !["that", "this", "with", "from", "have", "your", "they", "will", "about", "there", "their", "which", "when", "what", "into"].includes(w));
+    const enFreq = {};
+    enMatches.forEach(w => { enFreq[w] = (enFreq[w] || 0) + 1; });
+    const sortedEn = Object.entries(enFreq).sort((a, b) => b[1] - a[1]).map(e => e[0]);
+    return [...sortedZh, ...sortedEn].slice(0, 4);
+  }
+
+  function generateLyricsFromArticleOffline() {
+    const cleanText = (articleSource.rawText || "").replace(/\s+/g, " ").trim();
+    if (!cleanText) {
+      showToast("⚠️ 請先上傳文件、擷取網址或貼上文章內容！");
+      return;
+    }
+
+    const sentences = cleanText
+      .split(/[。！？!?\n；;]+/)
+      .map(s => s.trim())
+      .filter(s => s.length >= 4 && s.length <= 42);
+
+    const extractedKw = extractKeywordsOfflineFromArticle(cleanText);
+    if (extractedKw.length) {
+      state.selectedKeywords = extractedKw;
+    }
+
+    // Suggest a concise title from the first meaningful clause if user hasn't customized one
+    const firstClause = (sentences[0] || cleanText.slice(0, 12)).replace(/[，,、：:「」『』()（）]/g, "").trim();
+    if (firstClause.length >= 2) {
+      state.songTitle = firstClause.slice(0, 10);
+    }
+
+    const sysId = state.systemId;
+    const title = state.songTitle;
+    const k1 = state.selectedKeywords[0] || "微光";
+    const k2 = state.selectedKeywords[1] || "記憶";
+    const k3 = state.selectedKeywords[2] || "遠方";
+    const parts = state.formStructure.length ? state.formStructure : ["前奏 Intro", "主歌 A1", "副歌 B1", "尾奏 Outro"];
+
+    let cursor = 0;
+    const nextLine = (fallback) => {
+      if (!sentences.length) return fallback;
+      const raw = sentences[cursor % sentences.length];
+      cursor++;
+      return raw.length > 22 ? raw.slice(0, 22) : raw;
+    };
+
+    const lyricsBlocks = parts.map((partLabel, idx) => {
+      const lower = partLabel.toLowerCase();
+      const tag = `[${idx + 1}. ${partLabel}]`;
+
+      if (lower.includes("intro") || partLabel.includes("前奏") || partLabel.includes("序奏")) {
+        return `${tag}\n（${state.bpm} BPM｜${state.leadInstrument}鋪陳，引出文章主題「${k1}」與「${k2}」）`;
+      }
+      if (lower.includes("outro") || lower.includes("coda") || partLabel.includes("尾奏") || partLabel.includes("尾聲")) {
+        return `${tag}\n（音樂漸弱收束，餘韻停留在「${k3}」與《${title}》的深層迴響）`;
+      }
+      if (lower.includes("interlude") || lower.includes("dance") || lower.includes("cadenza") ||
+          partLabel.includes("間奏") || partLabel.includes("舞蹈") || partLabel.includes("華彩")) {
+        return `${tag}\n（器樂變奏間奏：延續「${k1}」的情感張力推向下一段）`;
+      }
+      if (lower.includes("chorus") || lower.includes("aria") || partLabel.includes("副歌") || partLabel.includes("詠嘆")) {
+        const l1 = nextLine(`在${k1}與${k2}之間尋找答案`);
+        const l2 = nextLine(`把所有關於${k3}的故事唱完`);
+        return `${tag}\n${l1}\n這就是「${title}」最真實的模样\n${l2}\n讓${k1}照亮每一個遠方`;
+      }
+      if (lower.includes("bridge") || partLabel.includes("橋段")) {
+        const b1 = nextLine(`穿過漫長黑夜與沉默`);
+        return `${tag}\n${b1}\n當${k2}再次喚醒心中的光\n我們終將在「${title}」重逢`;
+      }
+      // Verse / Pre-Chorus / Custom
+      const v1 = nextLine(`翻開關於${k1}的篇章`);
+      const v2 = nextLine(`記錄著${k2}與${k3}的日常`);
+      const v3 = nextLine(`每一步都寫滿故事的重量`);
+      return `${tag}\n${v1}\n${v2}\n${v3}`;
+    });
+
+    state.generatedLyrics = lyricsBlocks.join("\n\n");
+    state.lyricsManuallyEdited = true;
+    state.formOrderModified = false;
+    articleSource.lastSummary = `【離線提煉】已從「${articleSource.sourceName || "貼上文案"}」萃取關鍵詞（${state.selectedKeywords.join("、")}），並依 ${parts.length} 個曲式段落編排為歌詞。`;
+    articleSource.lastEngineUsed = "離線智能提煉引擎";
+
+    if (!isLyricMode()) {
+      setMode("lyric_adv");
+    }
+    state.step = 4;
+    renderPanel();
+    drawWaveformCanvas();
+    showToast("⚡ 已透過離線引擎將文章改編為歌詞，並跳轉至步驟 4！");
+  }
+
+  async function generateLyricsFromArticle() {
+    const hasText = (articleSource.rawText || "").trim().length > 0;
+    const hasPdf = Boolean(articleSource.pdfBase64);
+    if (!hasText && !hasPdf) {
+      showToast("⚠️ 請先上傳 .txt/.docx/.pdf 文件、擷取網址或貼上文章內容！");
+      return;
+    }
+
+    const apiKey = (uploadedAudio.geminiApiKey || "").trim();
+    if (!apiKey) {
+      generateLyricsFromArticleOffline();
+      return;
+    }
+
+    articleSource.isGenerating = true;
+    renderPanel();
+
+    try {
+      const selectedModel = uploadedAudio.geminiModel || "gemini-3-flash-preview";
+      const sys = currentSystem();
+      const partsList = state.formStructure.length
+        ? state.formStructure.map((p, i) => `${i + 1}. ${p}`).join("\n")
+        : "1. 前奏 Intro\n2. 主歌 A1\n3. 副歌 B1\n4. 尾奏 Outro";
+
+      const modeInstruction = articleSource.conversionMode === "rewrite_rhyme"
+        ? "請保留參考文本的句式節奏、段落呼吸與修辭張力，進行「同格律二創改寫」，融入新歌名與主題關鍵詞。"
+        : "這是一篇尚未成為歌詞的完整文章／文案／文件內容。請深度提煉文章的核心主旨、情感轉折與關鍵意象，將散文式的敘述濃縮改編成「極具音樂性、節奏感與押韻韻腳的可演唱歌詞」。";
+
+      const promptText = `你是一位華語與國際頂級作詞家與音樂製作人。
+${modeInstruction}
+
+【目標音樂設定】
+- 曲風體系：${sys.name}（${sys.enName}）
+- 速度與拍號：${state.bpm} BPM ｜ ${state.timeSignature}
+- 核心情緒氛圍：${state.moods.join("、")}
+- 詞曲格律要求：${state.lyricPattern}
+- 押韻聲韻學要求：${state.rhymeAndProsody}
+
+【必須嚴格遵循的曲式段落順序（請逐段寫出對應的 [編號. 段落名稱] 標籤與歌詞）】
+${partsList}
+
+請嚴格只輸出一段合法的 JSON（不要 markdown 標記或額外說明），格式如下：
+{
+  "suggestedSongTitle": "依據文章靈魂提煉出的最貼切新歌名",
+  "extractedKeywords": ["核心關鍵詞1", "核心關鍵詞2", "核心關鍵詞3", "核心關鍵詞4"],
+  "articleSummary": "一句話精準摘要原文章核心主題與改編亮點（50字以內）",
+  "adaptedLyrics": "完整可演唱歌詞（必須包含上述所有曲式段落標籤，且每段歌詞皆具備音樂韻律與押韻）"
+}
+
+${hasText ? `【待改編的原始文章／文案內容】\n${articleSource.rawText.slice(0, 14000)}` : "【待改編的原始文件】請直接閱讀我隨附的 PDF 文件完整內容並改編成歌詞。"}`;
+
+      const contentParts = [{ text: promptText }];
+      if (hasPdf) {
+        contentParts.push({
+          inline_data: {
+            mime_type: articleSource.pdfMimeType || "application/pdf",
+            data: articleSource.pdfBase64
+          }
+        });
+      }
+
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(selectedModel)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: contentParts }],
+          generationConfig: {
+            temperature: 0.65,
+            responseMimeType: "application/json"
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error?.message || `HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
+      const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      const cleanJsonText = rawText.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      const parsed = JSON.parse(cleanJsonText);
+
+      if (parsed.suggestedSongTitle) {
+        state.songTitle = parsed.suggestedSongTitle;
+        uploadedAudio.geminiAppliedTitle = state.songTitle;
+      }
+      if (Array.isArray(parsed.extractedKeywords) && parsed.extractedKeywords.length) {
+        state.selectedKeywords = parsed.extractedKeywords;
+        uploadedAudio.geminiAppliedKeywords = state.selectedKeywords.join("、");
+      }
+      if (parsed.adaptedLyrics) {
+        state.generatedLyrics = parsed.adaptedLyrics;
+        state.lyricsManuallyEdited = true;
+        state.formOrderModified = false;
+      }
+      articleSource.lastSummary = parsed.articleSummary || `已由 ${selectedModel} 完成文章深度改編`;
+      articleSource.lastEngineUsed = `Gemini AI (${selectedModel})`;
+      articleSource.isGenerating = false;
+
+      if (!isLyricMode()) {
+        setMode("lyric_adv");
+      }
+      state.step = 4;
+      renderPanel();
+      drawWaveformCanvas();
+      showToast(`🧠 ${selectedModel} 已將文章深度改編為完整歌詞，並同步歌名與關鍵詞！`);
+    } catch (err) {
+      articleSource.isGenerating = false;
+      renderPanel();
+      alert("Gemini 文章轉歌詞失敗：" + err.message);
+    }
+  }
+
+  function renderArticleToLyricsCard() {
+    if (!isLyricMode()) return "";
+    const hasKey = Boolean((uploadedAudio.geminiApiKey || "").trim());
+    return `
+      <div class="section-block info-card" style="border:1px solid rgba(255,109,51,0.38); background:linear-gradient(135deg, rgba(255,109,51,0.06) 0%, #161616 100%);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+          <h4 style="margin:0; color:var(--accent);">📄 文章 / 文件（.txt / .docx / .pdf）/ 文案 / 網址 轉歌詞工作室</h4>
+          <span style="font-size:12px; padding:3px 10px; border-radius:999px; background:${hasKey ? 'rgba(255,109,51,0.2)' : '#252525'}; color:${hasKey ? '#ffb08e' : '#aaa'};">
+            ${hasKey ? '🧠 已偵測 API Key：將使用 Gemini AI 深度改編' : '⚡ 離線模式：未填 API Key 將自動走本地提煉生成'}
+          </span>
+        </div>
+        <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:10px;">
+          匯入尚未成詞的文章、故事、企劃書或網頁連結，系統會自動提煉主題關鍵詞、建議新歌名，並依照曲風與步驟 4 曲式順序改編為押韻歌詞。
+        </div>
+
+        <!-- Source Mode Tabs -->
+        <div class="pill-group" style="margin-bottom:12px;">
+          <button type="button" class="pill-btn ${articleSource.activeTab === 'file' ? 'active' : ''}" onclick="setArticleTab('file')">📂 上傳文件（.txt / .docx / .pdf）</button>
+          <button type="button" class="pill-btn ${articleSource.activeTab === 'paste' ? 'active' : ''}" onclick="setArticleTab('paste')">📝 貼上文章 / 文案 / 現成歌詞</button>
+          <button type="button" class="pill-btn ${articleSource.activeTab === 'url' ? 'active' : ''}" onclick="setArticleTab('url')">🌐 輸入網址連結（URL）</button>
+        </div>
+
+        ${articleSource.activeTab === 'file' ? `
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; padding:12px; border-radius:10px; border:1px dashed #444; background:#141414;">
+            <label class="btn-primary" style="cursor:pointer; margin:0;">
+              📎 選擇 .txt / .docx / .pdf 檔案
+              <input type="file" accept=".txt,.md,.docx,.pdf" style="display:none;" onchange="handleArticleFileUpload(this.files[0]); this.value='';" />
+            </label>
+            <span style="font-size:13px; color:var(--text-secondary);">
+              ${articleSource.isExtracting
+                ? '⏳ 正在解析文件文字內容...'
+                : (articleSource.sourceName && articleSource.activeTab === 'file'
+                    ? `已載入：<strong>${escapeHtml(articleSource.sourceName)}</strong>`
+                    : '支援純文字檔（.txt）、Word 文件（.docx）與 PDF 文件（.pdf）')}
+            </span>
+          </div>
+        ` : ''}
+
+        ${articleSource.activeTab === 'url' ? `
+          <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+            <input type="text" class="text-input" style="margin-bottom:0; flex:1; min-width:220px;"
+                   placeholder="貼上公開文章或網頁網址（例如：https://...）"
+                   value="${escapeHtml(articleSource.urlInput)}"
+                   oninput="articleSource.urlInput=this.value;" />
+            <button type="button" class="btn-secondary" onclick="fetchArticleFromUrl()" ${articleSource.isExtracting ? 'disabled' : ''}>
+              ${articleSource.isExtracting ? '⏳ 擷取中...' : '🌐 擷取網頁正文'}
+            </button>
+          </div>
+        ` : ''}
+
+        <div class="section-label" style="font-size:12.5px;">
+          已萃取／待改編文章內容預覽（可直接編輯或貼上文字，目前 ${articleSource.rawText.length} 字）：
+        </div>
+        <textarea class="textarea-input" rows="4" style="min-height:105px; font-size:13.5px; margin-bottom:10px;"
+                  placeholder="在此直接貼上文章段落、散文故事、品牌文案或現成歌詞，或透過上方按鈕上傳 .txt / .docx / .pdf / 網址自動填入..."
+                  oninput="articleSource.rawText=this.value;">${escapeHtml(articleSource.rawText)}</textarea>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12.5px;">
+            <span style="color:var(--text-secondary);">改編方式：</span>
+            <button type="button" class="pill-btn ${articleSource.conversionMode === 'adapt_article' ? 'active' : ''}"
+                    style="padding:4px 10px; font-size:12px;"
+                    onclick="articleSource.conversionMode='adapt_article'; renderPanel();">
+              ✨ 文章提煉轉歌詞（散文／企劃／網頁）
+            </button>
+            <button type="button" class="pill-btn ${articleSource.conversionMode === 'rewrite_rhyme' ? 'active' : ''}"
+                    style="padding:4px 10px; font-size:12px;"
+                    onclick="articleSource.conversionMode='rewrite_rhyme'; renderPanel();">
+              🔄 同格律二創改寫（現成歌詞仿寫）
+            </button>
+          </div>
+
+          <button type="button" class="btn-primary" onclick="generateLyricsFromArticle()" ${articleSource.isGenerating ? 'disabled' : ''}>
+            ${articleSource.isGenerating
+              ? '⏳ 正在將文章改編為歌詞...'
+              : (hasKey ? '🧠 Gemini AI 深度改編為歌詞（自動跳轉步驟 4）' : '⚡ 離線提煉生成歌詞（自動跳轉步驟 4）')}
+          </button>
+        </div>
+
+        ${articleSource.lastSummary ? `
+          <div style="margin-top:10px; padding:8px 12px; border-radius:8px; background:rgba(255,109,51,0.12); font-size:12.5px; color:#ffd6c4;">
+            ✅ <strong>${escapeHtml(articleSource.lastEngineUsed)}</strong>：${escapeHtml(articleSource.lastSummary)}
+          </div>
+        ` : ''}
+      </div>
+    `;
   }
 
   // =========================================================================
@@ -2324,6 +2821,24 @@
             </div>
           </div>
           ` : ''}
+
+          ${(!isAdvMode() && isLyricMode()) ? `
+            <div class="section-block info-card" style="padding:12px 16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <span style="font-size:13px; color:var(--text-secondary);">🔑 <strong>選填 Gemini API Key</strong>（填入後「文章／文件／網址轉歌詞」將自動啟用 Gemini AI 深度改編；不填則走離線生成）：</span>
+                <div class="api-key-inline">
+                  <input type="password" placeholder="輸入 Gemini API Key（以 AIza 開頭）"
+                         value="${escapeHtml(uploadedAudio.geminiApiKey)}"
+                         oninput="saveApiKey(this.value)" />
+                  <select class="select-input" onchange="saveGeminiModel(this.value)">
+                    <option value="gemini-3.1-pro-preview" ${uploadedAudio.geminiModel === 'gemini-3.1-pro-preview' ? 'selected' : ''}>gemini-3.1-pro-preview</option>
+                    <option value="gemini-3-flash-preview" ${uploadedAudio.geminiModel === 'gemini-3-flash-preview' ? 'selected' : ''}>gemini-3-flash-preview</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          ` : ''}
+          ${renderArticleToLyricsCard()}
 
           <div class="section-block">
             <div class="section-label">${!isAdvMode() ? '請選擇目標音樂元素體系（四大曲風資料庫）' : renderAppliedFieldLabel('或直接選擇目標音樂元素體系（四大曲風資料庫）', 1)}</div>
@@ -2652,7 +3167,14 @@
           <div class="section-block info-card">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
               <h4 style="margin:0;">📐 ${renderAppliedFieldLabel('曲式結構動態時間軸（Song Form）', 22)}</h4>
-              <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="resetFormStructureToPreset()">↺ 還原曲風預設曲式</button>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                ${isLyricMode() ? `
+                  <button type="button" class="btn-primary" style="padding:5px 12px; font-size:12.5px;" onclick="generateStyleMatchedLyrics(true)">
+                    ✨ 依最新曲式順序生成對應歌詞${state.formOrderModified ? '（順序已更新）' : ''}
+                  </button>
+                ` : ''}
+                <button type="button" class="btn-secondary" style="padding:5px 10px; font-size:12px;" onclick="resetFormStructureToPreset()">↺ 還原曲風預設曲式</button>
+              </div>
             </div>
             <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:10px;">
               點擊已啟用段落可「停用移出」，使用 ◀ / ▶ 調整段落前後順序，或從下方常用庫／自訂框加入新段落（共 ${state.formStructure.length} 個啟用段落）：
@@ -2719,10 +3241,11 @@
           </div>
 
           ${isLyricMode() ? `
+            ${renderArticleToLyricsCard()}
             <div class="section-block info-card">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
                 <h4 style="margin:0;">✍️ ${renderAppliedFieldLabel('同風格新詞工作區', 27)}</h4>
-                <button class="btn-primary" onclick="generateStyleMatchedLyrics(true)">✨ 依原曲格律重新生成新歌詞</button>
+                <button class="btn-primary" onclick="generateStyleMatchedLyrics(true)">✨ 依最新曲式順序與格律重新生成新歌詞</button>
               </div>
               ${renderOptionAiBadge([26, 27])}
               ${isAdvMode() ? `
@@ -2784,6 +3307,7 @@
               <div><span style="color:var(--text-secondary);">${isLyricMode() ? '人聲聲線唱腔' : '核心主奏樂器'}：</span><strong style="color:#fff;">${escapeHtml(isLyricMode() ? state.vocalStyle : state.leadInstrument)}</strong></div>
               <div style="grid-column:1 / -1;"><span style="color:var(--text-secondary);">核心配器編制：</span><strong style="color:#fff;">${escapeHtml(state.instruments.join("、"))}</strong></div>
               <div style="grid-column:1 / -1;"><span style="color:var(--text-secondary);">曲式結構時間軸：</span><strong style="color:#fff;">${escapeHtml(state.formStructure.join(" → "))}</strong></div>
+              ${articleSource.lastSummary ? `<div style="grid-column:1 / -1;"><span style="color:var(--text-secondary);">文章轉歌詞摘要：</span><strong style="color:var(--accent);">${escapeHtml(articleSource.lastSummary)}</strong></div>` : ''}
               <div style="grid-column:1 / -1; display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
                 <span style="color:var(--text-secondary);">主題靈感庫【${escapeHtml(state.themeCategory)}】（已選 ${state.selectedKeywords.length} 個）：</span>
                 ${state.selectedKeywords.length
@@ -2879,6 +3403,7 @@
   ];
 
   function toggleFormPartActive(index) {
+    state.formOrderModified = true;
     if (index < 0 || index >= state.formStructure.length) return;
     if (state.formStructure.length <= 1) {
       showToast("⚠️ 曲式時間軸至少需保留 1 個段落");
@@ -2893,6 +3418,7 @@
   }
 
   function restoreDisabledFormPart(disabledIdx) {
+    state.formOrderModified = true;
     if (disabledIdx < 0 || disabledIdx >= state.disabledFormParts.length) return;
     const [restored] = state.disabledFormParts.splice(disabledIdx, 1);
     if (restored) state.formStructure.push(restored);
@@ -2901,6 +3427,7 @@
   }
 
   function moveFormPart(index, delta) {
+    state.formOrderModified = true;
     const target = index + delta;
     if (index < 0 || index >= state.formStructure.length || target < 0 || target >= state.formStructure.length) return;
     const temp = state.formStructure[index];
@@ -2911,6 +3438,7 @@
   }
 
   function addPresetFormPart(partLabel) {
+    state.formOrderModified = true;
     const disIdx = state.disabledFormParts.indexOf(partLabel);
     if (disIdx >= 0) state.disabledFormParts.splice(disIdx, 1);
     state.formStructure.push(partLabel);
@@ -2920,6 +3448,7 @@
   }
 
   function addCustomFormPart() {
+    state.formOrderModified = true;
     const input = document.getElementById("customFormPartInput");
     if (!input) return;
     const val = input.value.trim();
@@ -2935,6 +3464,7 @@
   }
 
   function resetFormStructureToPreset() {
+    state.formOrderModified = true;
     const sys = currentSystem();
     const preset = sys.presets.find(p => p.id === state.presetId) || sys.presets[0];
     state.formStructure = [...preset.formStructure];
