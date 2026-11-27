@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "2.0-CrossGenre-MusicDNA",
+  "songTitle": "夜曲 Op.27 No.2：月下海潮",
+  "genreSystem": {
+    "id": "classical",
+    "name": "古典交響與室內樂",
+    "presetId": "class_romantic"
+  },
+  "musicTheory": {
+    "bpm": 66,
+    "timeSignature": "3/4 拍 或 4/4 拍（Adagio 慢板彈性速度）",
+    "keyAndHarmony": "C# 小調轉 Db 大調（半音階轉調與減七和弦）",
+    "harmonyFeatures": [
+      "半音階和聲遊走",
+      "減七和弦戲劇張力",
+      "拿坡里六和弦（Neapolitan 6th）"
+    ],
+    "moods": [
+      "史詩悲壯",
+      "深邃詩意",
+      "戲劇衝突"
+    ]
+  },
+  "orchestrationAndVocals": {
+    "isInstrumental": true,
+    "vocalStyle": null,
+    "vocalRange": null,
+    "chestResonancePercent": null,
+    "instruments": [
+      "史坦威平台鋼琴獨奏",
+      "全編制交響弦樂團",
+      "法國號（French Horn）",
+      "雙簧管（Oboe）",
+      "定音鼓（Timpani）"
+    ],
+    "mixingAcoustics": "維也納金色大廳自然堂音（Concert Hall Natural Acoustic）",
+    "reverbDepthPercent": 85
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "2.0-CrossGenre-MusicDNA",
+  "songTitle": "CHASING CALIFORNIA LIGHTS",
+  "genreSystem": {
+    "id": "uspop",
+    "name": "美國流行音樂",
+    "presetId": "uspop_synth"
+  },
+  "musicTheory": {
+    "bpm": 118,
+    "timeSignature": "4/4 拍（Disco-Pop 律動）",
+    "keyAndHarmony": "F 小調（F Minor 經典四和弦 vi-IV-I-V 變體）",
+    "harmonyFeatures": [
+      "I-V-vi-IV 冠軍四和弦",
+      "80s 類比合成器琶音",
+      "八度跳躍放克貝斯"
+    ],
+    "moods": [
+      "午夜馳騁",
+      "復古摩登",
+      "都會浪漫"
+    ]
+  },
+  "orchestrationAndVocals": {
+    "isInstrumental": false,
+    "vocalStyle": "流行真假音流暢切換（Falsetto Flip）＋俐落切分咬字",
+    "vocalRange": "G3 - F5",
+    "chestResonancePercent": 60,
+    "instruments": [
+      "Juno-106 復古合成器",
+      "放克電貝斯",
+      "門控殘響軍鼓（Gated Reverb Snare）",
+      "切分節奏電吉他"
+    ],
+    "mixingAcoustics": "現代超清低頻＋80年代門控殘響（Gated Reverb）空間感",
+    "reverbDepthPercent": 58
+  }
+}

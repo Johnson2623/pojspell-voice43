@@ -1,0 +1,2893 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 跨界音樂元素工作站 v15 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <style>
+    :root {
+      --bg-main: #111111;
+      --bg-panel: #181818;
+      --bg-card: #1f1f1f;
+      --bg-pill: #252525;
+      --bg-pill-hover: #303030;
+      --border-subtle: #2e2e2e;
+      --border-active: #ff6d33;
+      --accent: #ff6d33;
+      --accent-hover: #ff814d;
+      --accent-glow: rgba(255, 109, 51, 0.16);
+      --text-primary: #f3f3f3;
+      --text-secondary: #a0a0a0;
+      --text-muted: #707070;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: 18px 22px 40px;
+    }
+
+    .app-container {
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    /* Top Header Utility Bar */
+    .utility-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+    .utility-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* 4 Mode Tabs */
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .mode-tab {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 14px 12px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .mode-tab:hover {
+      background: var(--bg-pill-hover);
+      color: var(--text-primary);
+    }
+    .mode-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(255, 109, 51, 0.35);
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: #232323;
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: var(--radius-pill);
+      width: 20%;
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Main Workspace Grid */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Left Step Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: sticky;
+      top: 18px;
+    }
+    .step-nav-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 15px 18px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .step-nav-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+    .step-nav-btn.active {
+      background: linear-gradient(90deg, rgba(255, 109, 51, 0.16) 0%, rgba(24, 24, 24, 0.95) 100%);
+      border-color: var(--border-active);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .step-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+    }
+    .step-nav-btn.active .step-badge {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Sidebar Quick DNA Monitor */
+    .dna-summary-box {
+      margin-top: 8px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 12.5px;
+    }
+    .dna-summary-title {
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dna-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed #2a2a2a;
+      color: var(--text-secondary);
+      gap: 8px;
+    }
+    .dna-row:last-child { border-bottom: none; }
+    .dna-val {
+      color: var(--text-primary);
+      font-weight: 500;
+      text-align: right;
+      max-width: 155px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Right Main Panel */
+    .main-panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px 30px;
+      min-height: 600px;
+    }
+    .panel-header {
+      margin-bottom: 22px;
+    }
+    .panel-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .panel-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Buttons & Pills */
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 11px 20px;
+      border-radius: var(--radius-md);
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-secondary {
+      background: var(--bg-pill);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      padding: 9px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: var(--bg-pill-hover);
+      border-color: #444;
+    }
+    .btn-secondary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-accent-outline {
+      background: rgba(255, 109, 51, 0.12);
+      color: #ffb293;
+      border: 1px solid rgba(255, 109, 51, 0.45);
+      padding: 9px 15px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-accent-outline:hover {
+      background: rgba(255, 109, 51, 0.22);
+      color: #ffffff;
+    }
+
+    .section-block {
+      margin-bottom: 24px;
+    }
+    .section-label {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .section-hint {
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .text-input, .textarea-input, .select-input {
+      width: 100%;
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 12px 15px;
+      border-radius: var(--radius-md);
+      font-size: 14.5px;
+      font-family: inherit;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+    .text-input:focus, .textarea-input:focus, .select-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .textarea-input {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    /* Pill Grid */
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+    .pill-btn {
+      background: var(--bg-pill);
+      border: 1px solid var(--border-subtle);
+      color: #d8d8d8;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .pill-btn:hover {
+      background: var(--bg-pill-hover);
+      border-color: #484848;
+      color: #fff;
+    }
+    .pill-btn.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Audio Upload & Waveform Studio Box */
+    .audio-dropzone {
+      border: 1.5px dashed #3d3d3d;
+      background: linear-gradient(180deg, #151515 0%, #101010 100%);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 22px;
+      transition: all 0.2s ease;
+    }
+    .audio-dropzone.dragover {
+      border-color: var(--accent);
+      background: rgba(255, 109, 51, 0.08);
+    }
+    .dropzone-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .waveform-wrap {
+      margin-top: 14px;
+      background: #0b0b0b;
+      border: 1px solid #262626;
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    canvas#waveformCanvas {
+      width: 100%;
+      height: 78px;
+      display: block;
+      border-radius: 6px;
+    }
+    .acoustic-metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .metric-chip {
+      background: #161616;
+      border: 1px solid #292929;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+    .metric-chip span {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+    .metric-chip strong {
+      color: var(--accent);
+      font-size: 13.5px;
+    }
+    .dual-engine-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      align-items: center;
+    }
+    .api-key-inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 300px;
+      flex-wrap: wrap;
+    }
+    .api-key-inline input {
+      margin-bottom: 0;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      flex: 1;
+      min-width: 190px;
+    }
+    .api-key-inline select {
+      margin-bottom: 0;
+      padding: 9px 10px;
+      font-size: 12.5px;
+      font-family: var(--font-mono);
+      width: auto;
+      background: #181818;
+    }
+    .byok-notice {
+      margin-top: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #272727;
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .byok-notice a, .inline-link {
+      color: var(--accent);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* 4-Genre System Selector Cards */
+    .genre-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .genre-card {
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 13px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .genre-card:hover {
+      border-color: #4a4a4a;
+      background: #171717;
+    }
+    .genre-card.active {
+      border-color: var(--accent);
+      background: linear-gradient(145deg, rgba(255, 109, 51, 0.16) 0%, #151515 100%);
+      box-shadow: 0 4px 14px rgba(255, 109, 51, 0.15);
+    }
+    .genre-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .genre-card-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .genre-card-sub {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Two-column cards inside steps */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .info-card {
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+    .info-card h4 {
+      font-size: 14px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    /* Sliders */
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Code / Prompt Output Box */
+    .code-box {
+      background: #0c0c0c;
+      border: 1px solid #2c2c2c;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: #e4e4e4;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 290px;
+      overflow-y: auto;
+      line-height: 1.55;
+    }
+
+    /* Footer Navigation */
+    .panel-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* Modal for JSON & Guide */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      max-width: 860px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px 26px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* Guide Modal Tabs & Tables */
+    .guide-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .guide-tab-btn {
+      background: var(--bg-pill);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .guide-tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .guide-table th, .guide-table td {
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .guide-table th {
+      background: #141414;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .guide-step-list {
+      padding-left: 20px;
+      font-size: 13.5px;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent);
+      color: #fff;
+      padding: 11px 18px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      z-index: 1100;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tag-advanced {
+      font-size: 11px;
+      background: rgba(255, 109, 51, 0.18);
+      color: var(--accent);
+      border: 1px solid rgba(255, 109, 51, 0.4);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    @media (max-width: 960px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .mode-tabs { grid-template-columns: repeat(2, 1fr); }
+      .genre-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .acoustic-metrics-bar { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Top Utility Bar -->
+  <div class="utility-bar">
+    <div class="brand-badge">
+      <span class="brand-dot"></span>
+      <span><strong>AI 跨界音樂元素工作站 v15</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+    </div>
+    <div class="utility-actions">
+      <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
+      <button class="btn-secondary" onclick="openJsonModal()">🧬 音樂元素庫 / JSON 匯入匯出</button>
+      <button class="btn-secondary" onclick="toggleAudioPreview()" id="audioBtn">🔊 試聽和聲動機</button>
+    </div>
+  </div>
+
+  <!-- 4 Mode Tabs -->
+  <div class="mode-tabs" id="modeTabs">
+    <button class="mode-tab active" data-mode="lyric_basic" onclick="setMode('lyric_basic')">含歌詞初階</button>
+    <button class="mode-tab" data-mode="inst_basic" onclick="setMode('inst_basic')">僅音樂初階</button>
+    <button class="mode-tab" data-mode="lyric_adv" onclick="setMode('lyric_adv')">含歌詞高階</button>
+    <button class="mode-tab" data-mode="inst_adv" onclick="setMode('inst_adv')">僅音樂高階</button>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Main Workspace -->
+  <div class="workspace-grid">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <button class="step-nav-btn active" data-step="1" onclick="goStep(1)">
+        <span id="nav-label-1">1 構想與曲風元素</span>
+        <span class="step-badge">起點</span>
+      </button>
+      <button class="step-nav-btn" data-step="2" onclick="goStep(2)">
+        <span>2 曲風情緒與和聲</span>
+        <span class="step-badge" id="badge-step2">調性</span>
+      </button>
+      <button class="step-nav-btn" data-step="3" onclick="goStep(3)">
+        <span id="nav-label-3">3 人聲樂器與音場</span>
+        <span class="step-badge">配器</span>
+      </button>
+      <button class="step-nav-btn" data-step="4" onclick="goStep(4)">
+        <span id="nav-label-4">4 歌詞結構與格律</span>
+        <span class="step-badge" id="badge-step4">詞曲</span>
+      </button>
+      <button class="step-nav-btn" data-step="5" onclick="goStep(5)">
+        <span>5 輸出與 JSON 打包</span>
+        <span class="step-badge">完成</span>
+      </button>
+
+      <!-- Live DNA Monitor -->
+      <div class="dna-summary-box">
+        <div class="dna-summary-title">
+          <span>🧬 目前音樂元素快照</span>
+          <span id="modeLabelTag" style="font-size:11px;color:#a0a0a0;">含歌詞初階</span>
+        </div>
+        <div class="dna-row"><span>音樂體系</span><span class="dna-val" id="sum-system">華語流行經典</span></div>
+        <div class="dna-row"><span>元素來源</span><span class="dna-val" id="sum-source">時代抒情大歌</span></div>
+        <div class="dna-row"><span>目標新歌名</span><span class="dna-val" id="sum-title">霓虹散場後</span></div>
+        <div class="dna-row"><span>速度 / 拍號</span><span class="dna-val" id="sum-tempo">92 BPM · 4/4</span></div>
+        <div class="dna-row"><span>調性和聲</span><span class="dna-val" id="sum-key">B大調轉關係小調</span></div>
+        <div class="dna-row"><span>核心音色</span><span class="dna-val" id="sum-vocal">女中低音/鋼琴弦樂</span></div>
+      </div>
+    </aside>
+
+    <!-- Right Dynamic Panel -->
+    <main class="main-panel" id="panelContent">
+      <div style="padding: 24px; color: #a0a0a0;">正在載入工作站介面...</div>
+    </main>
+  </div>
+</div>
+
+<!-- JSON Import/Export Modal -->
+<div class="modal-backdrop" id="jsonModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 style="font-size:18px;">🧬 四大體系音樂元素 JSON 匯入 / 匯出</h3>
+      <button class="btn-secondary" onclick="closeJsonModal()">✕ 關閉</button>
+    </div>
+    <p style="font-size:13.5px; color:var(--text-secondary); margin-bottom:12px;">
+      可直接貼上由 Gemini 對話框產出的 JSON，或上傳本地 <code>.json</code> 檔，亦或一鍵切換載入「華語流行 / 韓國 K-Pop / 美國流行 / 古典樂」標準範本：
+    </p>
+    <div class="pill-group" style="margin-bottom:12px;">
+      <button class="btn-secondary" onclick="loadGenrePreset('mandopop', true)">🇹🇼 華語流行範本</button>
+      <button class="btn-secondary" onclick="loadGenrePreset('kpop', true)">🇰🇷 韓國 K-Pop 範本</button>
+      <button class="btn-secondary" onclick="loadGenrePreset('uspop', true)">🇺🇸 美國流行範本</button>
+      <button class="btn-secondary" onclick="loadGenrePreset('classical', true)">🎻 古典交響範本</button>
+      <label class="btn-secondary" style="cursor:pointer;">
+        📂 上傳本地 .json
+        <input type="file" accept=".json" style="display:none;" onchange="handleJsonFileUpload(event)" />
+      </label>
+    </div>
+    <textarea class="textarea-input" id="jsonEditorArea" style="font-family:var(--font-mono); font-size:12.5px; min-height:260px;"></textarea>
+    <div style="display:flex; justify-content:flex-end; gap:10px;">
+      <button class="btn-secondary" onclick="downloadJsonFile()">⬇️ 下載此 JSON 檔</button>
+      <button class="btn-primary" onclick="applyJsonFromEditor()">✅ 套用此 JSON 元素至工作站</button>
+    </div>
+  </div>
+</div>
+
+<!-- Guide & Universal Prompts Modal -->
+<div class="modal-backdrop" id="guideModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 style="font-size:18px;">📖 跨界音樂元素工作站｜完整使用指南與萬用指令庫</h3>
+      <button class="btn-secondary" onclick="closeGuideModal()">✕ 關閉</button>
+    </div>
+
+    <div class="guide-tabs">
+      <button class="guide-tab-btn active" id="gtab-prompt" onclick="switchGuideTab('prompt')">1. 萬用音樂元素提取指令（免 API Key 對話法）</button>
+      <button class="guide-tab-btn" id="gtab-apikey" onclick="switchGuideTab('apikey')">2. Gemini API Key 免費申請與模型說明</button>
+      <button class="guide-tab-btn" id="gtab-permissions" onclick="switchGuideTab('permissions')">3. 多人共用與功能權限一覽</button>
+    </div>
+
+    <div id="guideBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">已更新</div>
+
+<script>
+  // =========================================================================
+  // 1. FOUR CORE MUSIC GENRE SYSTEMS & PRESETS
+  // =========================================================================
+  const GENRE_SYSTEMS = {
+    mandopop: {
+      id: "mandopop",
+      icon: "🇹🇼",
+      name: "華語流行經典",
+      enName: "Mandopop",
+      desc: "時代敘事抒情、R&B中國風、都會情歌",
+      defaultTitle: "霓虹散場後",
+      titlePool: [
+        "霓虹散場後", "末班車的月台", "半杯冷掉的茶", "舊戲院的微光", "雨落台北城",
+        "給十年前的信", "平行時空的你", "風吹過淡水河", "未寄出的明信片", "煙火熄滅之前"
+      ],
+      presets: [
+        {
+          id: "mando_ballad",
+          label: "時代抒情大歌（大調轉關係小調）",
+          bpm: 92, timeSignature: "4/4 拍（Rubato 彈性律動）",
+          keyHarmony: "B 大調轉關係小調（Modal Mixture）",
+          harmonyTags: ["大調底色轉關係小調", "屬七和弦懸疑解決", "1645 經典流行進行", "五聲化抒情轉音"],
+          moods: ["深沉哀婉", "懷舊電影感", "克制深情", "宿命感"],
+          vocalStyle: "女中低音（Contralto）絲絨胸聲＋延遲顫音",
+          vocalRange: "F#3 - E5（跨12度）",
+          chestRatio: 82, reverbLevel: 65,
+          instruments: ["原聲平台鋼琴", "獨奏小提琴（滑音）", "大型弦樂群", "長笛（句尾點綴）", "爵士鼓（吊鈸滾奏）", "溫暖電貝斯"],
+          mixingStyle: "80–90年代類比盤帶暖聲＋板式殘響（Plate Reverb）",
+          formStructure: ["前奏 Intro（小提琴悲歌）", "主歌 A1（低音敘事對仗）", "主歌 A2（情緒累積）", "副歌 B1（高音八度跳進）", "間奏 Interlude", "副歌 B2（全弦樂張力）", "副歌再現 B'（漸弱收束）", "尾奏 Outro"],
+          lyricPattern: "主歌四字/三字對仗排比 ＋ 副歌長句抒情爆發（押韻：ou / ie / ang）",
+          sampleSeedLyrics: "踩不完 街燈明滅\n看不盡 人潮更迭\n喝不乾 昨夜微醺的咖啡\n\n我也曾 沉醉 在星光滿天\n像飛舞在夜空的蝴蝶\n我也曾 心碎 在轉身瞬間\n獨自走過微涼的長街"
+        },
+        {
+          id: "mando_chinese_rnb",
+          label: "新國風 R&B（五聲音階＋現代節拍）",
+          bpm: 84, timeSignature: "4/4 拍（R&B 切分律動）",
+          keyHarmony: "D 宮調式（五聲音階＋九和弦潤色）",
+          harmonyTags: ["中國五聲音階旋律", "當代 R&B 九和弦", "4-3-2-1 下行低音線", "古今跨界轉調"],
+          moods: ["詩意唯美", "雅緻微涼", "古今交錯", "細膩含蓄"],
+          vocalStyle: "氣聲 R&B 轉音（Melisma）＋戲曲韻味咬字",
+          vocalRange: "A3 - F5",
+          chestRatio: 55, reverbLevel: 55,
+          instruments: ["古箏輪指", "竹笛／簫", "電鋼琴 Rhodes", "808 次低音", "現代 R&B 鼓組", "原聲木吉他"],
+          mixingStyle: "現代高清人聲貼耳混音＋古樂器立體聲場",
+          formStructure: ["前奏 Intro（古箏泛音）", "主歌 A1（輕快敘事）", "導歌 Pre-Chorus（弦樂鋪墊）", "副歌 B1（五聲高音鉤子）", "間奏（竹笛對話）", "副歌 B2", "尾奏 Outro"],
+          lyricPattern: "古典意象融合現代口語（押韻：ian / ue / feng）",
+          sampleSeedLyrics: "青石板 沾了微雨\n屋簷下 風鈴輕語\n翻開了 泛黃詩集第幾頁\n\n月光落 在你指尖\n像千年未變的誓言\n紅塵裡 誰又為誰留戀"
+        }
+      ],
+      themeCategories: {
+        "都會夜色": ["霓虹", "末班車", "微醺", "雨夜", "舊戲院", "街角咖啡", "路燈", "深夜廣播"],
+        "離別記憶": ["散場", "老照片", "未寄出的信", "車站月台", "背影", "時光膠囊", "褪色", "重逢"],
+        "古典詩意": ["青石板", "煙雨", "竹林", "明月", "長安", "折柳", "紙傘", "紅塵"],
+        "人生感悟": ["倔強", "孤勇", "歲月", "微光", "成長", "釋懷", "奔赴", "初心"]
+      }
+    },
+
+    kpop: {
+      id: "kpop",
+      icon: "🇰🇷",
+      name: "韓國 K-Pop",
+      enName: "Korean K-Pop",
+      desc: "高能量舞曲、Y2K NewJeans風、Girl Crush、戲劇化轉調",
+      defaultTitle: "NEON MIRAGE (신기루)（中文：霓虹海市蜃樓）",
+      titlePool: [
+        "NEON MIRAGE (신기루)（中文：霓虹海市蜃樓）",
+        "VELVET POISON（中文：絲絨毒藥）",
+        "MIDNIGHT SEOUL (새벽 두 시)（中文：凌晨兩點的首爾）",
+        "GLITCH HEART（中文：錯頻心跳）",
+        "CYBER BUTTERFLY（中文：賽博蝴蝶）",
+        "ECLIPSE PROTOCOL（中文：日蝕協定）",
+        "SUGAR RUSH (달콤한 함정)（中文：甜蜜陷阱）",
+        "AFTERGLOW 1999（中文：1999 餘暉）",
+        "STARLIGHT ECHO (별빛의 메아리)（中文：星光回音）",
+        "LOVE DIVE INTO YOU（中文：愛意潛入）"
+      ],
+      presets: [
+        {
+          id: "kpop_girlcrush",
+          label: "Girl Crush / 暗黑史詩舞曲（EDM＋管弦重擊）",
+          bpm: 128, timeSignature: "4/4 拍（Four-on-the-Floor＋Trap 切換）",
+          keyHarmony: "F# 弗里吉亞調式（Phrygian Dominant）",
+          harmonyTags: ["弗里吉亞異國半音張力", "Anti-Drop 極簡重低音", "Pre-Chorus 戲劇升調", "Dance Break 變拍衝擊"],
+          moods: ["霸氣自信", "未來賽博感", "戲劇反轉", "高能量爆發"],
+          vocalStyle: "高音 Belting 爆發＋冷豔態度 Rap＋多聲部和聲疊錄",
+          vocalRange: "G3 - G5（含海豚音點綴）",
+          chestRatio: 65, reverbLevel: 40,
+          instruments: ["超鋸齒波合成器（Supersaw）", "失真 808 重低音", "工業風重擊鼓組", "史詩銅管齊奏", "撥弦合成器 Pluck", "人聲切片 Vocal Chops"],
+          mixingStyle: "高響度現代母帶壓縮（-6 LUFS）＋極寬立體聲合成器",
+          formStructure: ["前奏 Intro（標誌性音效 Hook）", "主歌 Verse 1（酷感低音）", "饒舌段 Rap Verse（高速切分）", "導歌 Pre-Chorus（情緒懸吊）", "副歌 Chorus（洗腦英文 Hook）", "舞蹈間奏 Dance Break（Half-time 重擊）", "高潮橋段 Bridge（主唱高音飆唱）", "終極副歌 Final Chorus"],
+          lyricPattern: "韓文敘事主歌 ＋ 英文洗腦副歌 Hook ＋ 雙語節奏 Rap（A-A-B-B 韻腳）",
+          sampleSeedLyrics: "어둠 속에 번지는 spotlight\n숨길 수 없는 나의 borderline\n멈추지 마 더 깊이 dive in\n\n[Chorus]\nBreak the rules, feel the rush tonight\nWe're shining like a neon mirage\n빛나는 순간을 잡아봐\nNo turning back, we own the night"
+        },
+        {
+          id: "kpop_y2k",
+          label: "Y2K 復古輕快 / UK Garage 碎拍（NewJeans 風格）",
+          bpm: 132, timeSignature: "4/4 拍（UK Garage 2-Step 碎拍）",
+          keyHarmony: "A 大調／F# 小調（爵士七和弦與九和弦循環）",
+          harmonyTags: ["Maj9 / Min9 夢幻爵士和弦", "2-Step 碎拍切分律動", "無壓力循環和聲", "清甜雙聲部齊唱"],
+          moods: ["青春悸動", "Y2K 復古夢幻", "輕盈通透", "清新微甜"],
+          vocalStyle: "自然氣聲吟唱（Breathy Natural Vocal）＋無修飾清新和聲",
+          vocalRange: "A3 - D5",
+          chestRatio: 40, reverbLevel: 50,
+          instruments: ["UK Garage 碎拍鼓組", "夢幻電鋼琴 Rhodes", "復古 FM 合成器貝斯", "清亮合唱電吉他", "卡帶沙沙聲 Lo-Fi 質感"],
+          mixingStyle: "自然動態溫潤混音＋90年代 R&B 復古空間感",
+          formStructure: ["前奏 Intro（碎拍鼓點進場）", "主歌 Verse 1", "副歌 Chorus 1（記憶點旋律）", "主歌 Verse 2", "副歌 Chorus 2", "橋段 Bridge（人聲清唱疊合）", "尾奏 Outro（漸弱碎拍）"],
+          lyricPattern: "韓英夾雜口語少女心事 ＋ 重複洗腦音節 Hook（如：Oh my, oh my）",
+          sampleSeedLyrics: "창문 너머 불어오는 breeze\n너의 이름만 떠올려도 freeze\n설레는 맘을 감출 수 없어\n\n[Chorus]\nTell me what you're waiting for\n두근거리는 heart beat more\n이 밤이 지나가기 전에\n너에게 달려갈게 right now"
+        }
+      ],
+      themeCategories: {
+        "Y2K 青春悸動": ["心動訊號", "首爾凌晨", "耳機分享", "復古相機", "汽水氣泡", "夏夜操場", "秘密日記"],
+        "賽博未來感": ["全息投影", "霓虹幻影", "數據風暴", "引力失重", "午夜超跑", "鏡像迷宮", "覺醒"],
+        "自信魅力": ["聚光燈", "皇冠", "無所畏懼", "打破規則", "紅毯", "致命吸引", "主場"],
+        "夢幻暗黑": ["月蝕", "黑天鵝", "玫瑰荊棘", "午夜鐘聲", "迷霧森林", "水晶球", "催眠"]
+      }
+    },
+
+    uspop: {
+      id: "uspop",
+      icon: "🇺🇸",
+      name: "美國流行音樂",
+      enName: "US Pop & R&B",
+      desc: "Billboard 冠軍流行、80s Synth-Pop、當代 R&B、民謠流行",
+      defaultTitle: "CHASING CALIFORNIA LIGHTS",
+      titlePool: [
+        "CHASING CALIFORNIA LIGHTS", "VELVET HIGHWAY", "3AM IN BROOKLYN", "PAPER CROWN",
+        "ELECTRIC SUMMER", "GHOST IN THE STEREO", "GOLDEN HOUR DRIVE", "STATIC & GOLD"
+      ],
+      presets: [
+        {
+          id: "uspop_synth",
+          label: "80s 復古合成器流行（The Weeknd / Dua Lipa 風）",
+          bpm: 118, timeSignature: "4/4 拍（Disco-Pop 律動）",
+          keyHarmony: "F 小調（F Minor 經典四和弦 vi-IV-I-V 變體）",
+          harmonyTags: ["I-V-vi-IV 冠軍四和弦", "80s 類比合成器琶音", "八度跳躍放克貝斯", "副歌大開大闔和聲"],
+          moods: ["午夜馳騁", "復古摩登", "微醺狂歡", "都會浪漫"],
+          vocalStyle: "流行真假音流暢切換（Falsetto Flip）＋俐落切分咬字",
+          vocalRange: "G3 - F5",
+          chestRatio: 60, reverbLevel: 58,
+          instruments: ["Juno-106 復古合成器", "放克電貝斯（Slap/Finger）", "門控殘響軍鼓（Gated Reverb Snare）", "切分節奏電吉他", "閃亮合成器銅管"],
+          mixingStyle: "現代超清低頻＋80年代門控殘響（Gated Reverb）空間感",
+          formStructure: ["前奏 Intro（合成器琶音）", "主歌 Verse 1", "導歌 Pre-Chorus（鼓點漸強）", "副歌 Chorus（全開復古舞曲）", "主歌 Verse 2", "副歌 Chorus", "橋段 Bridge（合成器 Solo）", "終極副歌 Outro"],
+          lyricPattern: "美式直白敘事意象 ＋ 朗朗上口副歌押韻（ABAB / AABB 韻式）",
+          sampleSeedLyrics: "Headlights cutting through the midnight rain\nRadio playing that familiar strain\nWe got nowhere left to hide tonight\n\n[Chorus]\nWe're chasing California lights\nBurning fast on the edge of time\nHold me close till the morning fades\nDancing out of the midnight shade"
+        },
+        {
+          id: "uspop_rnb",
+          label: "當代另類 R&B / 靈魂流行（SZA / Bruno Mars 風）",
+          bpm: 78, timeSignature: "4/4 拍（慵懶 Swing 搖擺感）",
+          keyHarmony: "Eb 大調（Maj7 / Min11 豐富延伸和弦）",
+          harmonyTags: ["九和弦與十一和弦色彩", "爵士藍調經過音", "延遲拍點（Laid-back Groove）", "福音式多層和聲疊錄"],
+          moods: ["慵懶性感", "深夜告白", "真摯靈魂", "微醺放鬆"],
+          vocalStyle: "絲滑轉音（Vocal Runs）＋耳語氣聲＋濃厚靈魂共鳴",
+          vocalRange: "F3 - G5",
+          chestRatio: 72, reverbLevel: 48,
+          instruments: ["Fender Rhodes 電鋼琴", "Warm Analog Bass", "指彈爵士電吉他", "黑膠底噪與脆響軍鼓", "弦樂四重奏點綴"],
+          mixingStyle: "溫暖類比飽和度（Tape Saturation）＋貼耳親密人聲",
+          formStructure: ["前奏 Intro（電鋼琴和弦）", "主歌 Verse 1", "副歌 Chorus 1", "主歌 Verse 2（節奏加深）", "副歌 Chorus 2", "即興轉音尾奏 Ad-lib Outro"],
+          lyricPattern: "內心獨白式美式英文詩句 ＋ 靈魂樂即興重複句",
+          sampleSeedLyrics: "3AM and your jacket's still on my chair\nCoffee's cold but your scent is everywhere\nWhy do we always talk in circles when it hurts?\n\n[Chorus]\nSay you'll stay just a little while longer\nEvery heartbeat pulling me in closer\nIn the quiet of this Brooklyn room\nI'm still falling right back to you"
+        }
+      ],
+      themeCategories: {
+        "公路與城市": ["California", "Brooklyn", "Midnight Highway", "Neon Motel", "Sunset Blvd", "Rooftop", "Rainy Cab"],
+        "愛情張力": ["Heartbreak", "Velvet", "Gravity", "Déjà Vu", "Bittersweet", "Afterhours", "Magnetic"],
+        "自我與自由": ["Paper Crown", "Wildfire", "Golden Hour", "Unstoppable", "Stardust", "Mirage", "Phoenix"],
+        "派對與夜生活": ["Disco Ball", "Champagne", "Stereo", "Electric", "Slow Dance", "Afterparty", "Flashlight"]
+      }
+    },
+
+    classical: {
+      id: "classical",
+      icon: "🎻",
+      name: "古典交響與室內樂",
+      enName: "Classical Music",
+      desc: "浪漫派協奏曲、巴洛克對位、印象派鋼琴、美聲詠嘆調",
+      defaultTitle: "夜曲 Op.27 No.2：月下海潮",
+      titlePool: [
+        "夜曲 Op.27 No.2：月下海潮", "d小調悲劇序曲（Tragic Overture）", "秋日薩拉班德舞曲",
+        "極光下的大提琴協奏曲", "威尼斯水影印象詩", "星辰與深淵交響詩", "聖母悼歌變奏曲"
+      ],
+      presets: [
+        {
+          id: "class_romantic",
+          label: "浪漫派交響詩 / 鋼琴協奏曲（拉赫曼尼諾夫／蕭邦風）",
+          bpm: 66, timeSignature: "3/4 拍 或 4/4 拍（Adagio 慢板彈性速度）",
+          keyHarmony: "C# 小調轉 Db 大調（半音階轉調與減七和弦）",
+          harmonyTags: ["半音階和聲遊走", "減七和弦戲劇張力", "拿坡里六和弦（Neapolitan 6th）", "關係大調輝煌轉折"],
+          moods: ["史詩悲壯", "深邃詩意", "戲劇衝突", "崇高輝煌"],
+          vocalStyle: "戲劇女高音 / 次女高音美聲（Bel Canto Operatic）",
+          vocalRange: "A3 - C6（美聲全音域）",
+          chestRatio: 70, reverbLevel: 85,
+          instruments: ["史坦威平台鋼琴獨奏", "全編制交響弦樂團", "法國號（French Horn）", "雙簧管（Oboe 哀婉獨奏）", "定音鼓（Timpani 滾奏）", "豎琴琶音"],
+          mixingStyle: "維也納金色大廳自然堂音（Concert Hall Natural Acoustic）",
+          formStructure: ["序奏 Introduzione（低音弦樂陰鬱鋪陳）", "呈示部第一主題（抒情長線條旋律）", "發展部 Development（半音轉調與對位衝突）", "華彩樂段 Cadenza（獨奏炫技爆發）", "再現部 Recapitulation（全樂團輝煌齊奏）", "尾聲 Coda（漸弱歸於寧靜）"],
+          lyricPattern: "義大利文／拉丁文美聲詠嘆調詩體（附中文意譯對照）",
+          sampleSeedLyrics: "[Recitativo - 宣敘調]\nNella notte silenziosa, il vento sussurra il tuo nome,\n(在寂靜的夜裡，微風低語著你的名字，)\n\n[Aria - 詠嘆調]\nO luna d'argento, porta via il mio dolore,\n(啊，銀色的月亮，帶走我的哀傷吧，)\nCome un'onda eterna che torna al mare,\n(如同永恆的波浪終將回歸大海，)\nL'anima mia canta nell'ombra e nella luce.\n(我的靈魂在暗影與光芒中歌唱。)"
+        },
+        {
+          id: "class_baroque",
+          label: "巴洛克室內樂與賦格（巴赫／韋瓦第風）",
+          bpm: 108, timeSignature: "4/4 拍（Allegro 活力規律律動）",
+          keyHarmony: "D 小調（嚴謹對位法與數字低音 Basso Continuo）",
+          harmonyTags: ["卡農與賦格對位（Fugue）", "數字低音持續推進", "模進（Sequence）層層推升", "皮卡第三度終止式"],
+          moods: ["莊嚴理性", "建築般精密", "莊重輝煌", "靈動跳躍"],
+          vocalStyle: "巴洛克清亮花腔美聲（Baroque Coloratura）",
+          vocalRange: "C4 - A5",
+          chestRatio: 50, reverbLevel: 72,
+          instruments: ["大鍵琴（Harpsichord）", "巴洛克小提琴獨奏", "大提琴數字低音", "低音管（Bassoon）", "室內弦樂團"],
+          mixingStyle: "歐洲古教堂／巴洛克宮廷室內樂自然殘響",
+          formStructure: ["主題呈示 Subject（大鍵琴與小提琴卡農）", "對題展開 Counter-subject", "發展段 Episode（模進轉調）", "密接和應 Stretto（聲部緊密交織）", "終止式 Coda（莊嚴和弦解決）"],
+          lyricPattern: "拉丁文聖詠／巴洛克詩歌對仗結構",
+          sampleSeedLyrics: "Lux aeterna luceat in tenebris,\n(永恆之光照耀於黑暗之中，)\nPer saecula cantamus gloriam,\n(世世代代我們頌唱榮耀，)\nIn harmonia caeli et terrae.\n(在天地和諧的樂章裡。)"
+        }
+      ],
+      themeCategories: {
+        "自然與宇宙": ["月下海潮", "冬日暴風雪", "晨曦微光", "阿爾卑斯山嵐", "星空旋轉", "秋葉飄零"],
+        "神話與史詩": ["奧菲斯豎琴", "普羅米修斯", "命運女神", "特洛伊城牆", "聖杯騎士", "鳳凰涅槃"],
+        "內心與哲思": ["孤獨沉思", "安魂曲", "永恆之愛", "時間之河", "命運叩門", "狂喜與哀愁"],
+        "舞曲與宮廷": ["薩拉班德", "小步舞曲", "威尼斯船歌", "塔朗泰拉", "加沃特舞曲", "夜曲"]
+      }
+    }
+  };
+
+  // =========================================================================
+  // 2. UNIVERSAL PROMPT & GUIDE CONTENT
+  // =========================================================================
+  const UNIVERSAL_ANALYSIS_PROMPT = `請以專業音樂學家、管弦與現代編曲家、以及混音母帶工程師的最高專業視角，針對我上傳的音檔進行全方位音樂元素解析。請依序輸出以下五個完整模組（使用結構化 Markdown 表格呈現）：
+
+1. 基礎曲目與音樂理論參數（Musicology & Theory）：
+   - 判斷曲風體系（華語流行 / 韓國 K-Pop / 美國流行 / 古典交響室內樂等）與時代美學定位。
+   - 精準分析調性（Key）、和聲進行邏輯（如大調轉關係小調、弗里吉亞調式、九和弦/十一和弦延伸、半音階轉調或五聲音階色彩）。
+   - 標註拍號（Time Signature）、基礎速度（BPM）與律動特徵（如 Rubato 彈性速度、2-Step 碎拍、Swing 搖擺或 Four-on-the-Floor）。
+   - 解析主歌與副歌的旋律輪廓、音程跳進設計與音域跨度。
+
+2. 編曲配器與音場織體（Orchestration & Texture）：
+   - 依序拆解「弦樂組 / 鍵盤與合成器組 / 木管與銅管組 / 節奏與低音組 / 吉他與特殊音效」的具體樂器型號或音色特徵、演奏技法（如滑音、輪指、Gated Reverb 軍鼓、808 次低音）及其在各段落的編曲功能。
+
+3. 人聲聲學與混音製作工程（Vocal Acoustics & Mixing）：
+   - 若為人聲曲目，分析演唱者聲部（女低音、高音 Belting、氣聲 R&B、美聲詠嘆調等）、胸腔與頭腔共鳴比例、咬字與顫音（Vibrato / Melisma）技巧；若為純演奏曲，則分析主奏樂器的觸鍵或運弓表情。
+   - 分析混音空間感（聲場寬度、板式殘響或音樂廳堂音深度）與動態範圍特徵（類比盤帶暖聲或現代高響度母帶壓縮）。
+
+4. 全曲結構與動態演進矩陣（Structural & Dynamic Matrix）：
+   - 列出精確時間軸（0:00 - X:XX）、曲式段落名稱、動態力度標記（pp → ff）、配器密度星等與情感功能。
+
+5. 標準化 JSON 音樂元素輸出（Schema v2.0）：
+   - 最後請將上述所有分析結果，嚴格封裝成一段可直接匯入「AI 跨界音樂元素工作站」的 JSON 程式碼（包含 songTitle、sourceReference、genreSystem、musicTheory、orchestrationAndVocals、structureAndLyrics 欄位），並保留原曲的歌詞格律或段落結構供我進行同風格二創。`;
+
+  const GENRE_FOCUS_ADDONS = {
+    mandopop: "【華語流行經典加分聚焦】請特別分析中文四聲語調與旋律音高的貼合度、副歌高音跳進的戲劇張力，以及歌詞的對仗排比格律。",
+    kpop: "【韓國 K-Pop 加分聚焦】請特別標註 Pre-Chorus 的情緒懸吊設計、Chorus 的英文 Hook 記憶點、Dance Break 的低頻衝擊，以及多聲部和聲疊錄結構。",
+    uspop: "【美國流行音樂加分聚焦】請特別分析 Groove 的切分律動（Pocket）、真假音切換（Falsetto Flip）位置，以及副歌四和弦或延伸和弦的律動推進。",
+    classical: "【古典交響 / 室內樂加分聚焦】請特別分析曲式結構（如奏鳴曲式呈示部、發展部、華彩樂段 Cadenza 與再現部）、主題動機（Motif）的變奏發展，以及各聲部的對位織體。"
+  };
+
+  // =========================================================================
+  // 3. APPLICATION STATE & UPLOADED AUDIO STATE
+  // =========================================================================
+  let state = {
+    mode: "lyric_basic",
+    step: 1,
+    systemId: "mandopop",
+    presetId: "mando_ballad",
+    sourceLabel: "時代抒情大歌",
+    eraAesthetics: "1980–1990年代黃金時代電影敘事美學",
+    songTitle: "霓虹散場後",
+    themeCategory: "都會夜色",
+    selectedKeywords: ["霓虹", "末班車", "微醺"],
+    // Step 2: Rhythm, Mood, Melody & Harmony (Expanded)
+    bpm: 92,
+    timeSignature: "4/4 拍（Rubato 彈性律動）",
+    groovePocket: "延遲後拍（Laid-back）＋副歌前微漸慢（Ritardando）",
+    moods: ["深沉哀婉", "懷舊電影感"],
+    emotionalArc: "低吟壓抑 → 副歌八度爆發 → 尾奏留白餘韻",
+    keyHarmony: "B 大調轉關係小調（Modal Mixture）",
+    chordProgression: "I - V/7 - vi - IV - ii7 - V7sus4 - V7",
+    harmonyTags: ["大調底色轉關係小調", "屬七和弦懸疑解決"],
+    melodyContour: "主歌級進低迴（Stepwise）＋副歌大六度／八度戲劇跳進",
+    // Step 3: Vocals / Lead Solo, Orchestration, Texture & Acoustics (Expanded)
+    vocalStyle: "女中低音（Contralto）絲絨胸聲＋延遲顫音",
+    vocalRange: "F#3 - E5（跨12度）",
+    chestRatio: 82,
+    vocalTechniques: "句尾延遲顫音（Delayed Vibrato）＋氣聲轉真聲過渡",
+    vocalDiction: "字頭圓潤飽滿、母音拉長共鳴、語氣貼近敘事口吻",
+    backingVocals: "副歌第二遍加入三度／六度溫暖女聲合音鋪底",
+    leadInstrument: "獨奏小提琴（深情揉弦與滑音）＆ 史坦威平台鋼琴",
+    playingArticulation: "連奏長線條（Legato）＋句尾漸弱（Morendo）呼吸感",
+    counterMelody: "長笛與大提琴在人聲／主旋律句尾進行對位應答",
+    instruments: ["原聲平台鋼琴", "獨奏小提琴（滑音）", "大型弦樂群", "長笛（句尾點綴）", "爵士鼓（吊鈸滾奏）"],
+    bassAndPercussion: "溫暖電貝斯長音支撐 ＋ 吊鈸滾奏與輕刷軍鼓",
+    arrangementDensity: "前奏稀疏（2軌）→ 主歌中度（4軌）→ 副歌滿編（8軌）",
+    mixingStyle: "80–90年代類比盤帶暖聲＋板式殘響（Plate Reverb）",
+    reverbLevel: 65,
+    stereoImaging: "人聲／主奏居中貼耳，弦樂群左右極寬包覆，木管偏右點綴",
+    dynamicContrast: "寬動態範圍（pp 細語至 ff 管弦齊奏，約 14 dB 落差）",
+    // Step 4: Structure, Motifs & Lyrics (Expanded)
+    formStructure: ["前奏 Intro（小提琴悲歌）", "主歌 A1（低音敘事對仗）", "副歌 B1（高音八度跳進）", "間奏 Interlude", "副歌 B2（全弦樂張力）", "尾奏 Outro"],
+    sectionTimeline: "0:00 前奏 → 0:24 主歌A → 1:05 副歌B → 1:48 間奏 → 2:10 副歌B2 → 3:05 尾奏",
+    hookAndMotif: "前奏小提琴四音下行嘆息動機貫穿全曲過門",
+    climaxDesign: "2:35 處升半音轉調＋全弦樂齊奏與定音鼓滾奏推向最高潮",
+    lyricPattern: "主歌四字/三字對仗排比 ＋ 副歌長句抒情爆發",
+    rhymeAndProsody: "主歌押 ie / ang 韻，副歌開口音（a / an）利於高音共鳴",
+    generatedLyrics: GENRE_SYSTEMS.mandopop.presets[0].sampleSeedLyrics
+  };
+
+  let uploadedAudio = {
+    file: null,
+    fileName: "",
+    mimeType: "",
+    objectUrl: null,
+    durationSec: 0,
+    peaks: [],
+    metrics: null,
+    isPlayingFile: false,
+    geminiApiKey: localStorage.getItem("gemini_music_dna_key") || "",
+    geminiModel: localStorage.getItem("gemini_music_dna_model") || "gemini-3-flash-preview",
+    isAnalyzingGemini: false,
+    lastAppliedReport: null,
+    reportExpanded: true
+  };
+
+  let fileAudioElement = null;
+
+  const isLyricMode = () => state.mode.startsWith("lyric");
+  const isAdvMode = () => state.mode.endsWith("adv");
+  const currentSystem = () => GENRE_SYSTEMS[state.systemId];
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2600);
+  }
+
+  // =========================================================================
+  // 4. GUIDE MODAL RENDERER
+  // =========================================================================
+  function openGuideModal(tab = "prompt") {
+    document.getElementById("guideModal").classList.add("open");
+    switchGuideTab(tab);
+  }
+
+  function closeGuideModal() {
+    document.getElementById("guideModal").classList.remove("open");
+  }
+
+  function switchGuideTab(tab) {
+    ["prompt", "apikey", "permissions"].forEach(id => {
+      const btn = document.getElementById("gtab-" + id);
+      if (btn) btn.classList.toggle("active", id === tab);
+    });
+    const body = document.getElementById("guideBody");
+
+    if (tab === "prompt") {
+      body.innerHTML = `
+        <p style="font-size:13.5px; color:var(--text-secondary); margin-bottom:12px;">
+          若您或訪客<strong>不想申請 API Key 或未綁定帳單</strong>，只要在免費的 Gemini 對話視窗上傳音檔，貼上這組「萬用專家級分析指令」，產出 JSON 後複製貼回本工作站右上角的「🧬 音樂元素庫 / JSON 匯入匯出」即可完成無縫二創！
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+          <strong style="font-size:14px; color:var(--accent);">📋 步驟 A：複製萬用專家級音樂元素提取指令</strong>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="copyUniversalPrompt(false)">📋 複製純萬用指令</button>
+            <button class="btn-secondary" onclick="copyUniversalPrompt(true)">✨ 複製（含「${currentSystem().name}」加分指令）</button>
+          </div>
+        </div>
+        <div class="code-box" id="universalPromptDisplay" style="max-height:210px; margin-bottom:16px;">${escapeHtml(UNIVERSAL_ANALYSIS_PROMPT)}</div>
+
+        <strong style="font-size:14px; color:var(--accent); display:block; margin-bottom:8px;">🎯 步驟 B：四大曲風專屬加分聚焦詞（可一鍵連同萬用指令複製）</strong>
+        <table class="guide-table">
+          <thead>
+            <tr><th style="width:170px;">上傳曲風類型</th><th>建議追加的聚焦指令</th><th style="width:95px;">操作</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🇹🇼 華語流行經典</td>
+              <td>${escapeHtml(GENRE_FOCUS_ADDONS.mandopop)}</td>
+              <td><button class="btn-secondary" onclick="copyAddonPrompt('mandopop')">複製整組</button></td>
+            </tr>
+            <tr>
+              <td>🇰🇷 韓國 K-Pop</td>
+              <td>${escapeHtml(GENRE_FOCUS_ADDONS.kpop)}</td>
+              <td><button class="btn-secondary" onclick="copyAddonPrompt('kpop')">複製整組</button></td>
+            </tr>
+            <tr>
+              <td>🇺🇸 美國流行音樂</td>
+              <td>${escapeHtml(GENRE_FOCUS_ADDONS.uspop)}</td>
+              <td><button class="btn-secondary" onclick="copyAddonPrompt('uspop')">複製整組</button></td>
+            </tr>
+            <tr>
+              <td>🎻 古典交響 / 室內樂</td>
+              <td>${escapeHtml(GENRE_FOCUS_ADDONS.classical)}</td>
+              <td><button class="btn-secondary" onclick="copyAddonPrompt('classical')">複製整組</button></td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    } else if (tab === "apikey") {
+      body.innerHTML = `
+        <div class="info-card" style="margin-bottom:14px;">
+          <h4>🔑 什麼是 Gemini API Key？</h4>
+          <p style="font-size:13.5px; color:var(--text-secondary);">
+            Gemini API Key 是一組由 Google 核發的專屬數位通行證（以 <code>AIza</code> 開頭的 39 位英數字串）。填入本工作站的「軌道 B」後，網頁就能直接將您上傳的音檔送交最新的 <code>gemini-3.1-pro-preview</code>（或 <code>gemini-3-flash-preview</code>）進行專業樂理、配器、混音與同格律新詞解析。
+          </p>
+        </div>
+
+        <div class="info-card" style="margin-bottom:14px;">
+          <h4>🚀 如何獲取 Gemini API Key（四步驟）</h4>
+          <ol class="guide-step-list">
+            <li>使用您的個人 Google 帳號前往官方開發者平台：<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="inline-link">https://aistudio.google.com/apikey</a></li>
+            <li>進入後若在左側欄，可點擊最左下角的<strong>鑰匙圖示（🔑）</strong>或 <strong>「Dashboard → API keys」</strong>。</li>
+            <li>點擊右上角的 <strong>「Create API key」</strong>（或複製系統已為新帳號自動建好的預設金鑰）。</li>
+            <li>複製以 <code>AIza...</code> 開頭的字串，貼入本工作站步驟 1 的輸入框即可使用。</li>
+          </ol>
+        </div>
+
+        <table class="guide-table">
+          <thead>
+            <tr><th style="width:185px;">模型與額度注意事項</th><th>具體說明與建議</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>gemini-3.1-pro-preview</strong><br><span style="font-size:12px;color:var(--accent);">（預設最高精度旗艦模型）</span></td>
+              <td>具備最強多模態音檔推理與結構化 JSON 輸出能力；若 API 呼叫時遇到免費層級額度限制（Quota），可在下拉選單切換為 <code>gemini-3-flash-preview</code>，或改用「對話框指令法」。</td>
+            </tr>
+            <tr>
+              <td><strong>金鑰隱私保護</strong></td>
+              <td>本工作站採用純前端本地儲存（<code>localStorage</code>），您輸入的金鑰<strong>只存在您自己的瀏覽器中，絕不會寫死在公開的 GitHub HTML 原始碼裡</strong>。</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    } else if (tab === "permissions") {
+      body.innerHTML = `
+        <p style="font-size:13.5px; color:var(--text-secondary); margin-bottom:12px;">
+          本工作站採用 <strong>BYOK（Bring Your Own Key，自帶金鑰）</strong> 安全架構。當您將本專案上傳至 GitHub Pages 公開給其他人使用時，不同功能的權限如下：
+        </p>
+        <table class="guide-table">
+          <thead>
+            <tr>
+              <th>功能模組</th>
+              <th style="width:145px;">是否需 API Key</th>
+              <th>其他使用者開啟 GitHub Pages 時的運作方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>四大曲風資料庫與創作流</strong><br><span style="font-size:12px;color:#a0a0a0;">步驟 1–5 全部設定、同格律歌詞生成、和聲動機試聽</span></td>
+              <td><strong style="color:#4ade80;">❌ 完全不需要</strong></td>
+              <td>100% 內建於瀏覽器前端執行，任何人打開網頁就能直接免費使用。</td>
+            </tr>
+            <tr>
+              <td><strong>軌道 A：上傳音檔＋離線聲學提取</strong><br><span style="font-size:12px;color:#a0a0a0;">波形視覺化、自動偵測 BPM、動態範圍、曲風判定</span></td>
+              <td><strong style="color:#4ade80;">❌ 完全不需要</strong></td>
+              <td>透過瀏覽器原生的 Web Audio API 在使用者本機裝置運算，免連網呼叫外部模型。</td>
+            </tr>
+            <tr>
+              <td><strong>JSON 音樂元素匯入 / 匯出</strong></td>
+              <td><strong style="color:#4ade80;">❌ 完全不需要</strong></td>
+              <td>直接讀寫本地 <code>.json</code> 檔案，完全離線運作。</td>
+            </tr>
+            <tr>
+              <td><strong>軌道 B：Gemini 3.1 Pro 深度元素解析</strong><br><span style="font-size:12px;color:#a0a0a0;">上傳音檔由 AI 聽寫歌詞、分析細部和聲與配器</span></td>
+              <td><strong style="color:var(--accent);">✅ 需自行填入</strong></td>
+              <td>為保護您的額度不被公開網頁爬蟲盜用，每位訪客若想直接使用網頁內建的軌道 B，需輸入他們自己的金鑰（僅存於訪客自己的瀏覽器 <code>localStorage</code> 中，彼此完全隔離）；若訪客沒有金鑰，亦可改用頁籤 1 的「對話框指令法」。</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
+  }
+
+  function copyUniversalPrompt(includeCurrentGenre) {
+    let text = UNIVERSAL_ANALYSIS_PROMPT;
+    if (includeCurrentGenre && GENRE_FOCUS_ADDONS[state.systemId]) {
+      text += "\n\n" + GENRE_FOCUS_ADDONS[state.systemId];
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(includeCurrentGenre ? `📋 已複製萬用指令＋「${currentSystem().name}」加分指令` : "📋 已複製萬用音樂元素提取指令");
+    });
+  }
+
+  function copyAddonPrompt(sysId) {
+    const text = UNIVERSAL_ANALYSIS_PROMPT + "\n\n" + (GENRE_FOCUS_ADDONS[sysId] || "");
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`📋 已複製「${GENRE_SYSTEMS[sysId].name}」專屬提取指令`);
+    });
+  }
+
+  // =========================================================================
+  // 5. MODE & STEP NAVIGATION
+  // =========================================================================
+  function setMode(mode) {
+    state.mode = mode;
+    document.querySelectorAll(".mode-tab").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.mode === mode);
+    });
+    const modeNames = {
+      lyric_basic: "含歌詞初階",
+      inst_basic: "僅音樂初階",
+      lyric_adv: "含歌詞高階",
+      inst_adv: "僅音樂高階"
+    };
+    document.getElementById("modeLabelTag").textContent = modeNames[mode];
+    const step1LabelMap = {
+      lyric_basic: "1 構想與曲風元素",
+      inst_basic: "1 選擇四大曲風資料庫",
+      lyric_adv: "1 音檔上傳與曲風元素",
+      inst_adv: "1 音檔上傳與曲風元素"
+    };
+    const nav1 = document.getElementById("nav-label-1");
+    if (nav1) nav1.textContent = step1LabelMap[mode] || "1 音檔上傳與曲風元素";
+    document.getElementById("nav-label-3").textContent = isLyricMode() ? "3 人聲樂器與音場" : "3 編曲樂器與音場";
+    document.getElementById("nav-label-4").textContent = isLyricMode() ? "4 歌詞結構與格律" : "4 樂曲結構與段落";
+    document.getElementById("badge-step4").textContent = isLyricMode() ? "詞曲" : "曲式";
+    if (uploadedAudio.lastAppliedReport) rebuildAppliedReport();
+    renderPanel();
+  }
+
+  function goStep(stepNum) {
+    state.step = Math.max(1, Math.min(5, stepNum));
+    document.querySelectorAll(".step-nav-btn").forEach(btn => {
+      btn.classList.toggle("active", Number(btn.dataset.step) === state.step);
+    });
+    document.getElementById("progressFill").style.width = (state.step * 20) + "%";
+    renderPanel();
+  }
+
+  function updateSummaryBox() {
+    const sys = currentSystem();
+    document.getElementById("sum-system").textContent = `${sys.icon} ${sys.name}`;
+    document.getElementById("sum-source").textContent = state.sourceLabel;
+    document.getElementById("sum-title").textContent = state.songTitle || "未命名新作";
+    document.getElementById("sum-tempo").textContent = `${state.bpm} BPM · ${state.timeSignature.split("（")[0]}`;
+    document.getElementById("sum-key").textContent = state.keyHarmony.split("（")[0];
+    document.getElementById("sum-vocal").textContent = isLyricMode()
+      ? `${state.vocalStyle.split("（")[0]} / ${state.instruments[0] || ""}`
+      : `純演奏：${state.instruments.slice(0, 2).join("＋")}`;
+  }
+
+  // =========================================================================
+  // 6. AUDIO UPLOAD, WAVEFORM RENDERING & DUAL-TRACK ANALYSIS ENGINE
+  // =========================================================================
+  async function handleAudioFileUpload(file) {
+    if (!file) return;
+    if (uploadedAudio.objectUrl) URL.revokeObjectURL(uploadedAudio.objectUrl);
+
+    uploadedAudio.file = file;
+    uploadedAudio.fileName = file.name;
+    uploadedAudio.mimeType = file.type || inferAudioMimeType(file.name);
+    uploadedAudio.objectUrl = URL.createObjectURL(file);
+    uploadedAudio.isPlayingFile = false;
+    if (fileAudioElement) {
+      fileAudioElement.pause();
+      fileAudioElement = null;
+    }
+
+    showToast(`🎵 正在解碼音檔波形：${file.name}...`);
+
+    try {
+      const arrayBuf = await file.arrayBuffer();
+      const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const audioBuffer = await tempCtx.decodeAudioData(arrayBuf);
+      uploadedAudio.durationSec = audioBuffer.duration;
+
+      const channelData = audioBuffer.getChannelData(0);
+      const numBars = 140;
+      const blockSize = Math.floor(channelData.length / numBars);
+      const peaks = [];
+      let sumSquares = 0;
+      let zeroCrossings = 0;
+
+      for (let i = 0; i < numBars; i++) {
+        let maxVal = 0;
+        const start = i * blockSize;
+        for (let j = 0; j < blockSize; j++) {
+          const idx = start + j;
+          if (idx >= channelData.length) break;
+          const v = Math.abs(channelData[idx]);
+          if (v > maxVal) maxVal = v;
+          sumSquares += channelData[idx] * channelData[idx];
+          if (idx > 0 && ((channelData[idx - 1] >= 0 && channelData[idx] < 0) || (channelData[idx - 1] < 0 && channelData[idx] >= 0))) {
+            zeroCrossings++;
+          }
+        }
+        peaks.push(maxVal);
+      }
+
+      const rms = Math.sqrt(sumSquares / channelData.length);
+      const rmsDb = Math.max(-60, 20 * Math.log10(rms || 1e-6));
+      const peakDb = 20 * Math.log10(Math.max(...peaks, 1e-6));
+      const crestFactorDb = Math.max(3, Math.min(24, peakDb - rmsDb));
+      const zcrRate = zeroCrossings / audioBuffer.duration;
+
+      const detectedBpm = estimateBpmFromBuffer(audioBuffer);
+      const suggestedSystem = classifyGenreFromAcoustics(detectedBpm, crestFactorDb, zcrRate, file.name);
+
+      uploadedAudio.peaks = peaks;
+      uploadedAudio.metrics = {
+        bpm: detectedBpm,
+        dynamicRangeDb: crestFactorDb.toFixed(1),
+        brightnessHz: Math.round(zcrRate * 0.5),
+        suggestedSystemId: suggestedSystem.id,
+        suggestedSystemName: suggestedSystem.name
+      };
+
+      await tempCtx.close();
+      renderPanel();
+      drawWaveformCanvas();
+      showToast(`✅ 波形與基礎聲學提取完成（偵測約 ${detectedBpm} BPM）`);
+    } catch (err) {
+      showToast(`⚠️ 音檔解碼失敗：${err.message}`);
+    }
+  }
+
+  function inferAudioMimeType(filename) {
+    const ext = filename.split(".").pop().toLowerCase();
+    const map = { mp3: "audio/mp3", wav: "audio/wav", m4a: "audio/mp4", aac: "audio/aac", ogg: "audio/ogg", flac: "audio/flac" };
+    return map[ext] || "audio/mp3";
+  }
+
+  function estimateBpmFromBuffer(audioBuffer) {
+    const sampleRate = audioBuffer.sampleRate;
+    const data = audioBuffer.getChannelData(0);
+    const maxSamples = Math.min(data.length, sampleRate * 45);
+    const hop = Math.floor(sampleRate / 100);
+    const env = [];
+    for (let i = 0; i < maxSamples; i += hop) {
+      let sum = 0;
+      for (let j = 0; j < hop && i + j < maxSamples; j++) {
+        sum += data[i + j] * data[i + j];
+      }
+      env.push(Math.sqrt(sum / hop));
+    }
+
+    let bestBpm = 96;
+    let bestScore = -1;
+    for (let bpm = 60; bpm <= 155; bpm++) {
+      const lag = Math.round((60 / bpm) * 100);
+      let corr = 0;
+      for (let i = 0; i < env.length - lag; i++) {
+        corr += env[i] * env[i + lag];
+      }
+      if (corr > bestScore) {
+        bestScore = corr;
+        bestBpm = bpm;
+      }
+    }
+    return bestBpm;
+  }
+
+  function classifyGenreFromAcoustics(bpm, dynamicRangeDb, zcrRate, fileName) {
+    const lower = fileName.toLowerCase();
+    if (/symphony|concerto|sonata|op\.|chopin|bach|mozart|beethoven|piano|violin|古典|交響|夜曲/.test(lower)) {
+      return GENRE_SYSTEMS.classical;
+    }
+    if (/kpop|k-pop|blackpink|newjeans|bts|aespa|ive|twice|exo|韓|신기루/.test(lower)) {
+      return GENRE_SYSTEMS.kpop;
+    }
+    if (dynamicRangeDb > 13.5 && bpm < 112) {
+      return GENRE_SYSTEMS.classical;
+    }
+    if (bpm >= 118 && dynamicRangeDb < 10.5) {
+      return GENRE_SYSTEMS.kpop;
+    }
+    if (bpm >= 102 && bpm < 126) {
+      return GENRE_SYSTEMS.uspop;
+    }
+    return GENRE_SYSTEMS.mandopop;
+  }
+
+  function drawWaveformCanvas() {
+    const canvas = document.getElementById("waveformCanvas");
+    if (!canvas || !uploadedAudio.peaks.length) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.max(300, rect.width * dpr);
+    canvas.height = 78 * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+
+    const w = rect.width || 600;
+    const h = 78;
+    ctx.clearRect(0, 0, w, h);
+
+    const peaks = uploadedAudio.peaks;
+    const barW = w / peaks.length;
+    peaks.forEach((p, idx) => {
+      const barH = Math.max(4, p * (h - 10));
+      const x = idx * barW;
+      const y = (h - barH) / 2;
+      ctx.fillStyle = idx % 2 === 0 ? "#ff6d33" : "#ff9466";
+      ctx.fillRect(x + 1, y, Math.max(2, barW - 2), barH);
+    });
+  }
+
+  function toggleUploadedFilePlayback() {
+    if (!uploadedAudio.objectUrl) return;
+    if (!fileAudioElement) {
+      fileAudioElement = new Audio(uploadedAudio.objectUrl);
+      fileAudioElement.onended = () => {
+        uploadedAudio.isPlayingFile = false;
+        renderPanel();
+        drawWaveformCanvas();
+      };
+    }
+    if (uploadedAudio.isPlayingFile) {
+      fileAudioElement.pause();
+      uploadedAudio.isPlayingFile = false;
+    } else {
+      fileAudioElement.play();
+      uploadedAudio.isPlayingFile = true;
+    }
+    renderPanel();
+    drawWaveformCanvas();
+  }
+
+  function applyOfflineAcousticExtraction() {
+    if (!uploadedAudio.metrics) return;
+    const m = uploadedAudio.metrics;
+    const sys = GENRE_SYSTEMS[m.suggestedSystemId] || GENRE_SYSTEMS.mandopop;
+    state.systemId = sys.id;
+    const preset = sys.presets[0];
+
+    state.presetId = preset.id;
+    state.sourceLabel = `音檔聲學提取：${uploadedAudio.fileName.slice(0, 14)}`;
+    state.bpm = m.bpm;
+    state.timeSignature = preset.timeSignature;
+    state.keyHarmony = preset.keyHarmony;
+    state.harmonyTags = [...preset.harmonyTags];
+    state.moods = [...preset.moods];
+    state.vocalStyle = preset.vocalStyle;
+    state.vocalRange = preset.vocalRange;
+    state.chestRatio = preset.chestRatio;
+    state.reverbLevel = Math.min(92, Math.max(30, Math.round(Number(m.dynamicRangeDb) * 5)));
+    state.instruments = [...preset.instruments];
+    state.mixingStyle = preset.mixingStyle;
+    state.formStructure = [...preset.formStructure];
+    state.lyricPattern = preset.lyricPattern;
+
+    if (sys.id === "classical" && Number(m.dynamicRangeDb) > 15) {
+      setMode("inst_adv");
+    } else {
+      renderPanel();
+      drawWaveformCanvas();
+    }
+    showToast(`⚡ 已套用離線聲學分析（${sys.name} · ${m.bpm} BPM）！`);
+  }
+
+  async function runGeminiDeepAnalysis() {
+    if (!uploadedAudio.file) {
+      showToast("⚠️ 請先上傳一個音檔！");
+      return;
+    }
+    const apiKey = (uploadedAudio.geminiApiKey || "").trim();
+    if (!apiKey) {
+      showToast("⚠️ 請先輸入 Gemini API Key，或改用「對話框指令法」");
+      openGuideModal("apikey");
+      return;
+    }
+    if (uploadedAudio.file.size > 18 * 1024 * 1024) {
+      showToast("⚠️ 瀏覽器直傳建議音檔小於 18MB（可使用裁剪後副歌片段）");
+      return;
+    }
+
+    uploadedAudio.isAnalyzingGemini = true;
+    renderPanel();
+    drawWaveformCanvas();
+
+    try {
+      const base64Audio = await fileToBase64(uploadedAudio.file);
+      const selectedModel = uploadedAudio.geminiModel || "gemini-3-flash-preview";
+      const promptText = `你是一位頂級音樂學家、管弦與現代編曲家、聲樂指導及混音母帶工程師。請針對我上傳的音檔進行「最詳盡、極度細膩」的多維度音樂元素拆解，務必完整捕捉原曲所有靈魂特色（包含和聲進行級數、旋律跳進、配器分工、演奏技法、聲場定位、動態演進、動機發展與詞曲格律）。
+請判斷它屬於「mandopop（華語流行）」、「kpop（韓國流行）」、「uspop（美國流行）」或「classical（古典樂）」哪一種體系，並嚴格只輸出一段合法的 JSON（不要 markdown 標記或額外解釋），所有欄位皆必須填寫具體專業分析內容：
+{
+  "schemaVersion": "3.0-FullSpectrum-MusicElements",
+  "sourceSongDescription": "原曲風格定位、年代質感與核心魅力精準描述",
+  "eraAndAesthetics": "時代美學與製作流派（如 90年代港台電影抒情 / 2024 Y2K UK Garage / 浪漫派晚期交響）",
+  "suggestedNewTitle": "為同風格二創建議的新歌名或新曲名稱",
+  "genreSystem": { "id": "mandopop 或 kpop 或 uspop 或 classical", "name": "中文體系名稱" },
+  "musicTheory": {
+    "bpm": 92,
+    "timeSignature": "4/4 拍（含具體律動型態）",
+    "groovePocket": "節奏律動與微時間感（如延遲後拍 Laid-back、切分重音、Rubato 彈性速度）",
+    "keyAndHarmony": "主調性、轉調邏輯與調式色彩（如 B大調轉關係小調、弗里吉亞調式）",
+    "chordProgression": "核心和弦進行級數（如 I - V/7 - vi - IV - ii7 - V7）",
+    "harmonyFeatures": ["和聲特色1", "和聲特色2", "和聲特色3"],
+    "melodyContour": "旋律線條輪廓與音程跳進設計（如主歌級進低迴、副歌八度跳進）",
+    "moods": ["核心情緒1", "核心情緒2", "核心情緒3"],
+    "emotionalArc": "全曲情緒張力推進曲線（如低吟壓抑 → 導歌懸吊 → 副歌爆發 → 尾奏留白）"
+  },
+  "orchestrationAndVocals": {
+    "isInstrumental": false,
+    "vocalStyle": "人聲聲部定位與整體音色（純演奏曲亦請填寫建議改編人聲聲部供參考）",
+    "vocalRange": "演唱音域跨度（如 F#3 - E5，跨12度）",
+    "chestResonancePercent": 78,
+    "vocalTechniques": "細部唱腔技巧（如氣聲起音、句尾延遲顫音、R&B轉音、Belting爆發）",
+    "vocalDiction": "咬字發音與語氣表情（如母音拉長共鳴、戲曲韻味、美式連讀切分）",
+    "backingVocals": "和聲編排與疊錄層次（如副歌三度/六度合音、八度齊唱、Ad-lib即興）",
+    "leadInstrument": "核心主奏樂器與音色型號（如史坦威鋼琴、獨奏小提琴、Juno-106合成器）",
+    "playingArticulation": "主奏樂器演奏技法與觸鍵/運弓表情（如滑音、輪指、斷奏、延音踏板）",
+    "counterMelody": "副旋律與聲部對位設計（如木管/弦樂在主旋律句尾的對位應答）",
+    "instruments": ["樂器1", "樂器2", "樂器3", "樂器4", "樂器5", "樂器6"],
+    "bassAndPercussion": "低音線條（Bassline）與打擊節奏組設計（如808次低音、吊鈸滾奏、門控軍鼓）",
+    "arrangementDensity": "配器織體密度演變（如前奏極簡2軌 → 主歌4軌 → 副歌滿編8軌）",
+    "mixingAcoustics": "混音年代聲學與母帶處理特徵（如類比盤帶暖聲、高響度壓縮、音樂廳堂音）",
+    "reverbDepthPercent": 65,
+    "stereoImaging": "立體聲場定位與空間擺位（如主奏居中貼耳、弦樂極寬包覆、特效左右乒乓）",
+    "dynamicContrast": "全曲動態對比與響度落差（如 pp 細語至 ff 齊奏，動態範圍 14dB）"
+  },
+  "structureAndLyrics": {
+    "themeCategory": "主題意象分類",
+    "keywords": ["核心意象詞1", "核心意象詞2", "核心意象詞3", "核心意象詞4"],
+    "formStructure": ["前奏 Intro", "主歌 A1", "導歌 Pre-Chorus", "副歌 B1", "間奏 Interlude", "副歌 B2", "橋段 Bridge", "尾奏 Outro"],
+    "sectionTimeline": "全曲段落時間軸與小節配置（如 0:00 前奏8小節 → 0:24 主歌16小節 → ...）",
+    "hookAndMotif": "全曲最洗腦記憶點（Hook）或主題動機（Motif）發展手法",
+    "climaxDesign": "全曲最高潮（Climax）的編曲與和聲引爆設計",
+    "lyricPattern": "原曲詞曲句式結構與字數對仗格律",
+    "rhymeAndProsody": "押韻韻腳設計與母音共鳴聲韻學特徵",
+    "newStyleMatchedLyrics": "依據原曲完整結構、段落標籤、字數格律與押韻規則創作的全新風格歌詞（請寫出完整主歌、導歌、副歌、橋段與尾奏）"
+  }
+}`;
+
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(selectedModel)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: promptText },
+              { inline_data: { mime_type: uploadedAudio.mimeType, data: base64Audio } }
+            ]
+          }],
+          generationConfig: {
+            temperature: 0.4,
+            responseMimeType: "application/json"
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error?.message || `HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
+      const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      const cleanJsonText = rawText.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      const dna = JSON.parse(cleanJsonText);
+
+      if (dna.genreSystem && GENRE_SYSTEMS[dna.genreSystem.id]) {
+        state.systemId = dna.genreSystem.id;
+      }
+      state.sourceLabel = dna.sourceSongDescription || `${selectedModel} 解析：${uploadedAudio.fileName.slice(0, 12)}`;
+      if (dna.eraAndAesthetics) state.eraAesthetics = dna.eraAndAesthetics;
+      if (dna.suggestedNewTitle) state.songTitle = dna.suggestedNewTitle;
+
+      if (dna.musicTheory) {
+        const mt = dna.musicTheory;
+        if (mt.bpm) state.bpm = Number(mt.bpm);
+        if (mt.timeSignature) state.timeSignature = mt.timeSignature;
+        if (mt.groovePocket) state.groovePocket = mt.groovePocket;
+        if (mt.keyAndHarmony) state.keyHarmony = mt.keyAndHarmony;
+        if (mt.chordProgression) state.chordProgression = mt.chordProgression;
+        if (Array.isArray(mt.harmonyFeatures)) state.harmonyTags = mt.harmonyFeatures;
+        if (mt.melodyContour) state.melodyContour = mt.melodyContour;
+        if (Array.isArray(mt.moods)) state.moods = mt.moods;
+        if (mt.emotionalArc) state.emotionalArc = mt.emotionalArc;
+      }
+
+      if (dna.orchestrationAndVocals) {
+        const ov = dna.orchestrationAndVocals;
+        if (ov.vocalStyle) state.vocalStyle = ov.vocalStyle;
+        if (ov.vocalRange) state.vocalRange = ov.vocalRange;
+        if (typeof ov.chestResonancePercent === "number") state.chestRatio = ov.chestResonancePercent;
+        if (ov.vocalTechniques) state.vocalTechniques = ov.vocalTechniques;
+        if (ov.vocalDiction) state.vocalDiction = ov.vocalDiction;
+        if (ov.backingVocals) state.backingVocals = ov.backingVocals;
+        if (ov.leadInstrument) state.leadInstrument = ov.leadInstrument;
+        if (ov.playingArticulation) state.playingArticulation = ov.playingArticulation;
+        if (ov.counterMelody) state.counterMelody = ov.counterMelody;
+        if (Array.isArray(ov.instruments) && ov.instruments.length) state.instruments = ov.instruments;
+        if (ov.bassAndPercussion) state.bassAndPercussion = ov.bassAndPercussion;
+        if (ov.arrangementDensity) state.arrangementDensity = ov.arrangementDensity;
+        if (ov.mixingAcoustics) state.mixingStyle = ov.mixingAcoustics;
+        if (typeof ov.reverbDepthPercent === "number") state.reverbLevel = ov.reverbDepthPercent;
+        if (ov.stereoImaging) state.stereoImaging = ov.stereoImaging;
+        if (ov.dynamicContrast) state.dynamicContrast = ov.dynamicContrast;
+
+        if (state.mode !== "inst_adv" && state.mode !== "lyric_adv") {
+          state.mode = ov.isInstrumental === true ? "inst_adv" : "lyric_adv";
+        }
+      }
+
+      if (dna.structureAndLyrics) {
+        const sl = dna.structureAndLyrics;
+        if (sl.themeCategory) state.themeCategory = sl.themeCategory;
+        if (Array.isArray(sl.keywords) && sl.keywords.length) state.selectedKeywords = sl.keywords;
+        if (Array.isArray(sl.formStructure) && sl.formStructure.length) state.formStructure = sl.formStructure;
+        if (sl.sectionTimeline) state.sectionTimeline = sl.sectionTimeline;
+        if (sl.hookAndMotif) state.hookAndMotif = sl.hookAndMotif;
+        if (sl.climaxDesign) state.climaxDesign = sl.climaxDesign;
+        if (sl.lyricPattern) state.lyricPattern = sl.lyricPattern;
+        if (sl.rhymeAndProsody) state.rhymeAndProsody = sl.rhymeAndProsody;
+        if (sl.newStyleMatchedLyrics) state.generatedLyrics = sl.newStyleMatchedLyrics;
+      }
+
+      uploadedAudio.lastAppliedReport = [];
+      rebuildAppliedReport();
+      uploadedAudio.reportExpanded = true;
+      uploadedAudio.isAnalyzingGemini = false;
+      setMode(state.mode);
+      drawWaveformCanvas();
+      showToast(`🧠 ${selectedModel} 深度解析完成！已生成 28 項全方位音樂元素並同步套用至各頁`);
+    } catch (err) {
+      uploadedAudio.isAnalyzingGemini = false;
+      renderPanel();
+      drawWaveformCanvas();
+      alert("Gemini API 深度解析失敗：" + err.message);
+    }
+  }
+
+  function rebuildAppliedReport() {
+    if (!uploadedAudio.lastAppliedReport) return;
+    const modeLabelMap = {
+      lyric_basic: "含歌詞初階",
+      inst_basic: "僅音樂初階",
+      lyric_adv: "含歌詞高階",
+      inst_adv: "僅音樂高階"
+    };
+    const isInst = !isLyricMode();
+
+    uploadedAudio.lastAppliedReport = [
+      // Group 1: Step 1 (Indices 0 - 5)
+      { id: 1, item: "01. 運作模式定位", value: modeLabelMap[state.mode] || state.mode, location: "頂部主頁籤 ＆ 左側快照", step: 1 },
+      { id: 2, item: "02. 音樂元素體系", value: `${currentSystem().icon} ${currentSystem().name}`, location: "步驟 1「四大曲風資料庫」", step: 1 },
+      { id: 3, item: "03. 原曲風格與魅力簡述", value: state.sourceLabel, location: "步驟 1 總覽 ＆ 左側元素快照", step: 1 },
+      { id: 4, item: "04. 時代美學與製作流派", value: state.eraAesthetics, location: "步驟 1「時代美學定位」框", step: 1 },
+      { id: 5, item: isInst ? "05. 建議新曲名稱" : "05. 建議新歌名", value: `《${state.songTitle}》`, location: "步驟 1「新歌名／新曲名稱」框", step: 1 },
+      { id: 6, item: "06. 核心主題關鍵詞", value: state.selectedKeywords.join("、"), location: "步驟 1「主題靈感庫」已選標籤", step: 1 },
+
+      // Group 2: Step 2 (Indices 6 - 13)
+      { id: 7, item: "07. 基礎速度（BPM）", value: `${state.bpm} BPM`, location: "步驟 2「速度與節拍律動」滑桿", step: 2 },
+      { id: 8, item: "08. 拍號與律動型態", value: state.timeSignature, location: "步驟 2「節拍與律動感」標籤", step: 2 },
+      { id: 9, item: "09. 微時間律動（Groove Pocket）", value: state.groovePocket, location: "步驟 2「微時間律動感」輸入框", step: 2 },
+      { id: 10, item: "10. 核心情緒氛圍", value: state.moods.join("、"), location: "步驟 2「核心情緒氛圍」複選區", step: 2 },
+      { id: 11, item: "11. 全曲情緒張力曲線", value: state.emotionalArc, location: "步驟 2「情緒張力推進曲線」框", step: 2 },
+      { id: 12, item: "12. 主調性與調式色彩", value: state.keyHarmony, location: "步驟 2「調性與和聲進行」主框", step: 2 },
+      { id: 13, item: "13. 核心和弦進行級數", value: `${state.chordProgression}（${state.harmonyTags.join(" / ")}）`, location: "步驟 2「核心和弦進行級數」框", step: 2 },
+      { id: 14, item: "14. 旋律輪廓與音程跳進", value: state.melodyContour, location: "步驟 2「旋律線條與跳進」框", step: 2 },
+
+      // Group 3: Step 3 (Indices 14 - 21) -> Mode-aware between 含歌詞高階 vs 僅音樂高階
+      isInst
+        ? { id: 15, item: "15. 核心主奏樂器與音色", value: state.leadInstrument, location: "步驟 3「核心主奏樂器與音色」框", step: 3 }
+        : { id: 15, item: "15. 人聲聲部與音色特質", value: state.vocalStyle, location: "步驟 3「人聲聲線與演唱技巧」框", step: 3 },
+      isInst
+        ? { id: 16, item: "16. 演奏技法與觸鍵／運弓", value: state.playingArticulation, location: "步驟 3「演奏技法與表情處理」框", step: 3 }
+        : { id: 16, item: "16. 胸腔共鳴比例與音域跨度", value: `胸腔共鳴 ${state.chestRatio}% ｜ 音域 ${state.vocalRange}`, location: "步驟 3「共鳴比例滑桿與音域框」", step: 3 },
+      isInst
+        ? { id: 17, item: "17. 副旋律與聲部對位設計", value: state.counterMelody, location: "步驟 3「副旋律與聲部對位」框", step: 3 }
+        : { id: 17, item: "17. 細部唱腔與裝飾音技巧", value: state.vocalTechniques, location: "步驟 3「細部唱腔與裝飾音」框", step: 3 },
+      isInst
+        ? { id: 18, item: "18. 編曲織體密度演變", value: state.arrangementDensity, location: "步驟 3「編曲織體密度演變」框", step: 3 }
+        : { id: 18, item: "18. 咬字發音與和聲疊錄層次", value: `${state.vocalDiction} ｜ ${state.backingVocals}`, location: "步驟 3「咬字發音與合音編排」框", step: 3 },
+      { id: 19, item: "19. 核心伴奏樂器編制", value: state.instruments.join("、"), location: "步驟 3「核心伴奏樂器編制」區", step: 3 },
+      { id: 20, item: "20. 低音線條與打擊節奏組", value: state.bassAndPercussion, location: "步驟 3「低音線條與打擊組」框", step: 3 },
+      { id: 21, item: "21. 混音年代聲學與殘響深度", value: `${state.mixingStyle}（殘響 ${state.reverbLevel}%）`, location: "步驟 3「高階混音年代聲學」框", step: 3 },
+      { id: 22, item: "22. 立體聲場定位與動態對比", value: `${state.stereoImaging} ｜ ${state.dynamicContrast}`, location: "步驟 3「立體聲場與動態落差」框", step: 3 },
+
+      // Group 4: Step 4 & Step 5 (Indices 22 - 27)
+      { id: 23, item: "23. 曲式結構動態順序", value: state.formStructure.join(" → "), location: "步驟 4「曲式結構動態時間軸」", step: 4 },
+      { id: 24, item: "24. 全曲段落時間軸配置", value: state.sectionTimeline, location: "步驟 4「段落時間軸與小節」框", step: 4 },
+      { id: 25, item: "25. 核心記憶點（Hook／動機）", value: state.hookAndMotif, location: "步驟 4「核心記憶點與動機」框", step: 4 },
+      { id: 26, item: "26. 最高潮（Climax）引爆設計", value: state.climaxDesign, location: "步驟 4「最高潮編曲引爆設計」框", step: 4 },
+      isInst
+        ? { id: 27, item: "27. 純演奏聲部輪替與力度指引", value: `依據「${state.arrangementDensity}」建立分段演奏指令`, location: "步驟 4「純演奏曲動態張力指引」", step: 4 }
+        : { id: 27, item: "27. 詞曲句式格律與押韻聲韻", value: `${state.lyricPattern}（${state.rhymeAndProsody}）`, location: "步驟 4「詞曲格律與押韻聲韻」框", step: 4 },
+      isInst
+        ? { id: 28, item: "28. AI 純音樂提示詞 ＆ JSON 打包", value: `已整合 28 項元素至英文 Style 提示詞與純演奏藍圖`, location: "步驟 5「輸出與音樂元素 JSON 打包」", step: 5 }
+        : { id: 28, item: "28. 同格律全新歌詞 ＆ JSON 打包", value: `已生成 ${state.generatedLyrics.length} 字完整新歌詞並打包 28 項元素`, location: "步驟 4「新詞工作區」＆ 步驟 5「輸出」", step: 5 }
+    ];
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const res = String(reader.result);
+        const commaIdx = res.indexOf(",");
+        resolve(commaIdx >= 0 ? res.slice(commaIdx + 1) : res);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function saveApiKey(val) {
+    uploadedAudio.geminiApiKey = val;
+    localStorage.setItem("gemini_music_dna_key", val);
+  }
+
+  function saveGeminiModel(val) {
+    uploadedAudio.geminiModel = val;
+    localStorage.setItem("gemini_music_dna_model", val);
+    showToast(`已切換解析模型為：${val}`);
+  }
+
+  // =========================================================================
+  // 7. GENRE SYSTEM & PRESET LOADING
+  // =========================================================================
+  function selectGenreSystem(sysId) {
+    state.systemId = sysId;
+    const sys = GENRE_SYSTEMS[sysId];
+    const firstCategory = Object.keys(sys.themeCategories)[0];
+    state.themeCategory = firstCategory;
+    state.selectedKeywords = sys.themeCategories[firstCategory].slice(0, 3);
+    state.songTitle = sys.defaultTitle;
+    loadGenrePreset(sysId, false, sys.presets[0].id);
+    showToast(`已切換至「${sys.name}」音樂元素體系`);
+  }
+
+  function loadGenrePreset(sysId, fromModal = false, specificPresetId = null) {
+    state.systemId = sysId;
+    const sys = GENRE_SYSTEMS[sysId];
+    const preset = specificPresetId
+      ? (sys.presets.find(p => p.id === specificPresetId) || sys.presets[0])
+      : sys.presets[0];
+
+    state.presetId = preset.id;
+    state.sourceLabel = preset.label.split("（")[0];
+    state.bpm = preset.bpm;
+    state.timeSignature = preset.timeSignature;
+    state.keyHarmony = preset.keyHarmony;
+    state.harmonyTags = [...preset.harmonyTags];
+    state.moods = [...preset.moods];
+    state.vocalStyle = preset.vocalStyle;
+    state.vocalRange = preset.vocalRange;
+    state.chestRatio = preset.chestRatio;
+    state.reverbLevel = preset.reverbLevel;
+    state.instruments = [...preset.instruments];
+    state.mixingStyle = preset.mixingStyle;
+    state.formStructure = [...preset.formStructure];
+    state.lyricPattern = preset.lyricPattern;
+    state.generatedLyrics = preset.sampleSeedLyrics;
+
+    if (!sys.themeCategories[state.themeCategory]) {
+      const firstCat = Object.keys(sys.themeCategories)[0];
+      state.themeCategory = firstCat;
+      state.selectedKeywords = sys.themeCategories[firstCat].slice(0, 3);
+    }
+
+    if (fromModal) {
+      document.getElementById("jsonEditorArea").value = JSON.stringify(buildExportJson(), null, 2);
+      showToast(`已載入 ${sys.name} 標準 JSON 範本`);
+    }
+    renderPanel();
+    drawWaveformCanvas();
+  }
+
+  function triggerOneClickInspiration() {
+    const sys = currentSystem();
+    const titles = sys.titlePool;
+    state.songTitle = titles[Math.floor(Math.random() * titles.length)];
+    const cats = Object.keys(sys.themeCategories);
+    const randomCat = cats[Math.floor(Math.random() * cats.length)];
+    state.themeCategory = randomCat;
+    const pool = [...sys.themeCategories[randomCat]];
+    pool.sort(() => Math.random() - 0.5);
+    state.selectedKeywords = pool.slice(0, 3);
+    generateStyleMatchedLyrics(false);
+    renderPanel();
+    drawWaveformCanvas();
+    showToast(`🎲 已為「${sys.name}」生成靈感與對仗新詞！`);
+  }
+
+  // =========================================================================
+  // 8. STYLE-MATCHED LYRIC GENERATOR (4 LANGUAGES / STYLES)
+  // =========================================================================
+  function generateStyleMatchedLyrics(notify = true) {
+    const sysId = state.systemId;
+    const title = state.songTitle || currentSystem().defaultTitle;
+    const kw = state.selectedKeywords.length ? state.selectedKeywords : ["夜色", "微光", "記憶"];
+    const k1 = kw[0] || "夜色";
+    const k2 = kw[1] || "微光";
+    const k3 = kw[2] || "記憶";
+
+    let lyrics = "";
+    if (sysId === "mandopop") {
+      lyrics = `[Intro - 鋼琴與獨奏弦樂鋪陳 ${state.bpm} BPM]\n\n` +
+        `[Verse A1 - 敘事低吟]\n` +
+        `數不盡 ${k1}明滅\n` +
+        `留不住 ${k2}更迭\n` +
+        `寫不完 關於${k3}的長夜\n` +
+        `風吹過 寂寞的街\n` +
+        `誰還在 原地徘徊\n` +
+        `獨自面對 散場後的冷卻\n\n` +
+        `[Chorus B1 - 情感爆發]\n` +
+        `我也曾 沉醉 在「${title}」的瞬間\n` +
+        `像飛舞在夜空裡的蝴蝶\n` +
+        `我也曾 心碎 在轉身的邊緣\n` +
+        `把所有的溫柔都妥協\n` +
+        `燈火將滅 夢也醒\n` +
+        `此刻該向 過去告別\n` +
+        `曲終人散 回頭一瞥\n` +
+        `這就是 我們的${title}\n\n` +
+        `[Outro - 小提琴漸弱收尾]`;
+    } else if (sysId === "kpop") {
+      lyrics = `[Intro - Signature Synth & Vocal Chop (${state.bpm} BPM)]\n` +
+        `Yeah, turn the lights up... (${title})\n\n` +
+        `[Verse 1 - 韓文酷感敘事]\n` +
+        `${k1} 속에 번지는 midnight vibe\n` +
+        `숨길 수 없는 ${k2}의 borderline\n` +
+        `멈추지 마 더 깊이 dive in\n` +
+        `우리만의 비밀을 깨워봐 tonight\n\n` +
+        `[Pre-Chorus - 情緒懸吊]\n` +
+        `심장이 뛰는 소리 louder now\n` +
+        `No gravity, we're floating off the ground\n\n` +
+        `[Chorus - 洗腦英文 + 韓文 Hook]\n` +
+        `Welcome to my ${title}, feel the rush\n` +
+        `빛나는 ${k3} 속으로 crush\n` +
+        `Oh my, oh my, we never slow it down\n` +
+        `이 밤의 주인공은 바로 나 (Right now!)\n\n` +
+        `[Dance Break - 808 Bass & Trap Drop]`;
+    } else if (sysId === "uspop") {
+      lyrics = `[Intro - Analog Synth & Groove (${state.bpm} BPM)]\n\n` +
+        `[Verse 1]\n` +
+        `Tracing shadows through the ${k1} glow\n` +
+        `Every radio playing songs we used to know\n` +
+        `Got ${k2} tangled in my midnight mind\n` +
+        `Leaving all the heavy days behind\n\n` +
+        `[Pre-Chorus]\n` +
+        `And I can feel the rhythm taking over me\n` +
+        `Caught between the static and the melody\n\n` +
+        `[Chorus]\n` +
+        `We're living in the ${title}\n` +
+        `Chasing ${k3} till the morning light\n` +
+        `Hold me close, don't let the feeling fade\n` +
+        `Dancing through the neon masquerade\n\n` +
+        `[Outro - Falsetto Ad-libs & Fade Out]`;
+    } else if (sysId === "classical") {
+      lyrics = `[Introduzione - 交響弦樂與鋼琴呈示部 (${state.bpm} BPM)]\n\n` +
+        `[Recitativo - 宣敘調｜主題：${k1}與${k2}]\n` +
+        `Nel silenzio della sera, splende la luce di "${title}",\n` +
+        `(在暮色的靜謐之中，「${title}」的光芒悄然綻放，)\n` +
+        `Dove il vento porta i ricordi lontano.\n` +
+        `(微風將關於「${k3}」的記憶吹向遠方。)\n\n` +
+        `[Aria - 美聲詠嘆調｜高潮再現]\n` +
+        `O notte eterna, ascolta il mio canto,\n` +
+        `(啊，永恆的夜啊，請聆聽我的歌唱，)\n` +
+        `Tra le stelle e l'onda del destino,\n` +
+        `(在星辰與命運的波濤之間，)\n` +
+        `L'amore vive per sempre nell'armonia.\n` +
+        `(愛將在和諧的樂章中永存。)\n\n` +
+        `[Coda - 管弦樂輝煌終止式]`;
+    }
+
+    state.generatedLyrics = lyrics;
+    if (notify) {
+      renderPanel();
+      showToast("✨ 已依據原曲格律與關鍵詞生成全新歌詞");
+    }
+  }
+
+  // =========================================================================
+  // 9. DYNAMIC PANEL RENDERER (STEPS 1 TO 5)
+  // =========================================================================
+  function renderGlobalAppliedBanner() {
+    if (!uploadedAudio.lastAppliedReport) return "";
+    const rowsHtml = uploadedAudio.lastAppliedReport.map(r => `
+      <tr>
+        <td><strong>${escapeHtml(r.item)}</strong></td>
+        <td style="color:#f3f3f3;">${escapeHtml(r.value)}</td>
+        <td style="color:#a0a0a0;">${escapeHtml(r.location)}</td>
+        <td><button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="goStep(${r.step})">步驟 ${r.step}</button></td>
+      </tr>
+    `).join("");
+
+    return `
+      <div style="margin-bottom:20px; background:linear-gradient(135deg, rgba(255,109,51,0.12) 0%, #141414 100%); border:1px solid var(--accent); border-radius:12px; padding:14px 16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div style="font-size:14.5px; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:8px;">
+            <span>📋 Gemini AI 深度解析「全數套用項目總覽」（共 28 項深度音樂元素｜全頁同步顯示）</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-secondary" style="padding:5px 12px; font-size:12px;" onclick="uploadedAudio.reportExpanded=!uploadedAudio.reportExpanded; renderPanel(); drawWaveformCanvas();">
+              ${uploadedAudio.reportExpanded ? '🔼 收合對照表' : '🔽 展開 28 項完整對照表'}
+            </button>
+            <button class="btn-secondary" style="padding:5px 10px; font-size:12px;" onclick="uploadedAudio.lastAppliedReport=null; renderPanel(); drawWaveformCanvas();" title="清除此份解析紀錄">✕</button>
+          </div>
+        </div>
+        ${uploadedAudio.reportExpanded ? `
+          <div style="overflow-x:auto; margin-top:12px;">
+            <table class="guide-table" style="margin-bottom:0; font-size:12.5px;">
+              <thead>
+                <tr>
+                  <th style="width:155px;">套用項目</th>
+                  <th>AI 解析並寫入的實際內容</th>
+                  <th style="width:230px;">在 App 的哪裡查看</th>
+                  <th style="width:82px;">跳轉</th>
+                </tr>
+              </thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  function renderOptionAiBadge(indices) {
+    if (!uploadedAudio.lastAppliedReport) return "";
+    const matched = indices.map(idx => uploadedAudio.lastAppliedReport[idx]).filter(Boolean);
+    if (!matched.length) return "";
+    return `
+      <div style="margin:6px 0 10px; padding:8px 12px; border-radius:8px; background:rgba(255,109,51,0.1); border-left:3px solid var(--accent); font-size:12.5px; color:#ffd6c4;">
+        ${matched.map(m => `<div>🤖 <strong>AI 已套用【${escapeHtml(m.item)}】</strong>：${escapeHtml(m.value)}</div>`).join("")}
+      </div>
+    `;
+  }
+
+  function renderPanel() {
+    try {
+      updateSummaryBox();
+      const panel = document.getElementById("panelContent");
+      const sys = currentSystem();
+
+      if (state.step === 1) {
+        const catNames = Object.keys(sys.themeCategories);
+        const currentWords = sys.themeCategories[state.themeCategory] || [];
+
+        panel.innerHTML = `
+          <div class="panel-header">
+            <div class="panel-title">${state.mode === 'lyric_basic' ? '1 構想與曲風元素' : (state.mode === 'inst_basic' ? '1 選擇四大曲風資料庫' : '1 音檔上傳與曲風元素')}</div>
+            <div class="panel-subtitle">${state.mode === 'lyric_basic'
+              ? '請先選擇目標音樂元素體系（四大曲風資料庫），並決定新歌名與主題關鍵詞。'
+              : (state.mode === 'inst_basic'
+                ? '請先選擇目標音樂元素體系（四大曲風資料庫），並決定新曲名稱與主題關鍵詞。'
+                : '可上傳自己的參考音檔（華語 / K-Pop / 美國流行 / 古典樂）自動提取元素，或直接從下方四大體系開始。')}</div>
+          </div>
+
+          ${renderGlobalAppliedBanner()}
+          ${isAdvMode() ? `
+          <!-- Audio Upload & Dual-Track Extraction Studio -->
+          <div class="audio-dropzone" id="audioDropzone"
+               ondragover="event.preventDefault(); this.classList.add('dragover');"
+               ondragleave="this.classList.remove('dragover');"
+               ondrop="event.preventDefault(); this.classList.remove('dragover'); handleAudioFileUpload(event.dataTransfer.files[0]);">
+            <div class="dropzone-top">
+              <div>
+                <div style="font-size:15px; font-weight:700; color:var(--text-primary);">
+                  🎵 上傳參考音檔提取音樂元素（支援 MP3 / WAV / M4A / FLAC）
+                </div>
+                <div style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">
+                  ${uploadedAudio.fileName
+                    ? `已載入：<strong>${escapeHtml(uploadedAudio.fileName)}</strong>（${uploadedAudio.durationSec.toFixed(1)} 秒）`
+                    : '拖曳任意華語經典、韓國 K-Pop、美國流行或古典樂音檔至此，自動生成波形與聲學參數'}
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn-secondary" onclick="openGuideModal('prompt')" title="免 API Key 也可複製萬用指令給 Gemini 對話框解析">
+                  💬 對話框指令法（免 Key）
+                </button>
+                ${uploadedAudio.objectUrl ? `
+                  <button class="btn-secondary" onclick="toggleUploadedFilePlayback()">
+                    ${uploadedAudio.isPlayingFile ? '⏸️ 暫停原曲' : '▶️ 試聽原曲'}
+                  </button>
+                ` : ''}
+                <label class="btn-primary" style="cursor:pointer;">
+                  📂 選擇音檔上傳
+                  <input type="file" accept="audio/*" style="display:none;" onchange="handleAudioFileUpload(this.files[0])" />
+                </label>
+              </div>
+            </div>
+
+            ${uploadedAudio.peaks.length ? `
+              <div class="waveform-wrap">
+                <canvas id="waveformCanvas"></canvas>
+                <div class="acoustic-metrics-bar">
+                  <div class="metric-chip"><span>偵測速度（Tempo）</span><strong>${uploadedAudio.metrics.bpm} BPM</strong></div>
+                  <div class="metric-chip"><span>動態範圍（Dynamic）</span><strong>${uploadedAudio.metrics.dynamicRangeDb} dB</strong></div>
+                  <div class="metric-chip"><span>頻譜明亮度</span><strong>${uploadedAudio.metrics.brightnessHz} Hz</strong></div>
+                  <div class="metric-chip"><span>自動曲風判定</span><strong>${uploadedAudio.metrics.suggestedSystemName}</strong></div>
+                </div>
+              </div>
+
+              <div class="dual-engine-actions">
+                <button class="btn-secondary" onclick="applyOfflineAcousticExtraction()">
+                  ⚡ 軌道 A：一鍵套用離線聲學參數（免 API Key）
+                </button>
+                <div class="api-key-inline">
+                  <input type="password" placeholder="輸入 Gemini API Key（以 AIza 開頭）"
+                         value="${escapeHtml(uploadedAudio.geminiApiKey)}"
+                         oninput="saveApiKey(this.value)" />
+                  <select class="select-input" onchange="saveGeminiModel(this.value)" title="選擇 Gemini 解析模型">
+                    <option value="gemini-3.1-pro-preview" ${uploadedAudio.geminiModel === 'gemini-3.1-pro-preview' ? 'selected' : ''}>gemini-3.1-pro-preview</option>
+                    <option value="gemini-3-flash-preview" ${uploadedAudio.geminiModel === 'gemini-3-flash-preview' ? 'selected' : ''}>gemini-3-flash-preview</option>
+                  </select>
+                  <button class="btn-primary" onclick="runGeminiDeepAnalysis()" ${uploadedAudio.isAnalyzingGemini ? 'disabled' : ''}>
+                    ${uploadedAudio.isAnalyzingGemini ? '⏳ 解析中...' : '🧠 軌道 B：Gemini AI 深度解析'}
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="byok-notice">
+              <span>🔒 <strong>隱私與模型說明：</strong>預設已設為高免費額度 <code>gemini-3-flash-preview</code>（可於選單切換至 3.1 Pro）；金鑰僅存於本機 <code>localStorage</code>，上傳 GitHub 公開後他人無法看到。</span>
+              <span>
+                <a onclick="openGuideModal('apikey')">如何取得 API Key？</a> ｜ 
+                <a onclick="openGuideModal('permissions')">多人共用權限說明</a>
+              </span>
+            </div>
+          </div>
+          ` : ''}
+
+          <div class="section-block">
+            <div class="section-label">${!isAdvMode() ? '請選擇目標音樂元素體系（四大曲風資料庫）' : '或直接選擇目標音樂元素體系（四大曲風資料庫）'}</div>
+            <div class="genre-cards-grid">
+              ${Object.values(GENRE_SYSTEMS).map(g => `
+                <div class="genre-card ${state.systemId === g.id ? 'active' : ''}" onclick="selectGenreSystem('${g.id}')">
+                  <div class="genre-card-top">
+                    <span class="genre-card-title">${g.icon} ${g.name}</span>
+                    ${state.systemId === g.id ? '<span style="color:var(--accent);font-size:12px;">● 已選</span>' : ''}
+                  </div>
+                  <div class="genre-card-sub">${g.desc}</div>
+                </div>
+              `).join("")}
+            </div>
+
+            <div class="section-label" style="margin-top:12px;">選擇該體系的經典編曲子流派（或匯入 JSON）</div>
+            <div class="pill-group">
+              ${sys.presets.map(p => `
+                <button class="pill-btn ${state.presetId === p.id ? 'active' : ''}" onclick="loadGenrePreset('${sys.id}', false, '${p.id}')">
+                  ${p.label}
+                </button>
+              `).join("")}
+              <button class="pill-btn" onclick="openJsonModal()">📥 匯入 / 檢視 JSON 元素</button>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <button class="btn-primary" onclick="triggerOneClickInspiration()">
+              🎲 一鍵靈感（隨機新歌名與 3 個主題關鍵詞）
+            </button>
+          </div>
+
+          ${isAdvMode() ? `
+            <div class="section-block info-card">
+              <h4>🏛️ 原曲風格定位與時代美學（Era & Aesthetics）</h4>
+              ${renderOptionAiBadge([2, 3])}
+              <div class="two-col">
+                <div>
+                  <div class="section-label" style="font-size:13px;">原曲風格與魅力簡述</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.sourceLabel)}" oninput="state.sourceLabel=this.value; updateSummaryBox();" />
+                </div>
+                <div>
+                  <div class="section-label" style="font-size:13px;">時代美學與製作流派</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.eraAesthetics)}" oninput="state.eraAesthetics=this.value;" />
+                </div>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="section-block">
+            <div class="section-label">${isLyricMode() ? '新歌名' : '新曲名稱'}${(state.systemId === 'kpop' && isLyricMode()) ? ' <span class="section-hint">（已為韓國 K-Pop 全部選項附上中文歌名翻譯）</span>' : ''}</div>
+            ${renderOptionAiBadge([4, 5])}
+            <input type="text" class="text-input" value="${escapeHtml(state.songTitle)}"
+                   placeholder="輸入新歌名，或點選下方靈感標籤"
+                   oninput="state.songTitle = this.value; updateSummaryBox();" />
+            <div class="pill-group">
+              ${sys.titlePool.map(t => `
+                <button class="pill-btn ${state.songTitle === t ? 'active' : ''}"
+                        onclick="state.songTitle='${escapeAttr(t)}'; renderPanel(); drawWaveformCanvas();">
+                  ${escapeHtml(t)}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-label">
+              主題靈感庫
+              <span class="section-hint">先選分類，再點選關鍵詞加入故事（已選 ${state.selectedKeywords.length} 個）</span>
+            </div>
+            <div class="pill-group" style="margin-bottom:12px;">
+              ${catNames.map(cat => `
+                <button class="pill-btn ${state.themeCategory === cat ? 'active' : ''}"
+                        onclick="state.themeCategory='${cat}'; renderPanel(); drawWaveformCanvas();">
+                  ${cat}
+                </button>
+              `).join("")}
+            </div>
+            <div class="pill-group">
+              ${currentWords.map(w => {
+                const active = state.selectedKeywords.includes(w);
+                return `<button class="pill-btn ${active ? 'active' : ''}" onclick="toggleKeyword('${escapeAttr(w)}')">${active ? '✓ ' : '+ '}${escapeHtml(w)}</button>`;
+              }).join("")}
+            </div>
+          </div>
+
+          ${renderFooterNav(false, true)}
+        `;
+        requestAnimationFrame(drawWaveformCanvas);
+      } else if (state.step === 2) {
+        const allMoods = ["深沉哀婉", "懷舊電影感", "霸氣自信", "未來賽博感", "Y2K 復古夢幻", "午夜馳騁", "慵懶性感", "史詩悲壯", "莊嚴理性", "詩意唯美"];
+        const allHarmony = ["大調底色轉關係小調", "弗里吉亞異國半音張力", "Maj9 / Min9 夢幻爵士和弦", "I-V-vi-IV 冠軍四和弦", "半音階和聲遊走", "卡農與賦格對位", "中國五聲音階旋律"];
+
+        panel.innerHTML = `
+          <div class="panel-header">
+            <div class="panel-title">2 曲風情緒、旋律與和聲進行 ${isAdvMode() ? '<span class="tag-advanced">高階樂理與律動控制</span>' : ''}</div>
+            <div class="panel-subtitle">繼承「${sys.name}」的節奏微時間感、情緒張力曲線、和弦級數與旋律跳進輪廓。</div>
+          </div>
+
+          ${renderGlobalAppliedBanner()}
+          <div class="two-col section-block">
+            <div class="info-card">
+              <h4>⏱️ 速度（BPM）、拍號與微時間律動</h4>
+              ${renderOptionAiBadge([6, 7, 8])}
+              <div class="slider-row">
+                <div class="slider-header">
+                  <span>基礎速度（Tempo）</span>
+                  <strong style="color:var(--accent);">${state.bpm} BPM</strong>
+                </div>
+                <input type="range" min="50" max="165" value="${state.bpm}"
+                       oninput="state.bpm=Number(this.value); this.previousElementSibling.lastElementChild.textContent=this.value+' BPM'; updateSummaryBox();" />
+              </div>
+              <div class="section-label" style="font-size:13px;">拍號與基礎律動</div>
+              <div class="pill-group" style="margin-bottom:12px;">
+                ${["4/4 拍（Rubato 彈性律動）", "4/4 拍（UK Garage 2-Step 碎拍）", "4/4 拍（Disco-Pop 律動）", "4/4 拍（慵懶 Swing 搖擺感）", "3/4 拍（浪漫派圓舞曲感）"].map(ts => `
+                  <button class="pill-btn ${state.timeSignature === ts ? 'active' : ''}"
+                          onclick="state.timeSignature='${ts}'; renderPanel();">
+                    ${ts}
+                  </button>
+                `).join("")}
+              </div>
+              ${isAdvMode() ? `
+                <div class="section-label" style="font-size:13px;">微時間律動感（Groove Pocket）</div>
+                <input type="text" class="text-input" value="${escapeHtml(state.groovePocket)}" oninput="state.groovePocket=this.value;" />
+              ` : ''}
+            </div>
+
+            <div class="info-card">
+              <h4>🎭 核心情緒氛圍與張力推進曲線</h4>
+              ${renderOptionAiBadge([9, 10])}
+              <div class="pill-group" style="margin-bottom:12px;">
+                ${allMoods.map(m => {
+                  const active = state.moods.includes(m);
+                  return `<button class="pill-btn ${active ? 'active' : ''}" onclick="toggleArrayItem('moods', '${m}')">${m}</button>`;
+                }).join("")}
+              </div>
+              ${isAdvMode() ? `
+                <div class="section-label" style="font-size:13px;">全曲情緒張力推進曲線（Emotional Arc）</div>
+                <input type="text" class="text-input" value="${escapeHtml(state.emotionalArc)}" oninput="state.emotionalArc=this.value;" />
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="section-block info-card">
+            <h4>🎹 調性色彩、和弦進行級數與旋律跳進</h4>
+            ${renderOptionAiBadge([11, 12, 13])}
+            <div class="two-col">
+              <div>
+                <div class="section-label" style="font-size:13px;">主調性與調式色彩</div>
+                <input type="text" class="text-input" value="${escapeHtml(state.keyHarmony)}"
+                       oninput="state.keyHarmony=this.value; updateSummaryBox();" />
+              </div>
+              ${isAdvMode() ? `
+                <div>
+                  <div class="section-label" style="font-size:13px;">核心和弦進行級數（Chord Progression）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.chordProgression)}"
+                         oninput="state.chordProgression=this.value;" />
+                </div>
+              ` : '<div></div>'}
+            </div>
+            <div class="pill-group" style="margin-bottom:12px;">
+              ${allHarmony.map(h => {
+                const active = state.harmonyTags.includes(h);
+                return `<button class="pill-btn ${active ? 'active' : ''}" onclick="toggleArrayItem('harmonyTags', '${h}')">${h}</button>`;
+              }).join("")}
+            </div>
+            ${isAdvMode() ? `
+              <div class="section-label" style="font-size:13px;">旋律線條輪廓與音程跳進（Melody Contour & Intervals）</div>
+              <input type="text" class="text-input" value="${escapeHtml(state.melodyContour)}" oninput="state.melodyContour=this.value;" />
+            ` : ''}
+          </div>
+
+          ${renderFooterNav(true, true)}
+        `;
+      } else if (state.step === 3) {
+        const vocalPresets = [
+          "女中低音（Contralto）絲絨胸聲＋延遲顫音",
+          "氣聲 R&B 轉音（Melisma）＋戲曲韻味咬字",
+          "高音 Belting 爆發＋冷豔態度 Rap＋多聲部和聲",
+          "自然氣聲吟唱（Breathy Natural Vocal）",
+          "流行真假音流暢切換（Falsetto Flip）",
+          "戲劇女高音 / 次女高音美聲（Bel Canto Operatic）"
+        ];
+        const instrumentPool = [
+          "原聲平台鋼琴", "獨奏小提琴（滑音）", "大型弦樂群", "長笛（句尾點綴）",
+          "超鋸齒波合成器（Supersaw）", "失真 808 重低音", "UK Garage 碎拍鼓組",
+          "Fender Rhodes 電鋼琴", "放克電貝斯", "史坦威平台鋼琴獨奏", "法國號（French Horn）", "大鍵琴（Harpsichord）"
+        ];
+
+        panel.innerHTML = `
+          <div class="panel-header">
+            <div class="panel-title">${isLyricMode() ? '3 人聲聲學、配器編制與混音音場' : '3 主奏器樂、對位織體與聲場聲學'} ${isAdvMode() ? '<span class="tag-advanced">高階聲學與編曲全參數</span>' : ''}</div>
+            <div class="panel-subtitle">${isLyricMode()
+              ? '完整設定演唱者聲區、胸腔共鳴、唱腔技巧、咬字合音，以及伴奏配器與混音音場。'
+              : '專注於純音樂的核心主奏樂器、演奏技法、副旋律對位、織體密度與音樂廳聲場。'}</div>
+          </div>
+
+          ${renderGlobalAppliedBanner()}
+          ${isLyricMode() ? `
+            <div class="section-block info-card">
+              <h4>🎤 人聲聲線、共鳴比例、唱腔與合音編排（含歌詞模式專屬）</h4>
+              ${renderOptionAiBadge([14, 15, 16, 17])}
+              <div class="pill-group" style="margin-bottom:12px;">
+                ${vocalPresets.map(v => `
+                  <button class="pill-btn ${state.vocalStyle === v ? 'active' : ''}"
+                          onclick="state.vocalStyle='${v}'; renderPanel();">
+                    ${v}
+                  </button>
+                `).join("")}
+              </div>
+              <input type="text" class="text-input" value="${escapeHtml(state.vocalStyle)}" oninput="state.vocalStyle=this.value; updateSummaryBox();" />
+              ${isAdvMode() ? `
+                <div class="two-col" style="margin-top:8px;">
+                  <div class="slider-row">
+                    <div class="slider-header"><span>胸腔共鳴比例（Chest Resonance）</span><strong style="color:var(--accent);">${state.chestRatio}%</strong></div>
+                    <input type="range" min="20" max="95" value="${state.chestRatio}"
+                           oninput="state.chestRatio=Number(this.value); this.previousElementSibling.lastElementChild.textContent=this.value+'%';" />
+                  </div>
+                  <div>
+                    <div class="section-label" style="font-size:13px;">目標音域跨度（Vocal Range）</div>
+                    <input type="text" class="text-input" value="${escapeHtml(state.vocalRange)}" oninput="state.vocalRange=this.value;" />
+                  </div>
+                </div>
+                <div class="two-col">
+                  <div>
+                    <div class="section-label" style="font-size:13px;">細部唱腔與裝飾音技巧（Vibrato / Melisma）</div>
+                    <input type="text" class="text-input" value="${escapeHtml(state.vocalTechniques)}" oninput="state.vocalTechniques=this.value;" />
+                  </div>
+                  <div>
+                    <div class="section-label" style="font-size:13px;">咬字發音與語氣表情（Diction & Articulation）</div>
+                    <input type="text" class="text-input" value="${escapeHtml(state.vocalDiction)}" oninput="state.vocalDiction=this.value;" />
+                  </div>
+                </div>
+                <div>
+                  <div class="section-label" style="font-size:13px;">和聲編排與疊錄層次（Backing Vocals & Harmonies）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.backingVocals)}" oninput="state.backingVocals=this.value;" />
+                </div>
+              ` : ''}
+            </div>
+          ` : `
+            <div class="section-block info-card">
+              <h4>🎻 核心主奏樂器、演奏技法與聲部對位（僅音樂模式專屬）</h4>
+              ${renderOptionAiBadge([14, 15, 16, 17])}
+              <div class="two-col">
+                <div>
+                  <div class="section-label" style="font-size:13px;">核心主奏樂器與音色型號（Lead Solo Instrument）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.leadInstrument)}" oninput="state.leadInstrument=this.value; updateSummaryBox();" />
+                </div>
+                <div>
+                  <div class="section-label" style="font-size:13px;">演奏技法與觸鍵／運弓表情（Articulation）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.playingArticulation)}" oninput="state.playingArticulation=this.value;" />
+                </div>
+              </div>
+              <div class="two-col">
+                <div>
+                  <div class="section-label" style="font-size:13px;">副旋律與聲部對位設計（Counter-Melody & Polyphony）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.counterMelody)}" oninput="state.counterMelody=this.value;" />
+                </div>
+                <div>
+                  <div class="section-label" style="font-size:13px;">編曲織體密度演變（Arrangement Density）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.arrangementDensity)}" oninput="state.arrangementDensity=this.value;" />
+                </div>
+              </div>
+            </div>
+          `}
+
+          <div class="section-block info-card">
+            <h4>🎼 核心伴奏樂器編制與低音／打擊組</h4>
+            ${renderOptionAiBadge([18, 19])}
+            <div class="pill-group" style="margin-bottom:12px;">
+              ${instrumentPool.map(inst => {
+                const active = state.instruments.includes(inst);
+                return `<button class="pill-btn ${active ? 'active' : ''}" onclick="toggleArrayItem('instruments', '${inst}')">${active ? '✓ ' : '+ '}${inst}</button>`;
+              }).join("")}
+            </div>
+            ${isAdvMode() ? `
+              <div class="two-col" style="margin-top:8px;">
+                <div>
+                  <div class="section-label" style="font-size:13px;">低音線條與打擊節奏組（Bassline & Percussion）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.bassAndPercussion)}" oninput="state.bassAndPercussion=this.value;" />
+                </div>
+                <div>
+                  <div class="section-label" style="font-size:13px;">全曲編曲層次密度（Orchestration Density）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.arrangementDensity)}" oninput="state.arrangementDensity=this.value;" />
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          ${isAdvMode() ? `
+            <div class="section-block info-card">
+              <h4>🎛️ 高階混音年代聲學、立體聲場與動態落差</h4>
+              ${renderOptionAiBadge([20, 21])}
+              <input type="text" class="text-input" value="${escapeHtml(state.mixingStyle)}" oninput="state.mixingStyle=this.value;" />
+              <div class="slider-row">
+                <div class="slider-header"><span>空間殘響深度（Reverb / Hall Depth）</span><strong style="color:var(--accent);">${state.reverbLevel}%</strong></div>
+                <input type="range" min="15" max="95" value="${state.reverbLevel}"
+                       oninput="state.reverbLevel=Number(this.value); this.previousElementSibling.lastElementChild.textContent=this.value+'%';" />
+              </div>
+              <div class="two-col">
+                <div>
+                  <div class="section-label" style="font-size:13px;">立體聲場定位與擺位（Stereo Imaging）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.stereoImaging)}" oninput="state.stereoImaging=this.value;" />
+                </div>
+                <div>
+                  <div class="section-label" style="font-size:13px;">全曲動態對比與響度落差（Dynamic Contrast）</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.dynamicContrast)}" oninput="state.dynamicContrast=this.value;" />
+                </div>
+              </div>
+            </div>
+          ` : ''}
+
+          ${renderFooterNav(true, true)}
+        `;
+      } else if (state.step === 4) {
+        panel.innerHTML = `
+          <div class="panel-header">
+            <div class="panel-title">${isLyricMode() ? '4 曲式結構、動機發展與同格律新詞' : '4 曲式時間軸、主題動機與高潮編排'}</div>
+            <div class="panel-subtitle">${isLyricMode()
+              ? `依據「${sys.name}」的段落時間軸、記憶點動機與押韻聲韻學，生成高度貼合原曲的全新歌詞。`
+              : '完整呈現純演奏曲的段落時間軸、主題動機（Motif）發展與最高潮管弦／電子引爆設計。'}</div>
+          </div>
+
+          ${renderGlobalAppliedBanner()}
+          <div class="section-block info-card">
+            <h4>📐 曲式結構時間軸、記憶點動機（Hook／Motif）與高潮設計</h4>
+            ${renderOptionAiBadge([22, 23, 24, 25])}
+            <div class="pill-group" style="margin-bottom:12px;">
+              ${state.formStructure.map((part, idx) => `
+                <span class="pill-btn active" style="cursor:default;">${idx + 1}. ${part}</span>
+              `).join("")}
+            </div>
+            ${isAdvMode() ? `
+              <div class="section-label" style="font-size:13px;">全曲段落時間軸與小節配置（Section Timeline）</div>
+              <input type="text" class="text-input" value="${escapeHtml(state.sectionTimeline)}" oninput="state.sectionTimeline=this.value;" />
+              <div class="two-col">
+                <div>
+                  <div class="section-label" style="font-size:13px;">核心記憶點（Hook）或主題動機（Motif）發展</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.hookAndMotif)}" oninput="state.hookAndMotif=this.value;" />
+                </div>
+                <div>
+                  <div class="section-label" style="font-size:13px;">全曲最高潮（Climax）編曲與和聲引爆設計</div>
+                  <input type="text" class="text-input" value="${escapeHtml(state.climaxDesign)}" oninput="state.climaxDesign=this.value;" />
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          ${isLyricMode() ? `
+            <div class="section-block info-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                <h4 style="margin:0;">✍️ 同風格新詞工作區與押韻聲韻設計</h4>
+                <button class="btn-primary" onclick="generateStyleMatchedLyrics(true)">✨ 依原曲格律重新生成新歌詞</button>
+              </div>
+              ${renderOptionAiBadge([26, 27])}
+              ${isAdvMode() ? `
+                <div class="two-col" style="margin-bottom:8px;">
+                  <div>
+                    <div class="section-label" style="font-size:13px;">詞曲句式與對仗格律（Lyric Pattern）</div>
+                    <input type="text" class="text-input" value="${escapeHtml(state.lyricPattern)}" oninput="state.lyricPattern=this.value;" />
+                  </div>
+                  <div>
+                    <div class="section-label" style="font-size:13px;">押韻韻腳與母音共鳴聲韻（Rhyme & Prosody）</div>
+                    <input type="text" class="text-input" value="${escapeHtml(state.rhymeAndProsody)}" oninput="state.rhymeAndProsody=this.value;" />
+                  </div>
+                </div>
+              ` : ''}
+              <textarea class="textarea-input" style="min-height:260px; font-size:14.5px;"
+                        oninput="state.generatedLyrics=this.value;">${escapeHtml(state.generatedLyrics)}</textarea>
+            </div>
+          ` : `
+            <div class="section-block info-card">
+              <h4>🎼 純演奏曲動態張力與聲部輪替指引</h4>
+              ${renderOptionAiBadge([26])}
+              <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.65;">
+                系統已為純演奏曲《${escapeHtml(state.songTitle)}》整合主奏樂器（${escapeHtml(state.leadInstrument)}）、副旋律對位（${escapeHtml(state.counterMelody)}）與織體演變（${escapeHtml(state.arrangementDensity)}），可直接於下一步複製至 Suno / Udio 生成純音樂。
+              </p>
+            </div>
+          `}
+
+          ${renderFooterNav(true, true)}
+        `;
+      } else if (state.step === 5) {
+        const stylePrompt = buildSunoStylePrompt();
+        const fullPackage = buildFullDeliverableText();
+        const exportJson = JSON.stringify(buildExportJson(), null, 2);
+
+        panel.innerHTML = `
+          <div class="panel-header">
+            <div class="panel-title">5 輸出與 28 項音樂元素 JSON 打包</div>
+            <div class="panel-subtitle">全部 28 項深度音樂元素已完成融合！您可直接複製 AI 音樂生成提示詞（Suno / Udio），或下載完整 JSON 元素檔。</div>
+          </div>
+
+          ${renderGlobalAppliedBanner()}
+          ${renderOptionAiBadge([0, 1, 26, 27])}
+          <div class="two-col section-block">
+            <div class="info-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <h4 style="margin:0;">🎧 Style of Music 提示詞（28 項全元素濃縮標籤）</h4>
+                <button class="btn-secondary" onclick="copyText('stylePromptBox')">📋 複製</button>
+              </div>
+              <div class="code-box" id="stylePromptBox">${escapeHtml(stylePrompt)}</div>
+            </div>
+
+            <div class="info-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <h4 style="margin:0;">🧬 新曲完整 JSON 音樂元素檔（Schema v3.0）</h4>
+                <button class="btn-secondary" onclick="downloadJsonFile()">⬇️ 下載 .json</button>
+              </div>
+              <div class="code-box">${escapeHtml(exportJson)}</div>
+            </div>
+          </div>
+
+          <div class="section-block info-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <h4 style="margin:0;">${isLyricMode() ? '🎤 完整歌詞與結構指令（Custom Lyrics Box）' : '🎼 純音樂段落結構與動態指令（Instrumental Prompt）'}</h4>
+              <button class="btn-primary" onclick="copyText('fullOutputBox')">📋 一鍵複製完整作品</button>
+            </div>
+            <div class="code-box" id="fullOutputBox" style="max-height:320px;">${escapeHtml(fullPackage)}</div>
+          </div>
+
+          ${renderFooterNav(true, false)}
+        `;
+      }
+    } catch (err) {
+      document.getElementById("panelContent").innerHTML = `<div style="color:#ff6d33;padding:20px;">介面載入錯誤：${err.message}</div>`;
+    }
+  }
+
+  function renderFooterNav(hasPrev, hasNext) {
+    return `
+      <div class="panel-footer">
+        <div>
+          ${hasPrev ? `<button class="btn-secondary" onclick="goStep(${state.step - 1})">← 上一步</button>` : '<span></span>'}
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-secondary" onclick="openJsonModal()">🧬 檢視 JSON</button>
+          ${hasNext ? `<button class="btn-primary" onclick="goStep(${state.step + 1})">下一步 →</button>` : `<button class="btn-primary" onclick="downloadJsonFile()">⬇️ 下載完整 JSON 元素檔</button>`}
+        </div>
+      </div>
+    `;
+  }
+
+  // =========================================================================
+  // 10. STATE HELPERS & PROMPT / JSON BUILDERS
+  // =========================================================================
+  function toggleKeyword(word) {
+    const idx = state.selectedKeywords.indexOf(word);
+    if (idx >= 0) state.selectedKeywords.splice(idx, 1);
+    else state.selectedKeywords.push(word);
+    renderPanel();
+    drawWaveformCanvas();
+  }
+
+  function toggleArrayItem(key, item) {
+    const arr = state[key];
+    const idx = arr.indexOf(item);
+    if (idx >= 0) arr.splice(idx, 1);
+    else arr.push(item);
+    renderPanel();
+  }
+
+  function buildSunoStylePrompt() {
+    const sys = currentSystem();
+    const modeTag = isLyricMode() ? "Vocal Track" : "Instrumental Only, No Vocals";
+    return [
+      sys.enName,
+      state.eraAesthetics,
+      `${state.bpm} BPM`,
+      state.timeSignature.split("（")[0],
+      `Groove: ${state.groovePocket}`,
+      state.keyHarmony,
+      `Chords: ${state.chordProgression}`,
+      `Melody: ${state.melodyContour}`,
+      state.moods.join(", "),
+      isLyricMode()
+        ? `${state.vocalStyle}, ${state.vocalTechniques}, ${state.backingVocals}`
+        : `Lead Solo: ${state.leadInstrument}, ${state.playingArticulation}, Counter-Melody: ${state.counterMelody}`,
+      `Instruments: ${state.instruments.join(", ")}, ${state.bassAndPercussion}`,
+      isAdvMode() ? `Production: ${state.mixingStyle}, Reverb ${state.reverbLevel}%, ${state.stereoImaging}, ${state.dynamicContrast}` : "",
+      modeTag
+    ].filter(Boolean).join(" | ");
+  }
+
+  function buildFullDeliverableText() {
+    if (!isLyricMode()) {
+      return `[Instrumental Master Blueprint for "${state.songTitle}"]
+` +
+        `Style: ${buildSunoStylePrompt()}
+` +
+        `Timeline: ${state.sectionTimeline}
+` +
+        `Motif & Hook: ${state.hookAndMotif}
+` +
+        `Climax Design: ${state.climaxDesign}
+` +
+        `----------------------------------------
+` +
+        state.formStructure.map((s, i) => `[Section ${i + 1}: ${s}]
+(Lead: ${state.leadInstrument} | Counter: ${state.counterMelody} | Density: ${state.arrangementDensity})`).join("
+
+");
+    }
+    return `《${state.songTitle}》
+` +
+      `Style Tags: ${buildSunoStylePrompt()}
+` +
+      `Motif & Climax: ${state.hookAndMotif} ｜ ${state.climaxDesign}
+` +
+      `----------------------------------------
+` +
+      state.generatedLyrics;
+  }
+
+  function buildExportJson() {
+    return {
+      schemaVersion: "3.0-FullSpectrum-MusicElements",
+      songTitle: state.songTitle,
+      sourceReference: state.sourceLabel,
+      eraAndAesthetics: state.eraAesthetics,
+      mode: state.mode,
+      genreSystem: {
+        id: state.systemId,
+        name: currentSystem().name,
+        presetId: state.presetId
+      },
+      musicTheory: {
+        bpm: state.bpm,
+        timeSignature: state.timeSignature,
+        groovePocket: state.groovePocket,
+        keyAndHarmony: state.keyHarmony,
+        chordProgression: state.chordProgression,
+        harmonyFeatures: state.harmonyTags,
+        melodyContour: state.melodyContour,
+        moods: state.moods,
+        emotionalArc: state.emotionalArc
+      },
+      orchestrationAndVocals: {
+        isInstrumental: !isLyricMode(),
+        vocalStyle: isLyricMode() ? state.vocalStyle : null,
+        vocalRange: isLyricMode() ? state.vocalRange : null,
+        chestResonancePercent: isLyricMode() ? state.chestRatio : null,
+        vocalTechniques: isLyricMode() ? state.vocalTechniques : null,
+        vocalDiction: isLyricMode() ? state.vocalDiction : null,
+        backingVocals: isLyricMode() ? state.backingVocals : null,
+        leadInstrument: state.leadInstrument,
+        playingArticulation: state.playingArticulation,
+        counterMelody: state.counterMelody,
+        instruments: state.instruments,
+        bassAndPercussion: state.bassAndPercussion,
+        arrangementDensity: state.arrangementDensity,
+        mixingAcoustics: state.mixingStyle,
+        reverbDepthPercent: state.reverbLevel,
+        stereoImaging: state.stereoImaging,
+        dynamicContrast: state.dynamicContrast
+      },
+      structureAndLyrics: {
+        themeCategory: state.themeCategory,
+        keywords: state.selectedKeywords,
+        formStructure: state.formStructure,
+        sectionTimeline: state.sectionTimeline,
+        hookAndMotif: state.hookAndMotif,
+        climaxDesign: state.climaxDesign,
+        lyricPattern: state.lyricPattern,
+        rhymeAndProsody: state.rhymeAndProsody,
+        lyrics: isLyricMode() ? state.generatedLyrics : ""
+      }
+    };
+  }
+
+  // =========================================================================
+  // 11. JSON MODAL IMPORT / EXPORT HANDLERS
+  // =========================================================================
+  function openJsonModal() {
+    document.getElementById("jsonEditorArea").value = JSON.stringify(buildExportJson(), null, 2);
+    document.getElementById("jsonModal").classList.add("open");
+  }
+
+  function closeJsonModal() {
+    document.getElementById("jsonModal").classList.remove("open");
+  }
+
+  function applyJsonFromEditor() {
+    try {
+      const parsed = JSON.parse(document.getElementById("jsonEditorArea").value);
+      if (parsed.songTitle) state.songTitle = parsed.songTitle;
+      if (parsed.suggestedNewTitle) state.songTitle = parsed.suggestedNewTitle;
+      if (parsed.sourceReference) state.sourceLabel = parsed.sourceReference;
+      if (parsed.sourceSongDescription) state.sourceLabel = parsed.sourceSongDescription;
+      if (parsed.genreSystem && GENRE_SYSTEMS[parsed.genreSystem.id]) {
+        state.systemId = parsed.genreSystem.id;
+      }
+      if (parsed.musicTheory) {
+        if (parsed.musicTheory.bpm) state.bpm = parsed.musicTheory.bpm;
+        if (parsed.musicTheory.timeSignature) state.timeSignature = parsed.musicTheory.timeSignature;
+        if (parsed.musicTheory.keyAndHarmony) state.keyHarmony = parsed.musicTheory.keyAndHarmony;
+        if (Array.isArray(parsed.musicTheory.harmonyFeatures)) state.harmonyTags = parsed.musicTheory.harmonyFeatures;
+        if (Array.isArray(parsed.musicTheory.moods)) state.moods = parsed.musicTheory.moods;
+      }
+      if (parsed.orchestrationAndVocals) {
+        const ov = parsed.orchestrationAndVocals;
+        if (ov.vocalStyle) state.vocalStyle = ov.vocalStyle;
+        if (ov.vocalRange) state.vocalRange = ov.vocalRange;
+        if (typeof ov.chestResonancePercent === "number") state.chestRatio = ov.chestResonancePercent;
+        if (Array.isArray(ov.instruments)) state.instruments = ov.instruments;
+        if (ov.mixingAcoustics) state.mixingStyle = ov.mixingAcoustics;
+        if (typeof ov.reverbDepthPercent === "number") state.reverbLevel = ov.reverbDepthPercent;
+        if (typeof ov.isInstrumental === "boolean") {
+          state.mode = ov.isInstrumental ? "inst_adv" : "lyric_adv";
+        }
+      }
+      if (parsed.structureAndLyrics) {
+        const sl = parsed.structureAndLyrics;
+        if (Array.isArray(sl.keywords)) state.selectedKeywords = sl.keywords;
+        if (Array.isArray(sl.formStructure)) state.formStructure = sl.formStructure;
+        if (sl.lyricPattern) state.lyricPattern = sl.lyricPattern;
+        if (sl.lyrics) state.generatedLyrics = sl.lyrics;
+        if (sl.newStyleMatchedLyrics) state.generatedLyrics = sl.newStyleMatchedLyrics;
+      }
+      closeJsonModal();
+      setMode(state.mode);
+      drawWaveformCanvas();
+      showToast("✅ 已成功解析並套用 JSON 音樂元素！");
+    } catch (e) {
+      alert("JSON 格式有誤，請檢查括號或引號是否完整：" + e.message);
+    }
+  }
+
+  function handleJsonFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById("jsonEditorArea").value = e.target.result;
+      showToast("📂 已讀取本地 JSON，請點擊「套用此 JSON 元素」");
+    };
+    reader.readAsText(file);
+  }
+
+  function downloadJsonFile() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(buildExportJson(), null, 2));
+    const a = document.createElement("a");
+    a.setAttribute("href", dataStr);
+    a.setAttribute("download", `${state.songTitle || "music-dna"}-${state.systemId}.json`);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast("⬇️ JSON 音樂元素檔已下載");
+  }
+
+  function copyText(elementId) {
+    const text = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(text).then(() => showToast("📋 已複製到剪貼簿"));
+  }
+
+  // =========================================================================
+  // 12. WEB AUDIO API HARMONY MOTIF SYNTHESIZER
+  // =========================================================================
+  let audioCtx = null;
+  let isPlaying = false;
+  let playTimer = null;
+
+  function toggleAudioPreview() {
+    const btn = document.getElementById("audioBtn");
+    if (isPlaying) {
+      isPlaying = false;
+      clearTimeout(playTimer);
+      btn.textContent = "🔊 試聽和聲動機";
+      return;
+    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+
+    isPlaying = true;
+    btn.textContent = "⏹️ 停止和聲試聽";
+    playGenreProgression();
+  }
+
+  function playGenreProgression() {
+    if (!isPlaying) return;
+    const progressions = {
+      mandopop: [
+        [246.94, 311.13, 369.99, 466.16],
+        [207.65, 246.94, 311.13, 369.99],
+        [164.81, 207.65, 246.94, 311.13],
+        [185.00, 233.08, 277.18, 329.63]
+      ],
+      kpop: [
+        [185.00, 220.00, 277.18, 329.63],
+        [196.00, 246.94, 293.66, 369.99],
+        [185.00, 220.00, 277.18, 329.63],
+        [138.59, 174.61, 207.65, 246.94]
+      ],
+      uspop: [
+        [174.61, 207.65, 261.63, 311.13],
+        [138.59, 174.61, 207.65, 261.63],
+        [207.65, 261.63, 311.13, 392.00],
+        [155.56, 196.00, 233.08, 277.18]
+      ],
+      classical: [
+        [138.59, 164.81, 207.65, 277.18],
+        [146.83, 174.61, 220.00, 277.18],
+        [155.56, 207.65, 246.94, 311.13],
+        [138.59, 164.81, 207.65, 277.18]
+      ]
+    };
+
+    const chords = progressions[state.systemId] || progressions.mandopop;
+    const beatSec = 60 / state.bpm;
+    const chordDur = beatSec * 2;
+    const now = audioCtx.currentTime;
+
+    chords.forEach((chord, cIdx) => {
+      chord.forEach((freq, nIdx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = state.systemId === "kpop" ? "triangle" : "sine";
+        const startTime = now + cIdx * chordDur + nIdx * 0.08;
+        osc.frequency.setValueAtTime(freq, startTime);
+
+        gain.gain.setValueAtTime(0.001, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.06, startTime + 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.0008, startTime + chordDur + 0.3);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + chordDur + 0.35);
+      });
+    });
+
+    playTimer = setTimeout(() => {
+      if (isPlaying) playGenreProgression();
+    }, chords.length * chordDur * 1000);
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+  }
+  function escapeAttr(str) {
+    return String(str).replace(/'/g, "\\'");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderPanel);
+  } else {
+    renderPanel();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "2.0-CrossGenre-MusicDNA",
+  "songTitle": "NEON MIRAGE (신기루)（中文：霓虹海市蜃樓）",
+  "genreSystem": {
+    "id": "kpop",
+    "name": "韓國 K-Pop",
+    "presetId": "kpop_girlcrush"
+  },
+  "musicTheory": {
+    "bpm": 128,
+    "timeSignature": "4/4 拍（Four-on-the-Floor＋Trap 切換）",
+    "keyAndHarmony": "F# 弗里吉亞調式（Phrygian Dominant）",
+    "harmonyFeatures": [
+      "弗里吉亞異國半音張力",
+      "Anti-Drop 極簡重低音",
+      "Dance Break 變拍衝擊"
+    ],
+    "moods": [
+      "霸氣自信",
+      "未來賽博感",
+      "高能量爆發"
+    ]
+  },
+  "orchestrationAndVocals": {
+    "isInstrumental": false,
+    "vocalStyle": "高音 Belting 爆發＋冷豔態度 Rap＋多聲部和聲疊錄",
+    "vocalRange": "G3 - G5",
+    "chestResonancePercent": 65,
+    "instruments": [
+      "超鋸齒波合成器（Supersaw）",
+      "失真 808 重低音",
+      "工業風重擊鼓組",
+      "史詩銅管齊奏"
+    ],
+    "mixingAcoustics": "高響度現代母帶壓縮（-6 LUFS）＋極寬立體聲合成器",
+    "reverbDepthPercent": 40
+  }
+}

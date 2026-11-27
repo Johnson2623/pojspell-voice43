@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "2.0-CrossGenre-MusicDNA",
+  "songTitle": "最後一夜（範例元素）",
+  "genreSystem": {
+    "id": "mandopop",
+    "name": "華語流行經典",
+    "presetId": "mando_ballad"
+  },
+  "musicTheory": {
+    "bpm": 92,
+    "timeSignature": "4/4 拍（Rubato 彈性律動）",
+    "keyAndHarmony": "B 大調轉關係小調（Modal Mixture）",
+    "harmonyFeatures": [
+      "大調底色轉關係小調",
+      "屬七和弦懸疑解決",
+      "五聲化抒情轉音"
+    ],
+    "moods": [
+      "深沉哀婉",
+      "懷舊電影感",
+      "克制深情"
+    ]
+  },
+  "orchestrationAndVocals": {
+    "isInstrumental": false,
+    "vocalStyle": "女中低音（Contralto）絲絨胸聲＋延遲顫音",
+    "vocalRange": "F#3 - E5（跨12度）",
+    "chestResonancePercent": 82,
+    "instruments": [
+      "原聲平台鋼琴",
+      "獨奏小提琴（滑音）",
+      "大型弦樂群",
+      "長笛（句尾點綴）",
+      "爵士鼓（吊鈸滾奏）"
+    ],
+    "mixingAcoustics": "80–90年代類比盤帶暖聲＋板式殘響（Plate Reverb）",
+    "reverbDepthPercent": 65
+  }
+}
