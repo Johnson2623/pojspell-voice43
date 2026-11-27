@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v15 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v16 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v15</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v16</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -2626,31 +2626,18 @@
 
   function buildFullDeliverableText() {
     if (!isLyricMode()) {
-      return `[Instrumental Master Blueprint for "${state.songTitle}"]
-` +
-        `Style: ${buildSunoStylePrompt()}
-` +
-        `Timeline: ${state.sectionTimeline}
-` +
-        `Motif & Hook: ${state.hookAndMotif}
-` +
-        `Climax Design: ${state.climaxDesign}
-` +
-        `----------------------------------------
-` +
-        state.formStructure.map((s, i) => `[Section ${i + 1}: ${s}]
-(Lead: ${state.leadInstrument} | Counter: ${state.counterMelody} | Density: ${state.arrangementDensity})`).join("
-
-");
+      return `[Instrumental Master Blueprint for "${state.songTitle}"]\n` +
+        `Style: ${buildSunoStylePrompt()}\n` +
+        `Timeline: ${state.sectionTimeline}\n` +
+        `Motif & Hook: ${state.hookAndMotif}\n` +
+        `Climax Design: ${state.climaxDesign}\n` +
+        `----------------------------------------\n` +
+        state.formStructure.map((s, i) => `[Section ${i + 1}: ${s}]\n(Lead: ${state.leadInstrument} | Counter: ${state.counterMelody} | Density: ${state.arrangementDensity})`).join("\n\n");
     }
-    return `《${state.songTitle}》
-` +
-      `Style Tags: ${buildSunoStylePrompt()}
-` +
-      `Motif & Climax: ${state.hookAndMotif} ｜ ${state.climaxDesign}
-` +
-      `----------------------------------------
-` +
+    return `《${state.songTitle}》\n` +
+      `Style Tags: ${buildSunoStylePrompt()}\n` +
+      `Motif & Climax: ${state.hookAndMotif} ｜ ${state.climaxDesign}\n` +
+      `----------------------------------------\n` +
       state.generatedLyrics;
   }
 
