@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v20 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v21 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v20</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v21</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -1437,7 +1437,13 @@
       await tempCtx.close();
       renderPanel();
       drawWaveformCanvas();
-      showToast(`✅ 波形與基礎聲學提取完成（偵測約 ${detectedBpm} BPM）`);
+
+      if (isAdvMode() && (uploadedAudio.geminiApiKey || "").trim()) {
+        showToast(`✅ 音檔上傳完成，偵測到已輸入 API Key，自動啟動「🧠 軌道 B：Gemini AI 深度解析」...`);
+        await runGeminiDeepAnalysis();
+      } else {
+        showToast(`✅ 波形與基礎聲學提取完成（偵測約 ${detectedBpm} BPM）`);
+      }
     } catch (err) {
       showToast(`⚠️ 音檔解碼失敗：${err.message}`);
     }
@@ -2108,7 +2114,7 @@
                 ` : ''}
                 <label class="btn-primary" style="cursor:pointer;">
                   📂 選擇音檔上傳
-                  <input type="file" accept="audio/*" style="display:none;" onchange="handleAudioFileUpload(this.files[0])" />
+                  <input type="file" accept="audio/*" style="display:none;" onchange="handleAudioFileUpload(this.files[0]); this.value='';" />
                 </label>
               </div>
             </div>
