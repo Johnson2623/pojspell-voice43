@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v28 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v29 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v28</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v29</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -1279,7 +1279,8 @@
     climaxDesign: "2:35 處升半音轉調＋全弦樂齊奏與定音鼓滾奏推向最高潮",
     lyricPattern: "主歌四字/三字對仗排比 ＋ 副歌長句抒情爆發",
     rhymeAndProsody: "主歌押 ie / ang 韻，副歌開口音（a / an）利於高音共鳴",
-    generatedLyrics: GENRE_SYSTEMS.mandopop.presets[0].sampleSeedLyrics
+    generatedLyrics: GENRE_SYSTEMS.mandopop.presets[0].sampleSeedLyrics,
+    disabledFormParts: []
   };
 
   let uploadedAudio = {
@@ -2038,6 +2039,7 @@
     if (preset.stereoImaging) state.stereoImaging = preset.stereoImaging;
     if (preset.dynamicContrast) state.dynamicContrast = preset.dynamicContrast;
     state.formStructure = [...preset.formStructure];
+    state.disabledFormParts = [];
     if (preset.sectionTimeline) state.sectionTimeline = preset.sectionTimeline;
     if (preset.hookAndMotif) state.hookAndMotif = preset.hookAndMotif;
     if (preset.climaxDesign) state.climaxDesign = preset.climaxDesign;
@@ -2648,12 +2650,57 @@
 
           ${renderGlobalAppliedBanner()}
           <div class="section-block info-card">
-            <h4>📐 ${renderAppliedFieldLabel('曲式結構動態時間軸（Song Form）', 22)}</h4>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+              <h4 style="margin:0;">📐 ${renderAppliedFieldLabel('曲式結構動態時間軸（Song Form）', 22)}</h4>
+              <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="resetFormStructureToPreset()">↺ 還原曲風預設曲式</button>
+            </div>
+            <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:10px;">
+              點擊已啟用段落可「停用移出」，使用 ◀ / ▶ 調整段落前後順序，或從下方常用庫／自訂框加入新段落（共 ${state.formStructure.length} 個啟用段落）：
+            </div>
             ${renderOptionAiBadge([22, 23, 24, 25])}
+
+            <!-- Active Song Form Timeline Pills with Toggle & Reorder -->
             <div class="pill-group" style="margin-bottom:12px;">
               ${state.formStructure.map((part, idx) => `
-                <span class="pill-btn active" style="cursor:default;">${idx + 1}. ${part}</span>
+                <div class="pill-btn active" style="display:inline-flex; align-items:center; gap:6px; padding:6px 10px;">
+                  <span onclick="toggleFormPartActive(${idx})" title="點擊停用此段落" style="cursor:pointer;">✓ ${idx + 1}. ${escapeHtml(part)}</span>
+                  <span style="display:inline-flex; gap:3px; margin-left:4px; border-left:1px solid rgba(255,109,51,0.4); padding-left:6px;">
+                    ${idx > 0 ? `<button type="button" onclick="event.stopPropagation(); moveFormPart(${idx}, -1)" title="往前移" style="background:rgba(255,255,255,0.12); border:none; color:#fff; border-radius:4px; padding:1px 5px; cursor:pointer; font-size:11px;">◀</button>` : ''}
+                    ${idx < state.formStructure.length - 1 ? `<button type="button" onclick="event.stopPropagation(); moveFormPart(${idx}, 1)" title="往後移" style="background:rgba(255,255,255,0.12); border:none; color:#fff; border-radius:4px; padding:1px 5px; cursor:pointer; font-size:11px;">▶</button>` : ''}
+                    <button type="button" onclick="event.stopPropagation(); toggleFormPartActive(${idx})" title="停用此段落" style="background:rgba(255,80,80,0.22); border:none; color:#ffb4b4; border-radius:4px; padding:1px 5px; cursor:pointer; font-size:11px;">✕</button>
+                  </span>
+                </div>
               `).join("")}
+            </div>
+
+            ${state.disabledFormParts.length ? `
+              <div style="margin-bottom:12px; padding:8px 10px; border-radius:8px; background:#141414; border:1px dashed #333;">
+                <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">已停用段落（點擊可重新啟用加入時間軸）：</div>
+                <div class="pill-group">
+                  ${state.disabledFormParts.map((part, dIdx) => `
+                    <button type="button" class="pill-btn" style="opacity:0.75;" onclick="restoreDisabledFormPart(${dIdx})">
+                      + 重新啟用：${escapeHtml(part)}
+                    </button>
+                  `).join("")}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Common Song Form Library -->
+            <div class="section-label" style="font-size:13px; margin-top:6px;">常用曲式段落快速新增庫（點擊加入時間軸）</div>
+            <div class="pill-group" style="margin-bottom:12px;">
+              ${COMMON_FORM_PARTS.map(p => `
+                <button type="button" class="pill-btn" onclick="addPresetFormPart('${escapeAttr(p)}')">+ ${escapeHtml(p)}</button>
+              `).join("")}
+            </div>
+
+            <!-- Custom Song Form Segment Input -->
+            <div class="section-label" style="font-size:13px;">自訂段落名稱（例如：薩克斯風獨奏間奏 / 清唱橋段）</div>
+            <div style="display:flex; gap:8px; margin-bottom:${isAdvMode() ? '14px' : '4px'};">
+              <input type="text" id="customFormPartInput" class="text-input" style="margin-bottom:0;"
+                     placeholder="輸入自訂段落名稱，按 Enter 或點擊右側按鈕加入..."
+                     onkeydown="if(event.key==='Enter'){ event.preventDefault(); addCustomFormPart(); }" />
+              <button type="button" class="btn-primary" style="white-space:nowrap;" onclick="addCustomFormPart()">➕ 新增段落</button>
             </div>
             ${isAdvMode() ? `
               <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('全曲段落時間軸與小節配置（Section Timeline）', 23)}</div>
@@ -2814,6 +2861,87 @@
     if (idx >= 0) arr.splice(idx, 1);
     else arr.push(item);
     renderPanel();
+  }
+
+  const COMMON_FORM_PARTS = [
+    "前奏 Intro（氛圍開場）",
+    "主歌 A1（低音敘事）",
+    "主歌 A2（情緒累積）",
+    "導歌 Pre-Chorus（情緒懸吊）",
+    "副歌 B1（核心記憶點）",
+    "間奏 Interlude（器樂對話）",
+    "副歌 B2（全編制張力）",
+    "舞蹈間奏 Dance Break（重擊變拍）",
+    "橋段 Bridge（戲劇轉折）",
+    "華彩樂段 Cadenza（獨奏炫技）",
+    "升調終極副歌 Final Chorus",
+    "尾奏 Outro（漸弱收束）"
+  ];
+
+  function toggleFormPartActive(index) {
+    if (index < 0 || index >= state.formStructure.length) return;
+    if (state.formStructure.length <= 1) {
+      showToast("⚠️ 曲式時間軸至少需保留 1 個段落");
+      return;
+    }
+    const [removed] = state.formStructure.splice(index, 1);
+    if (removed && !state.disabledFormParts.includes(removed)) {
+      state.disabledFormParts.push(removed);
+    }
+    if (uploadedAudio.lastAppliedReport) rebuildAppliedReport();
+    renderPanel();
+  }
+
+  function restoreDisabledFormPart(disabledIdx) {
+    if (disabledIdx < 0 || disabledIdx >= state.disabledFormParts.length) return;
+    const [restored] = state.disabledFormParts.splice(disabledIdx, 1);
+    if (restored) state.formStructure.push(restored);
+    if (uploadedAudio.lastAppliedReport) rebuildAppliedReport();
+    renderPanel();
+  }
+
+  function moveFormPart(index, delta) {
+    const target = index + delta;
+    if (index < 0 || index >= state.formStructure.length || target < 0 || target >= state.formStructure.length) return;
+    const temp = state.formStructure[index];
+    state.formStructure[index] = state.formStructure[target];
+    state.formStructure[target] = temp;
+    if (uploadedAudio.lastAppliedReport) rebuildAppliedReport();
+    renderPanel();
+  }
+
+  function addPresetFormPart(partLabel) {
+    const disIdx = state.disabledFormParts.indexOf(partLabel);
+    if (disIdx >= 0) state.disabledFormParts.splice(disIdx, 1);
+    state.formStructure.push(partLabel);
+    if (uploadedAudio.lastAppliedReport) rebuildAppliedReport();
+    renderPanel();
+    showToast(`✅ 已加入段落「${partLabel}」`);
+  }
+
+  function addCustomFormPart() {
+    const input = document.getElementById("customFormPartInput");
+    if (!input) return;
+    const val = input.value.trim();
+    if (!val) {
+      showToast("⚠️ 請先輸入自訂段落名稱");
+      return;
+    }
+    state.formStructure.push(val);
+    input.value = "";
+    if (uploadedAudio.lastAppliedReport) rebuildAppliedReport();
+    renderPanel();
+    showToast(`✅ 已新增自訂段落「${val}」`);
+  }
+
+  function resetFormStructureToPreset() {
+    const sys = currentSystem();
+    const preset = sys.presets.find(p => p.id === state.presetId) || sys.presets[0];
+    state.formStructure = [...preset.formStructure];
+    state.disabledFormParts = [];
+    if (uploadedAudio.lastAppliedReport) rebuildAppliedReport();
+    renderPanel();
+    showToast(`↺ 已還原「${sys.name}」預設曲式結構`);
   }
 
   function buildSunoStylePrompt() {
