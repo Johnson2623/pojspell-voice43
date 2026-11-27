@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v25 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v27 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v25</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v27</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -843,34 +843,85 @@
         {
           id: "mando_ballad",
           label: "時代抒情大歌（大調轉關係小調）",
+          eraAesthetics: "1980–1990年代黃金時代電影敘事抒情美學",
           bpm: 92, timeSignature: "4/4 拍（Rubato 彈性律動）",
+          groovePocket: "延遲後拍（Laid-back）＋副歌前微漸慢（Ritardando）",
           keyHarmony: "B 大調轉關係小調（Modal Mixture）",
+          chordProgression: "I - V/7 - vi - IV - ii7 - V7sus4 - V7",
           harmonyTags: ["大調底色轉關係小調", "屬七和弦懸疑解決", "1645 經典流行進行", "五聲化抒情轉音"],
+          melodyContour: "主歌級進低迴（Stepwise）＋副歌大六度／八度戲劇跳進",
           moods: ["深沉哀婉", "懷舊電影感", "克制深情", "宿命感"],
+          emotionalArc: "低吟壓抑 → 副歌八度爆發 → 尾奏留白餘韻",
           vocalStyle: "女中低音（Contralto）絲絨胸聲＋延遲顫音",
           vocalRange: "F#3 - E5（跨12度）",
           chestRatio: 82, reverbLevel: 65,
+          vocalTechniques: "句尾延遲顫音（Delayed Vibrato）＋氣聲轉真聲過渡",
+          vocalDiction: "字頭圓潤飽滿、母音拉長共鳴、語氣貼近敘事口吻",
+          backingVocals: "副歌第二遍加入三度／六度溫暖女聲合音鋪底",
+          leadInstrument: "獨奏小提琴（深情揉弦與滑音）＆ 史坦威平台鋼琴",
+          playingArticulation: "連奏長線條（Legato）＋句尾漸弱（Morendo）呼吸感",
+          counterMelody: "長笛與大提琴在主旋律句尾進行對位應答",
           instruments: ["原聲平台鋼琴", "獨奏小提琴（滑音）", "大型弦樂群", "長笛（句尾點綴）", "爵士鼓（吊鈸滾奏）", "溫暖電貝斯"],
+          bassAndPercussion: "溫暖電貝斯長音支撐 ＋ 吊鈸滾奏與輕刷軍鼓",
+          arrangementDensity: "前奏稀疏（2軌）→ 主歌中度（4軌）→ 副歌滿編（8軌）",
           mixingStyle: "80–90年代類比盤帶暖聲＋板式殘響（Plate Reverb）",
+          stereoImaging: "主奏居中貼耳，弦樂群左右極寬包覆，木管偏右點綴",
+          dynamicContrast: "寬動態範圍（pp 細語至 ff 管弦齊奏，約 14 dB 落差）",
           formStructure: ["前奏 Intro（小提琴悲歌）", "主歌 A1（低音敘事對仗）", "主歌 A2（情緒累積）", "副歌 B1（高音八度跳進）", "間奏 Interlude", "副歌 B2（全弦樂張力）", "副歌再現 B'（漸弱收束）", "尾奏 Outro"],
+          sectionTimeline: "0:00 前奏8小節 → 0:24 主歌16小節 → 1:05 副歌16小節 → 1:48 間奏 → 2:10 副歌B2 → 3:05 尾奏",
+          hookAndMotif: "前奏小提琴四音下行嘆息動機貫穿全曲過門",
+          climaxDesign: "2:35 處升半音轉調＋全弦樂齊奏與定音鼓滾奏推向最高潮",
           lyricPattern: "主歌四字/三字對仗排比 ＋ 副歌長句抒情爆發（押韻：ou / ie / ang）",
-          sampleSeedLyrics: "踩不完 街燈明滅\n看不盡 人潮更迭\n喝不乾 昨夜微醺的咖啡\n\n我也曾 沉醉 在星光滿天\n像飛舞在夜空的蝴蝶\n我也曾 心碎 在轉身瞬間\n獨自走過微涼的長街"
+          rhymeAndProsody: "主歌押 ie / ang 韻，副歌開口音（a / an）利於高音共鳴",
+          sampleSeedLyrics: "踩不完 街燈明滅
+看不盡 人潮更迭
+喝不乾 昨夜微醺的咖啡
+
+我也曾 沉醉 在星光滿天
+像飛舞在夜空的蝴蝶
+我也曾 心碎 在轉身瞬間
+獨自走過微涼的長街"
         },
         {
           id: "mando_chinese_rnb",
           label: "新國風 R&B（五聲音階＋現代節拍）",
+          eraAesthetics: "2020年代東方新國風跨界 R&B 都會美學",
           bpm: 84, timeSignature: "4/4 拍（R&B 切分律動）",
+          groovePocket: "十六分音符微切分搖擺（16th-note Swing）＋808 滑音貼合",
           keyHarmony: "D 宮調式（五聲音階＋九和弦潤色）",
+          chordProgression: "Imaj9 - vi7 - IVmaj7 - V13sus4 - iii7 - vi9",
           harmonyTags: ["中國五聲音階旋律", "當代 R&B 九和弦", "4-3-2-1 下行低音線", "古今跨界轉調"],
+          melodyContour: "五聲音階級進繞樑＋戲曲腔調裝飾音滑轉",
           moods: ["詩意唯美", "雅緻微涼", "古今交錯", "細膩含蓄"],
+          emotionalArc: "古箏清冷開場 → 主歌輕盈律動 → 副歌五聲華彩交織",
           vocalStyle: "氣聲 R&B 轉音（Melisma）＋戲曲韻味咬字",
           vocalRange: "A3 - F5",
           chestRatio: 55, reverbLevel: 55,
+          vocalTechniques: "假音氣聲轉換（Falsetto Break）＋五聲音階快速轉音",
+          vocalDiction: "古典詩詞韻腳輕盈點綴、尾音氣聲自然消散",
+          backingVocals: "現代 R&B 密集三聲部和聲墊底＋遠景戲腔和鳴",
+          leadInstrument: "古箏（輪指與泛音）＆ 竹笛（氣息感獨奏）",
+          playingArticulation: "古箏左手按滑音揉弦 ＋ 電鋼琴輕柔切分和弦",
+          counterMelody: "竹笛與原聲木吉他分解和弦在副歌間隙對答",
           instruments: ["古箏輪指", "竹笛／簫", "電鋼琴 Rhodes", "808 次低音", "現代 R&B 鼓組", "原聲木吉他"],
+          bassAndPercussion: "深沉 808 次低音滑音 ＋ 顆粒感 Rimshot 邊擊節奏",
+          arrangementDensity: "前奏極簡（古箏獨奏）→ 主歌中度（4軌）→ 副歌豐滿（7軌）",
           mixingStyle: "現代高清人聲貼耳混音＋古樂器立體聲場",
+          stereoImaging: "人聲與 808 居中鎖定，古箏左右聲道泛音流動，竹笛偏左",
+          dynamicContrast: "中高動態控制（mp 細膩敘事至 f 現代節拍律動，約 10 dB）",
           formStructure: ["前奏 Intro（古箏泛音）", "主歌 A1（輕快敘事）", "導歌 Pre-Chorus（弦樂鋪墊）", "副歌 B1（五聲高音鉤子）", "間奏（竹笛對話）", "副歌 B2", "尾奏 Outro"],
+          sectionTimeline: "0:00 前奏4小節 → 0:12 主歌16小節 → 0:56 導歌8小節 → 1:18 副歌16小節 → 2:02 竹笛間奏",
+          hookAndMotif: "古箏五聲音階泛音動機與副歌假音轉音 Hook 雙重呼應",
+          climaxDesign: "末段副歌拔高八度轉音＋竹笛與現代鼓組齊鳴",
           lyricPattern: "古典意象融合現代口語（押韻：ian / ue / feng）",
-          sampleSeedLyrics: "青石板 沾了微雨\n屋簷下 風鈴輕語\n翻開了 泛黃詩集第幾頁\n\n月光落 在你指尖\n像千年未變的誓言\n紅塵裡 誰又為誰留戀"
+          rhymeAndProsody: "押 ian / ue 細膩韻母，句尾保留呼吸留白空間",
+          sampleSeedLyrics: "青石板 沾了微雨
+屋簷下 風鈴輕語
+翻開了 泛黃詩集第幾頁
+
+月光落 在你指尖
+像千年未變的誓言
+紅塵裡 誰又為誰留戀"
         }
       ],
       themeCategories: {
@@ -904,34 +955,88 @@
         {
           id: "kpop_girlcrush",
           label: "Girl Crush / 暗黑史詩舞曲（EDM＋管弦重擊）",
+          eraAesthetics: "2023–2026 四代／五代 K-Pop 暗黑賽博史詩舞曲美學",
           bpm: 128, timeSignature: "4/4 拍（Four-on-the-Floor＋Trap 切換）",
+          groovePocket: "精準量化重拍（Hard Quantized）＋副歌 Anti-Drop 半速抽離",
           keyHarmony: "F# 弗里吉亞調式（Phrygian Dominant）",
+          chordProgression: "i - bII - i - bvii - bVI - V7alt",
           harmonyTags: ["弗里吉亞異國半音張力", "Anti-Drop 極簡重低音", "Pre-Chorus 戲劇升調", "Dance Break 變拍衝擊"],
+          melodyContour: "主歌低音饒舌切分 ＋ 導歌階梯式急升 ＋ 副歌洗腦單音 Hook",
           moods: ["霸氣自信", "未來賽博感", "戲劇反轉", "高能量爆發"],
+          emotionalArc: "暗黑低音潛行 → 導歌急劇拉升 → Anti-Drop 反轉重擊 → 終極高音炸裂",
           vocalStyle: "高音 Belting 爆發＋冷豔態度 Rap＋多聲部和聲疊錄",
           vocalRange: "G3 - G5（含海豚音點綴）",
           chestRatio: 65, reverbLevel: 40,
+          vocalTechniques: "強混聲高音 Belting ＋ 雙倍速切分 Rap ＋ 氣聲耳語對比",
+          vocalDiction: "韓英雙語爆發性子音重擊（Punchy Consonants）",
+          backingVocals: "四人／五人齊唱 Gang Vocals ＋ 高八度主唱 Ad-lib 疊錄",
+          leadInstrument: "超鋸齒波合成器（Supersaw）＆ 史詩銅管齊奏",
+          playingArticulation: "極致側鏈壓縮呼吸感（Sidechain Pumping）＋斷奏重擊",
+          counterMelody: "高頻人聲切片（Vocal Chops）與撥弦合成器 Pluck 交錯",
           instruments: ["超鋸齒波合成器（Supersaw）", "失真 808 重低音", "工業風重擊鼓組", "史詩銅管齊奏", "撥弦合成器 Pluck", "人聲切片 Vocal Chops"],
+          bassAndPercussion: "飽滿失真 808 次低音 ＋ 工業風金屬打擊與 Trap 滾奏 Hi-Hat",
+          arrangementDensity: "前奏Hook（3軌）→ 導歌抽空（2軌）→ 副歌與Dance Break滿編（12軌）",
           mixingStyle: "高響度現代母帶壓縮（-6 LUFS）＋極寬立體聲合成器",
+          stereoImaging: "808 與底鼓單聲道極致凝聚，Supersaw 合成器與人聲切片極寬環繞",
+          dynamicContrast: "戲劇化段落反差（導歌極簡留白至 Dance Break 全頻轟炸，約 12 dB）",
           formStructure: ["前奏 Intro（標誌性音效 Hook）", "主歌 Verse 1（酷感低音）", "饒舌段 Rap Verse（高速切分）", "導歌 Pre-Chorus（情緒懸吊）", "副歌 Chorus（洗腦英文 Hook）", "舞蹈間奏 Dance Break（Half-time 重擊）", "高潮橋段 Bridge（主唱高音飆唱）", "終極副歌 Final Chorus"],
+          sectionTimeline: "0:00 Intro 8小節 → 0:15 Verse/Rap 16小節 → 0:45 Pre-Chorus → 1:00 Chorus → 1:45 Dance Break → 2:15 Bridge 高音",
+          hookAndMotif: "開場標誌性異國合成器 Riff 與副歌洗腦英文標題 Hook",
+          climaxDesign: "Bridge 兩段式高音 Belting 接無伴奏停頓，瞬間引爆終極雙倍節奏副歌",
           lyricPattern: "韓文敘事主歌 ＋ 英文洗腦副歌 Hook ＋ 雙語節奏 Rap（A-A-B-B 韻腳）",
-          sampleSeedLyrics: "어둠 속에 번지는 spotlight\n숨길 수 없는 나의 borderline\n멈추지 마 더 깊이 dive in\n\n[Chorus]\nBreak the rules, feel the rush tonight\nWe're shining like a neon mirage\n빛나는 순간을 잡아봐\nNo turning back, we own the night"
+          rhymeAndProsody: "高頻爆破音節與英文雙音節 Hook 強烈押韻（tonight / borderline / dive in）",
+          sampleSeedLyrics: "어둠 속에 번지는 spotlight
+숨길 수 없는 나의 borderline
+멈추지 마 더 깊이 dive in
+
+[Chorus]
+Break the rules, feel the rush tonight
+We're shining like a neon mirage
+빛나는 순간을 잡아봐
+No turning back, we own the night"
         },
         {
           id: "kpop_y2k",
           label: "Y2K 復古輕快 / UK Garage 碎拍（NewJeans 風格）",
+          eraAesthetics: "1990年代末 Y2K 復古千禧年＋現代 UK Garage 清新美學",
           bpm: 132, timeSignature: "4/4 拍（UK Garage 2-Step 碎拍）",
+          groovePocket: "跳躍式 2-Step 切分碎拍（Syncopated Skip）＋輕盈前進感",
           keyHarmony: "A 大調／F# 小調（爵士七和弦與九和弦循環）",
+          chordProgression: "IVmaj9 - iii7 - vi9 - ii7 - V13sus4",
           harmonyTags: ["Maj9 / Min9 夢幻爵士和弦", "2-Step 碎拍切分律動", "無壓力循環和聲", "清甜雙聲部齊唱"],
+          melodyContour: "輕快流暢的五聲與七和弦音階跳躍，無厚重高音壓迫感",
           moods: ["青春悸動", "Y2K 復古夢幻", "輕盈通透", "清新微甜"],
+          emotionalArc: "碎拍輕盈開場 → 青春少女敘事 → 副歌循環洗腦律動 → 夢幻漸弱尾奏",
           vocalStyle: "自然氣聲吟唱（Breathy Natural Vocal）＋無修飾清新和聲",
           vocalRange: "A3 - D5",
           chestRatio: 40, reverbLevel: 50,
+          vocalTechniques: "純淨無刻意顫音的少女氣聲（Airy Head-Mix）＋輕巧滑音",
+          vocalDiction: "韓英自然日常對話語氣，保留換氣聲增加親密貼耳感",
+          backingVocals: "清新雙聲部齊唱（Unison Doubling）＋高八度氣聲疊合",
+          leadInstrument: "夢幻電鋼琴 Rhodes ＆ 復古 FM 合成器貝斯",
+          playingArticulation: "電鋼琴柔和延音和弦 ＋ 碎拍鼓組清脆閉合鈸（Closed Hi-Hat）",
+          counterMelody: "清亮合唱電吉他（Chorus Guitar）與卡帶Lo-Fi音效點綴",
           instruments: ["UK Garage 碎拍鼓組", "夢幻電鋼琴 Rhodes", "復古 FM 合成器貝斯", "清亮合唱電吉他", "卡帶沙沙聲 Lo-Fi 質感"],
+          bassAndPercussion: "彈性 FM 合成器次低音 ＋ 高速跳躍 UK Garage 2-Step 碎拍鼓點",
+          arrangementDensity: "全程保持通透中低密度（4–6軌），留出充足空間給人聲與碎拍呼吸",
           mixingStyle: "自然動態溫潤混音＋90年代 R&B 復古空間感",
+          stereoImaging: "人聲貼近中央，電鋼琴與合唱吉他溫暖包覆中景，碎拍鈸片左右跳動",
+          dynamicContrast: "平滑流暢的律動起伏（mp 至 mf，保持輕鬆耐聽的動態曲線）",
           formStructure: ["前奏 Intro（碎拍鼓點進場）", "主歌 Verse 1", "副歌 Chorus 1（記憶點旋律）", "主歌 Verse 2", "副歌 Chorus 2", "橋段 Bridge（人聲清唱疊合）", "尾奏 Outro（漸弱碎拍）"],
+          sectionTimeline: "0:00 Intro 8小節 → 0:14 Verse 16小節 → 0:43 Chorus 16小節 → 1:40 Bridge 清唱 → 2:10 Outro",
+          hookAndMotif: "開場標誌性 2-Step 碎拍節奏型與副歌重複英文短句 Hook",
+          climaxDesign: "Bridge 抽掉鼓組僅留多聲部清唱合音，隨後碎拍與 FM 貝斯溫柔回歸",
           lyricPattern: "韓英夾雜口語少女心事 ＋ 重複洗腦音節 Hook（如：Oh my, oh my）",
-          sampleSeedLyrics: "창문 너머 불어오는 breeze\n너의 이름만 떠올려도 freeze\n설레는 맘을 감출 수 없어\n\n[Chorus]\nTell me what you're waiting for\n두근거리는 heart beat more\n이 밤이 지나가기 전에\n너에게 달려갈게 right now"
+          rhymeAndProsody: "短促輕快的單音節英文韻腳與韓語母音自然銜接（breeze / freeze / more）",
+          sampleSeedLyrics: "창문 너머 불어오는 breeze
+너의 이름만 떠올려도 freeze
+설레는 맘을 감출 수 없어
+
+[Chorus]
+Tell me what you're waiting for
+두근거리는 heart beat more
+이 밤이 지나가기 전에
+너에게 달려갈게 right now"
         }
       ],
       themeCategories: {
@@ -957,34 +1062,88 @@
         {
           id: "uspop_synth",
           label: "80s 復古合成器流行（The Weeknd / Dua Lipa 風）",
+          eraAesthetics: "1980年代復古未來主義 Synth-Pop／現代 Billboard 舞曲美學",
           bpm: 118, timeSignature: "4/4 拍（Disco-Pop 律動）",
+          groovePocket: "穩健四四拍舞曲推進（Driving Four-on-the-Floor）＋八度跳躍放克律動",
           keyHarmony: "F 小調（F Minor 經典四和弦 vi-IV-I-V 變體）",
+          chordProgression: "i - bVI - bIII - bVII（Fm - Db - Ab - Eb）",
           harmonyTags: ["I-V-vi-IV 冠軍四和弦", "80s 類比合成器琶音", "八度跳躍放克貝斯", "副歌大開大闔和聲"],
+          melodyContour: "主歌中音域緊湊敘事 ＋ 副歌高音域寬廣長線條爆發",
           moods: ["午夜馳騁", "復古摩登", "微醺狂歡", "都會浪漫"],
+          emotionalArc: "類比合成器夜色鋪陳 → 導歌鼓點推進 → 副歌霓虹全開狂歡",
           vocalStyle: "流行真假音流暢切換（Falsetto Flip）＋俐落切分咬字",
           vocalRange: "G3 - F5",
           chestRatio: 60, reverbLevel: 58,
+          vocalTechniques: "真假音瞬間翻轉（Falsetto Flip）＋80年代復古磁帶延遲（Tape Delay）",
+          vocalDiction: "美式英語俐落子音切分、母音明亮開放",
+          backingVocals: "80年代復古聲碼器（Vocoder）和聲 ＋ 副歌寬廣八度疊錄",
+          leadInstrument: "Juno-106 復古類比合成器 ＆ 閃亮合成器銅管",
+          playingArticulation: "十六分音符持續琶音（Arpeggiator）＋放克切分電吉他掃弦",
+          counterMelody: "閃亮合成器銅管 Riff 在副歌句尾進行標誌性應答",
           instruments: ["Juno-106 復古合成器", "放克電貝斯（Slap/Finger）", "門控殘響軍鼓（Gated Reverb Snare）", "切分節奏電吉他", "閃亮合成器銅管"],
+          bassAndPercussion: "八度跳躍類比合成器貝斯 ＋ 80年代門控殘響軍鼓（Gated Reverb）",
+          arrangementDensity: "前奏琶音（3軌）→ 主歌律動（5軌）→ 副歌滿編舞曲（9軌）",
           mixingStyle: "現代超清低頻＋80年代門控殘響（Gated Reverb）空間感",
+          stereoImaging: "主唱與底鼓居中紮實，合成器琶音與切分吉他左右鏡像對稱",
+          dynamicContrast: "高能量舞曲推進（mf 主歌至 ff 副歌爆發，約 11 dB 落差）",
           formStructure: ["前奏 Intro（合成器琶音）", "主歌 Verse 1", "導歌 Pre-Chorus（鼓點漸強）", "副歌 Chorus（全開復古舞曲）", "主歌 Verse 2", "副歌 Chorus", "橋段 Bridge（合成器 Solo）", "終極副歌 Outro"],
+          sectionTimeline: "0:00 Intro 8小節 → 0:16 Verse 16小節 → 0:48 Pre-Chorus 8小節 → 1:05 Chorus 16小節 → 2:10 Synth Solo",
+          hookAndMotif: "貫穿全曲的 Juno-106 十六分音符類比合成器琶音動機",
+          climaxDesign: "Bridge 復古類比合成器獨奏 Solo 攀升至最高音，直接銜接最後兩遍滿編副歌",
           lyricPattern: "美式直白敘事意象 ＋ 朗朗上口副歌押韻（ABAB / AABB 韻式）",
-          sampleSeedLyrics: "Headlights cutting through the midnight rain\nRadio playing that familiar strain\nWe got nowhere left to hide tonight\n\n[Chorus]\nWe're chasing California lights\nBurning fast on the edge of time\nHold me close till the morning fades\nDancing out of the midnight shade"
+          rhymeAndProsody: "長母音（night / lights / time / fade）配合副歌長音高音延展",
+          sampleSeedLyrics: "Headlights cutting through the midnight rain
+Radio playing that familiar strain
+We got nowhere left to hide tonight
+
+[Chorus]
+We're chasing California lights
+Burning fast on the edge of time
+Hold me close till the morning fades
+Dancing out of the midnight shade"
         },
         {
           id: "uspop_rnb",
           label: "當代另類 R&B / 靈魂流行（SZA / Bruno Mars 風）",
+          eraAesthetics: "2020年代當代另類 R&B 與 70年代復古靈魂樂融合美學",
           bpm: 78, timeSignature: "4/4 拍（慵懶 Swing 搖擺感）",
+          groovePocket: "極度慵懶延遲拍點（Heavy Laid-back Pocket / Dilla Feel）",
           keyHarmony: "Eb 大調（Maj7 / Min11 豐富延伸和弦）",
+          chordProgression: "IVmaj9 - iii7 - ii11 - Imaj9 - VI7alt",
           harmonyTags: ["九和弦與十一和弦色彩", "爵士藍調經過音", "延遲拍點（Laid-back Groove）", "福音式多層和聲疊錄"],
+          melodyContour: "自由即興的爵士藍調音階游走 ＋ 副歌真摯情感爬升",
           moods: ["慵懶性感", "深夜告白", "真摯靈魂", "微醺放鬆"],
+          emotionalArc: "深夜電鋼琴私語 → 主歌親密獨白 → 副歌靈魂共鳴 → 即興轉音尾奏",
           vocalStyle: "絲滑轉音（Vocal Runs）＋耳語氣聲＋濃厚靈魂共鳴",
           vocalRange: "F3 - G5",
           chestRatio: 72, reverbLevel: 48,
+          vocalTechniques: "福音式複雜轉音（Gospel Melisma）＋耳語氣聲與胸聲無縫切換",
+          vocalDiction: "美式口語連讀、隨性微拖拍的深夜對話感",
+          backingVocals: "福音式六聲部濃郁和聲墊底 ＋ 尾奏雙軌即興 Ad-lib 交織",
+          leadInstrument: "Fender Rhodes 電鋼琴 ＆ 指彈爵士電吉他",
+          playingArticulation: "電鋼琴溫暖顫音（Tremolo）＋吉他滑音與泛音點綴",
+          counterMelody: "室內弦樂四重奏與溫暖貝斯在人聲空隙進行低迴應答",
           instruments: ["Fender Rhodes 電鋼琴", "Warm Analog Bass", "指彈爵士電吉他", "黑膠底噪與脆響軍鼓", "弦樂四重奏點綴"],
+          bassAndPercussion: "圓潤類比指彈貝斯 ＋ 帶黑膠底噪的脆響 Lo-Fi 軍鼓",
+          arrangementDensity: "全程保持親密溫暖的中度織體（4–6軌），突出人聲細節",
           mixingStyle: "溫暖類比飽和度（Tape Saturation）＋貼耳親密人聲",
+          stereoImaging: "人聲極致貼耳居中，Rhodes 電鋼琴立體聲顫音左右搖曳",
+          dynamicContrast: "細膩柔和的動態起伏（pp 耳語至 mf 靈魂合唱，約 9 dB）",
           formStructure: ["前奏 Intro（電鋼琴和弦）", "主歌 Verse 1", "副歌 Chorus 1", "主歌 Verse 2（節奏加深）", "副歌 Chorus 2", "即興轉音尾奏 Ad-lib Outro"],
+          sectionTimeline: "0:00 Intro 4小節 → 0:12 Verse 16小節 → 1:01 Chorus 16小節 → 1:50 Verse 2 → 2:38 Ad-lib Outro",
+          hookAndMotif: "Fender Rhodes 十一和弦進行與副歌開頭長音情感呼喚",
+          climaxDesign: "尾奏 Ad-lib Outro 多層福音和聲疊加與主唱高音即興轉音交織",
           lyricPattern: "內心獨白式美式英文詩句 ＋ 靈魂樂即興重複句",
-          sampleSeedLyrics: "3AM and your jacket's still on my chair\nCoffee's cold but your scent is everywhere\nWhy do we always talk in circles when it hurts?\n\n[Chorus]\nSay you'll stay just a little while longer\nEvery heartbeat pulling me in closer\nIn the quiet of this Brooklyn room\nI'm still falling right back to you"
+          rhymeAndProsody: "口語內韻（Internal Rhyme）與柔和尾韻（chair / everywhere / longer / closer）",
+          sampleSeedLyrics: "3AM and your jacket's still on my chair
+Coffee's cold but your scent is everywhere
+Why do we always talk in circles when it hurts?
+
+[Chorus]
+Say you'll stay just a little while longer
+Every heartbeat pulling me in closer
+In the quiet of this Brooklyn room
+I'm still falling right back to you"
         }
       ],
       themeCategories: {
@@ -1010,34 +1169,87 @@
         {
           id: "class_romantic",
           label: "浪漫派交響詩 / 鋼琴協奏曲（拉赫曼尼諾夫／蕭邦風）",
+          eraAesthetics: "19世紀晚期浪漫主義交響與鋼琴協奏曲輝煌美學",
           bpm: 66, timeSignature: "3/4 拍 或 4/4 拍（Adagio 慢板彈性速度）",
+          groovePocket: "高度自由的浪漫派彈性速度（Tempo Rubato）與呼吸漸慢",
           keyHarmony: "C# 小調轉 Db 大調（半音階轉調與減七和弦）",
+          chordProgression: "i - iv6 - N6（拿坡里六和弦）- V7/V - V7 - I（同主音大調輝煌解決）",
           harmonyTags: ["半音階和聲遊走", "減七和弦戲劇張力", "拿坡里六和弦（Neapolitan 6th）", "關係大調輝煌轉折"],
+          melodyContour: "綿延不絕的歌唱性寬廣長線條（Cantabile）與深情八度大跳",
           moods: ["史詩悲壯", "深邃詩意", "戲劇衝突", "崇高輝煌"],
+          emotionalArc: "低音弦樂陰鬱低語 → 抒情主題展開 → 華彩炫技風暴 → 全樂團輝煌昇華",
           vocalStyle: "戲劇女高音 / 次女高音美聲（Bel Canto Operatic）",
           vocalRange: "A3 - C6（美聲全音域）",
           chestRatio: 70, reverbLevel: 85,
+          vocalTechniques: "義大利傳統美聲連音（Legato）＋戲劇性高音共鳴與弱音控制（Messa di Voce）",
+          vocalDiction: "義大利文／拉丁文母音純淨共鳴，子音清晰穿透交響樂團",
+          backingVocals: "必要時加入交響混聲合唱團（Symphonic Choir）營造神聖史詩感",
+          leadInstrument: "史坦威平台鋼琴獨奏 ＆ 全編制交響弦樂團",
+          playingArticulation: "鋼琴深沉踏板共鳴與瀑布式琶音 ＋ 弦樂全弓深情揉弦（Espressivo）",
+          counterMelody: "法國號與雙簧管在鋼琴與弦樂主旋律之間進行英雄式與哀婉式對位",
           instruments: ["史坦威平台鋼琴獨奏", "全編制交響弦樂團", "法國號（French Horn）", "雙簧管（Oboe 哀婉獨奏）", "定音鼓（Timpani 滾奏）", "豎琴琶音"],
+          bassAndPercussion: "低音大提琴深沉撥奏與長音 ＋ 定音鼓（Timpani）戲劇性滾奏與鈸擊",
+          arrangementDensity: "從獨奏鋼琴與單簧管（2聲部）層層疊加至完整 60 人交響樂團齊奏",
           mixingStyle: "維也納金色大廳自然堂音（Concert Hall Natural Acoustic）",
+          stereoImaging: "標準交響樂團舞台擺位（第一小提琴左、大提琴右、銅管打擊居中後方）",
+          dynamicContrast: "極致交響動態跨度（ppp 極弱耳語至 fff 全樂團轟鳴，超過 22 dB）",
           formStructure: ["序奏 Introduzione（低音弦樂陰鬱鋪陳）", "呈示部第一主題（抒情長線條旋律）", "發展部 Development（半音轉調與對位衝突）", "華彩樂段 Cadenza（獨奏炫技爆發）", "再現部 Recapitulation（全樂團輝煌齊奏）", "尾聲 Coda（漸弱歸於寧靜）"],
+          sectionTimeline: "0:00 序奏 → 0:35 第一主題呈示 → 1:30 發展部衝突 → 2:20 獨奏華彩 → 2:55 再現部齊奏 → 3:40 尾聲",
+          hookAndMotif: "由四個半音下行構成的「命運嘆息動機」貫穿全曲所有轉調變奏",
+          climaxDesign: "華彩樂段結束後，轉入 Db 大調，全弦樂八度齊奏與法國號齊鳴推向崇高頂點",
           lyricPattern: "義大利文／拉丁文美聲詠嘆調詩體（附中文意譯對照）",
-          sampleSeedLyrics: "[Recitativo - 宣敘調]\nNella notte silenziosa, il vento sussurra il tuo nome,\n(在寂靜的夜裡，微風低語著你的名字，)\n\n[Aria - 詠嘆調]\nO luna d'argento, porta via il mio dolore,\n(啊，銀色的月亮，帶走我的哀傷吧，)\nCome un'onda eterna che torna al mare,\n(如同永恆的波浪終將回歸大海，)\nL'anima mia canta nell'ombra e nella luce.\n(我的靈魂在暗影與光芒中歌唱。)"
+          rhymeAndProsody: "義大利文開放母音（a / o / e）利於美聲共鳴穿透音樂廳空間",
+          sampleSeedLyrics: "[Recitativo - 宣敘調]
+Nella notte silenziosa, il vento sussurra il tuo nome,
+(在寂靜的夜裡，微風低語著你的名字，)
+
+[Aria - 詠嘆調]
+O luna d'argento, porta via il mio dolore,
+(啊，銀色的月亮，帶走我的哀傷吧，)
+Come un'onda eterna che torna al mare,
+(如同永恆的波浪終將回歸大海，)
+L'anima mia canta nell'ombra e nella luce.
+(我的靈魂在暗影與光芒中歌唱。)"
         },
         {
           id: "class_baroque",
           label: "巴洛克室內樂與賦格（巴赫／韋瓦第風）",
+          eraAesthetics: "18世紀巴洛克時期宮廷室內樂與複音對位建築美學",
           bpm: 108, timeSignature: "4/4 拍（Allegro 活力規律律動）",
+          groovePocket: "精準恆定的巴洛克機械律動（Motoric Rhythm）與清晰節拍重音",
           keyHarmony: "D 小調（嚴謹對位法與數字低音 Basso Continuo）",
+          chordProgression: "i - V6 - i - iv - VII - III - VI - ii°6 - V - I（皮卡第三度大調終止）",
           harmonyTags: ["卡農與賦格對位（Fugue）", "數字低音持續推進", "模進（Sequence）層層推升", "皮卡第三度終止式"],
+          melodyContour: "十六分音符持續流動的裝飾音型（Ornamentation）與嚴謹主題模進",
           moods: ["莊嚴理性", "建築般精密", "莊重輝煌", "靈動跳躍"],
+          emotionalArc: "單聲部主題呈示 → 四聲部賦格層層交織 → 密接和應緊湊推升 → 莊嚴終止",
           vocalStyle: "巴洛克清亮花腔美聲（Baroque Coloratura）",
           vocalRange: "C4 - A5",
           chestRatio: 50, reverbLevel: 72,
+          vocalTechniques: "純淨直音（Straight Tone）接花腔快速音階跑動（Coloratura Runs）",
+          vocalDiction: "拉丁文聖詠清晰顆粒感咬字，與大鍵琴撥弦節奏同步",
+          backingVocals: "室內巴洛克四部合唱（SATB）對位應答",
+          leadInstrument: "大鍵琴（Harpsichord）＆ 巴洛克小提琴獨奏",
+          playingArticulation: "分奏短促顆粒感（Non-legato / Détaché）＋顫音與迴音裝飾奏",
+          counterMelody: "大提琴與低音管執行數字低音（Basso Continuo），各弦樂聲部獨立對位",
           instruments: ["大鍵琴（Harpsichord）", "巴洛克小提琴獨奏", "大提琴數字低音", "低音管（Bassoon）", "室內弦樂團"],
+          bassAndPercussion: "大提琴與低音管持續推進的數字低音線條（無現代打擊樂器）",
+          arrangementDensity: "從單聲部逐漸疊加至四聲部獨立複音對位（4–5個精純聲部）",
           mixingStyle: "歐洲古教堂／巴洛克宮廷室內樂自然殘響",
+          stereoImaging: "室內樂半圓形親密擺位，小提琴與大鍵琴左右清晰對話",
+          dynamicContrast: "巴洛克特有的階梯式力度對比（Terraced Dynamics，f 與 p 明確切換）",
           formStructure: ["主題呈示 Subject（大鍵琴與小提琴卡農）", "對題展開 Counter-subject", "發展段 Episode（模進轉調）", "密接和應 Stretto（聲部緊密交織）", "終止式 Coda（莊嚴和弦解決）"],
+          sectionTimeline: "0:00 主題呈示 → 0:25 對題展開 → 1:05 模進發展段 → 1:50 密接和應高潮 → 2:25 終止式",
+          hookAndMotif: "八音符跳躍與十六音符級進組成的巴洛克賦格核心主題（Subject）",
+          climaxDesign: "Stretto 密接和應段落四聲部每隔一小節相繼進入主題，最後以皮卡第三度輝煌收束",
           lyricPattern: "拉丁文聖詠／巴洛克詩歌對仗結構",
-          sampleSeedLyrics: "Lux aeterna luceat in tenebris,\n(永恆之光照耀於黑暗之中，)\nPer saecula cantamus gloriam,\n(世世代代我們頌唱榮耀，)\nIn harmonia caeli et terrae.\n(在天地和諧的樂章裡。)"
+          rhymeAndProsody: "拉丁文莊重音節重音與對位節奏精準對齊",
+          sampleSeedLyrics: "Lux aeterna luceat in tenebris,
+(永恆之光照耀於黑暗之中，)
+Per saecula cantamus gloriam,
+(世世代代我們頌唱榮耀，)
+In harmonia caeli et terrae.
+(在天地和諧的樂章裡。)"
         }
       ],
       themeCategories: {
@@ -1070,7 +1282,7 @@
 4. 全曲結構與動態演進矩陣（Structural & Dynamic Matrix）：
    - 列出精確時間軸（0:00 - X:XX）、曲式段落名稱、動態力度標記（pp → ff）、配器密度星等與情感功能。
 
-5. 標準化 JSON 音樂元素輸出（Schema v2.0）：
+5. 標準化 JSON 音樂元素輸出（Schema v3.0）：
    - 最後請將上述所有分析結果，嚴格封裝成一段可直接匯入「AI 跨界音樂元素工作站」的 JSON 程式碼（包含 songTitle、sourceReference、genreSystem、musicTheory、orchestrationAndVocals、structureAndLyrics 欄位），並保留原曲的歌詞格律或段落結構供我進行同風格二創。`;
 
   const GENRE_FOCUS_ADDONS = {
@@ -1558,21 +1770,13 @@
     state.systemId = sys.id;
     const preset = sys.presets[0];
 
-    state.presetId = preset.id;
+    loadGenrePreset(sys.id, false, preset.id);
     state.sourceLabel = `音檔聲學提取：${uploadedAudio.fileName.slice(0, 14)}`;
     state.bpm = m.bpm;
-    state.timeSignature = preset.timeSignature;
-    state.keyHarmony = preset.keyHarmony;
-    state.harmonyTags = [...preset.harmonyTags];
-    state.moods = [...preset.moods];
-    state.vocalStyle = preset.vocalStyle;
-    state.vocalRange = preset.vocalRange;
-    state.chestRatio = preset.chestRatio;
     state.reverbLevel = Math.min(92, Math.max(30, Math.round(Number(m.dynamicRangeDb) * 5)));
-    state.instruments = [...preset.instruments];
-    state.mixingStyle = preset.mixingStyle;
-    state.formStructure = [...preset.formStructure];
-    state.lyricPattern = preset.lyricPattern;
+    uploadedAudio.lastAppliedReport = null;
+    uploadedAudio.geminiAppliedTitle = null;
+    uploadedAudio.geminiAppliedKeywords = null;
 
     if (sys.id === "classical" && Number(m.dynamicRangeDb) > 15) {
       setMode("inst_adv");
@@ -1867,20 +2071,40 @@
 
     state.presetId = preset.id;
     state.sourceLabel = preset.label.split("（")[0];
+    if (preset.eraAesthetics) state.eraAesthetics = preset.eraAesthetics;
     state.bpm = preset.bpm;
     state.timeSignature = preset.timeSignature;
+    if (preset.groovePocket) state.groovePocket = preset.groovePocket;
     state.keyHarmony = preset.keyHarmony;
+    if (preset.chordProgression) state.chordProgression = preset.chordProgression;
     state.harmonyTags = [...preset.harmonyTags];
+    if (preset.melodyContour) state.melodyContour = preset.melodyContour;
     state.moods = [...preset.moods];
+    if (preset.emotionalArc) state.emotionalArc = preset.emotionalArc;
     state.vocalStyle = preset.vocalStyle;
     state.vocalRange = preset.vocalRange;
     state.chestRatio = preset.chestRatio;
     state.reverbLevel = preset.reverbLevel;
+    if (preset.vocalTechniques) state.vocalTechniques = preset.vocalTechniques;
+    if (preset.vocalDiction) state.vocalDiction = preset.vocalDiction;
+    if (preset.backingVocals) state.backingVocals = preset.backingVocals;
+    if (preset.leadInstrument) state.leadInstrument = preset.leadInstrument;
+    if (preset.playingArticulation) state.playingArticulation = preset.playingArticulation;
+    if (preset.counterMelody) state.counterMelody = preset.counterMelody;
     state.instruments = [...preset.instruments];
+    if (preset.bassAndPercussion) state.bassAndPercussion = preset.bassAndPercussion;
+    if (preset.arrangementDensity) state.arrangementDensity = preset.arrangementDensity;
     state.mixingStyle = preset.mixingStyle;
+    if (preset.stereoImaging) state.stereoImaging = preset.stereoImaging;
+    if (preset.dynamicContrast) state.dynamicContrast = preset.dynamicContrast;
     state.formStructure = [...preset.formStructure];
+    if (preset.sectionTimeline) state.sectionTimeline = preset.sectionTimeline;
+    if (preset.hookAndMotif) state.hookAndMotif = preset.hookAndMotif;
+    if (preset.climaxDesign) state.climaxDesign = preset.climaxDesign;
     state.lyricPattern = preset.lyricPattern;
+    if (preset.rhymeAndProsody) state.rhymeAndProsody = preset.rhymeAndProsody;
     state.generatedLyrics = preset.sampleSeedLyrics;
+    state.lyricsManuallyEdited = false;
 
     if (!sys.themeCategories[state.themeCategory]) {
       const firstCat = Object.keys(sys.themeCategories)[0];
@@ -2527,7 +2751,7 @@
                 </div>
               ` : ''}
               <textarea class="textarea-input" style="min-height:260px; font-size:14.5px;"
-                        oninput="state.generatedLyrics=this.value;">${escapeHtml(state.generatedLyrics)}</textarea>
+                        oninput="state.generatedLyrics=this.value; state.lyricsManuallyEdited=true;">${escapeHtml(state.generatedLyrics)}</textarea>
             </div>
           ` : `
             <div class="section-block info-card">
@@ -2556,15 +2780,25 @@
           ${renderOptionAiBadge([0, 1, 4, 5, 26, 27])}
 
           <div class="section-block info-card" style="border:1px solid rgba(255,109,51,0.45); background:linear-gradient(135deg, rgba(255,109,51,0.08) 0%, #161616 100%);">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-              <h4 style="margin:0; color:var(--accent);">🎯 已套用之主題靈感關鍵詞與創作核心</h4>
-              <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="goStep(1)">✏️ 返回步驟 1 增減關鍵詞</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+              <h4 style="margin:0; color:var(--accent);">🎯 本次已套用之全部音樂元素總覽（步驟 1～4 選項同步彙整）</h4>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="goStep(1)">✏️ 改歌名/關鍵詞</button>
+                <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="goStep(2)">🎹 改調性/情緒</button>
+                <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="goStep(3)">🎻 改人聲/配器</button>
+              </div>
             </div>
-            <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center; font-size:13.5px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px 18px; font-size:13.5px; line-height:1.6;">
+              <div><span style="color:var(--text-secondary);">音樂元素體系：</span><strong style="color:#fff;">${currentSystem().icon} ${escapeHtml(currentSystem().name)}（${escapeHtml(state.sourceLabel)}）</strong></div>
               <div><span style="color:var(--text-secondary);">${isLyricMode() ? '目標新歌名' : '目標新曲名稱'}：</span><strong style="color:#fff;">《${escapeHtml(state.songTitle)}》</strong></div>
-              <div><span style="color:var(--text-secondary);">主題分類：</span><strong style="color:#fff;">${escapeHtml(state.themeCategory)}</strong></div>
-              <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
-                <span style="color:var(--text-secondary);">主題靈感庫已選（${state.selectedKeywords.length} 個）：</span>
+              <div><span style="color:var(--text-secondary);">速度與拍號：</span><strong style="color:#fff;">${state.bpm} BPM ｜ ${escapeHtml(state.timeSignature)}</strong></div>
+              <div><span style="color:var(--text-secondary);">調性與和聲進行：</span><strong style="color:var(--accent);">${escapeHtml(state.keyHarmony)}</strong></div>
+              <div><span style="color:var(--text-secondary);">核心情緒氛圍：</span><strong style="color:#fff;">${escapeHtml(state.moods.join("、"))}</strong></div>
+              <div><span style="color:var(--text-secondary);">${isLyricMode() ? '人聲聲線唱腔' : '核心主奏樂器'}：</span><strong style="color:#fff;">${escapeHtml(isLyricMode() ? state.vocalStyle : state.leadInstrument)}</strong></div>
+              <div style="grid-column:1 / -1;"><span style="color:var(--text-secondary);">核心配器編制：</span><strong style="color:#fff;">${escapeHtml(state.instruments.join("、"))}</strong></div>
+              <div style="grid-column:1 / -1;"><span style="color:var(--text-secondary);">曲式結構時間軸：</span><strong style="color:#fff;">${escapeHtml(state.formStructure.join(" → "))}</strong></div>
+              <div style="grid-column:1 / -1; display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
+                <span style="color:var(--text-secondary);">主題靈感庫【${escapeHtml(state.themeCategory)}】（已選 ${state.selectedKeywords.length} 個）：</span>
                 ${state.selectedKeywords.length
                   ? state.selectedKeywords.map(k => `<span class="pill-btn active" style="padding:3px 10px; font-size:12.5px; cursor:default;">✓ ${escapeHtml(k)}</span>`).join("")
                   : '<span style="color:#888;">（尚未勾選關鍵詞）</span>'}
@@ -2627,6 +2861,9 @@
     const idx = state.selectedKeywords.indexOf(word);
     if (idx >= 0) state.selectedKeywords.splice(idx, 1);
     else state.selectedKeywords.push(word);
+    if (isLyricMode() && !state.lyricsManuallyEdited && !uploadedAudio.lastAppliedReport) {
+      generateStyleMatchedLyrics(false);
+    }
     renderPanel();
     drawWaveformCanvas();
   }
@@ -2642,6 +2879,19 @@
   function buildSunoStylePrompt() {
     const sys = currentSystem();
     const modeTag = isLyricMode() ? "Vocal Track" : "Instrumental Only, No Vocals";
+    if (!isAdvMode()) {
+      return [
+        sys.enName,
+        `${state.bpm} BPM`,
+        state.timeSignature.split("（")[0],
+        state.keyHarmony,
+        state.harmonyTags.length ? `Harmony: ${state.harmonyTags.join(", ")}` : "",
+        state.moods.join(", "),
+        isLyricMode() ? state.vocalStyle : `Lead: ${state.leadInstrument}`,
+        `Instruments: ${state.instruments.join(", ")}`,
+        modeTag
+      ].filter(Boolean).join(" | ");
+    }
     return [
       sys.enName,
       state.eraAesthetics,
@@ -2656,13 +2906,20 @@
         ? `${state.vocalStyle}, ${state.vocalTechniques}, ${state.backingVocals}`
         : `Lead Solo: ${state.leadInstrument}, ${state.playingArticulation}, Counter-Melody: ${state.counterMelody}`,
       `Instruments: ${state.instruments.join(", ")}, ${state.bassAndPercussion}`,
-      isAdvMode() ? `Production: ${state.mixingStyle}, Reverb ${state.reverbLevel}%, ${state.stereoImaging}, ${state.dynamicContrast}` : "",
+      `Production: ${state.mixingStyle}, Reverb ${state.reverbLevel}%, ${state.stereoImaging}, ${state.dynamicContrast}`,
       modeTag
     ].filter(Boolean).join(" | ");
   }
 
   function buildFullDeliverableText() {
     if (!isLyricMode()) {
+      if (!isAdvMode()) {
+        return `[Instrumental Blueprint for "${state.songTitle}"]\n` +
+          `Theme & Keywords: [${state.themeCategory}] ${state.selectedKeywords.join(", ")}\n` +
+          `Style: ${buildSunoStylePrompt()}\n` +
+          `----------------------------------------\n` +
+          state.formStructure.map((s, i) => `[Section ${i + 1}: ${s}]\n(Instruments: ${state.instruments.join(", ")})`).join("\n\n");
+      }
       return `[Instrumental Master Blueprint for "${state.songTitle}"]\n` +
         `Theme & Keywords: [${state.themeCategory}] ${state.selectedKeywords.join(", ")}\n` +
         `Style: ${buildSunoStylePrompt()}\n` +
@@ -2671,6 +2928,13 @@
         `Climax Design: ${state.climaxDesign}\n` +
         `----------------------------------------\n` +
         state.formStructure.map((s, i) => `[Section ${i + 1}: ${s}]\n(Lead: ${state.leadInstrument} | Counter: ${state.counterMelody} | Density: ${state.arrangementDensity})`).join("\n\n");
+    }
+    if (!isAdvMode()) {
+      return `《${state.songTitle}》\n` +
+        `主題分類與靈感關鍵詞：【${state.themeCategory}】${state.selectedKeywords.join("、")}\n` +
+        `Style Tags: ${buildSunoStylePrompt()}\n` +
+        `----------------------------------------\n` +
+        state.generatedLyrics;
     }
     return `《${state.songTitle}》\n` +
       `主題分類與靈感關鍵詞：【${state.themeCategory}】${state.selectedKeywords.join("、")}\n` +
@@ -2755,33 +3019,54 @@
       if (parsed.suggestedNewTitle) state.songTitle = parsed.suggestedNewTitle;
       if (parsed.sourceReference) state.sourceLabel = parsed.sourceReference;
       if (parsed.sourceSongDescription) state.sourceLabel = parsed.sourceSongDescription;
+      if (parsed.eraAndAesthetics) state.eraAesthetics = parsed.eraAndAesthetics;
       if (parsed.genreSystem && GENRE_SYSTEMS[parsed.genreSystem.id]) {
         state.systemId = parsed.genreSystem.id;
       }
       if (parsed.musicTheory) {
-        if (parsed.musicTheory.bpm) state.bpm = parsed.musicTheory.bpm;
-        if (parsed.musicTheory.timeSignature) state.timeSignature = parsed.musicTheory.timeSignature;
-        if (parsed.musicTheory.keyAndHarmony) state.keyHarmony = parsed.musicTheory.keyAndHarmony;
-        if (Array.isArray(parsed.musicTheory.harmonyFeatures)) state.harmonyTags = parsed.musicTheory.harmonyFeatures;
-        if (Array.isArray(parsed.musicTheory.moods)) state.moods = parsed.musicTheory.moods;
+        const mt = parsed.musicTheory;
+        if (mt.bpm) state.bpm = Number(mt.bpm);
+        if (mt.timeSignature) state.timeSignature = mt.timeSignature;
+        if (mt.groovePocket) state.groovePocket = mt.groovePocket;
+        if (mt.keyAndHarmony) state.keyHarmony = mt.keyAndHarmony;
+        if (mt.chordProgression) state.chordProgression = mt.chordProgression;
+        if (Array.isArray(mt.harmonyFeatures)) state.harmonyTags = mt.harmonyFeatures;
+        if (mt.melodyContour) state.melodyContour = mt.melodyContour;
+        if (Array.isArray(mt.moods)) state.moods = mt.moods;
+        if (mt.emotionalArc) state.emotionalArc = mt.emotionalArc;
       }
       if (parsed.orchestrationAndVocals) {
         const ov = parsed.orchestrationAndVocals;
         if (ov.vocalStyle) state.vocalStyle = ov.vocalStyle;
         if (ov.vocalRange) state.vocalRange = ov.vocalRange;
         if (typeof ov.chestResonancePercent === "number") state.chestRatio = ov.chestResonancePercent;
+        if (ov.vocalTechniques) state.vocalTechniques = ov.vocalTechniques;
+        if (ov.vocalDiction) state.vocalDiction = ov.vocalDiction;
+        if (ov.backingVocals) state.backingVocals = ov.backingVocals;
+        if (ov.leadInstrument) state.leadInstrument = ov.leadInstrument;
+        if (ov.playingArticulation) state.playingArticulation = ov.playingArticulation;
+        if (ov.counterMelody) state.counterMelody = ov.counterMelody;
         if (Array.isArray(ov.instruments)) state.instruments = ov.instruments;
+        if (ov.bassAndPercussion) state.bassAndPercussion = ov.bassAndPercussion;
+        if (ov.arrangementDensity) state.arrangementDensity = ov.arrangementDensity;
         if (ov.mixingAcoustics) state.mixingStyle = ov.mixingAcoustics;
         if (typeof ov.reverbDepthPercent === "number") state.reverbLevel = ov.reverbDepthPercent;
+        if (ov.stereoImaging) state.stereoImaging = ov.stereoImaging;
+        if (ov.dynamicContrast) state.dynamicContrast = ov.dynamicContrast;
         if (typeof ov.isInstrumental === "boolean") {
           state.mode = ov.isInstrumental ? "inst_adv" : "lyric_adv";
         }
       }
       if (parsed.structureAndLyrics) {
         const sl = parsed.structureAndLyrics;
+        if (sl.themeCategory) state.themeCategory = sl.themeCategory;
         if (Array.isArray(sl.keywords)) state.selectedKeywords = sl.keywords;
         if (Array.isArray(sl.formStructure)) state.formStructure = sl.formStructure;
+        if (sl.sectionTimeline) state.sectionTimeline = sl.sectionTimeline;
+        if (sl.hookAndMotif) state.hookAndMotif = sl.hookAndMotif;
+        if (sl.climaxDesign) state.climaxDesign = sl.climaxDesign;
         if (sl.lyricPattern) state.lyricPattern = sl.lyricPattern;
+        if (sl.rhymeAndProsody) state.rhymeAndProsody = sl.rhymeAndProsody;
         if (sl.lyrics) state.generatedLyrics = sl.lyrics;
         if (sl.newStyleMatchedLyrics) state.generatedLyrics = sl.newStyleMatchedLyrics;
       }
