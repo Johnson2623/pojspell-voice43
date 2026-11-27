@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v19 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v20 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v19</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v20</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -2040,6 +2040,14 @@
     `;
   }
 
+  function renderAppliedFieldLabel(baseLabel, reportIndex, extraSuffix = "") {
+    if (isAdvMode() && uploadedAudio.lastAppliedReport && uploadedAudio.lastAppliedReport[reportIndex]) {
+      const val = uploadedAudio.lastAppliedReport[reportIndex].value;
+      return `${baseLabel} 已經套用Gemini AI 深度解析 <span style="color:var(--accent); font-weight:700;">${escapeHtml(val)}</span>${extraSuffix}`;
+    }
+    return `${baseLabel}${extraSuffix}`;
+  }
+
   function renderOptionAiBadge(indices) {
     if (!uploadedAudio.lastAppliedReport) return "";
     const matched = indices.map(idx => uploadedAudio.lastAppliedReport[idx]).filter(Boolean);
@@ -2146,7 +2154,7 @@
           ` : ''}
 
           <div class="section-block">
-            <div class="section-label">${!isAdvMode() ? '請選擇目標音樂元素體系（四大曲風資料庫）' : '或直接選擇目標音樂元素體系（四大曲風資料庫）'}</div>
+            <div class="section-label">${!isAdvMode() ? '請選擇目標音樂元素體系（四大曲風資料庫）' : renderAppliedFieldLabel('或直接選擇目標音樂元素體系（四大曲風資料庫）', 1)}</div>
             <div class="genre-cards-grid">
               ${Object.values(GENRE_SYSTEMS).map(g => `
                 <div class="genre-card ${state.systemId === g.id ? 'active' : ''}" onclick="selectGenreSystem('${g.id}')">
@@ -2182,11 +2190,11 @@
               ${renderOptionAiBadge([2, 3])}
               <div class="two-col">
                 <div>
-                  <div class="section-label" style="font-size:13px;">原曲風格與魅力簡述</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('原曲風格與魅力簡述', 2)}</div>
                   <textarea class="textarea-input" rows="3" style="min-height:92px; line-height:1.55;" oninput="state.sourceLabel=this.value; updateSummaryBox();">${escapeHtml(state.sourceLabel)}</textarea>
                 </div>
                 <div>
-                  <div class="section-label" style="font-size:13px;">時代美學與製作流派</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('時代美學與製作流派', 3)}</div>
                   <textarea class="textarea-input" rows="3" style="min-height:92px; line-height:1.55;" oninput="state.eraAesthetics=this.value;">${escapeHtml(state.eraAesthetics)}</textarea>
                 </div>
               </div>
@@ -2251,13 +2259,13 @@
               ${renderOptionAiBadge([6, 7, 8])}
               <div class="slider-row">
                 <div class="slider-header">
-                  <span>基礎速度（Tempo）</span>
+                  <span>${renderAppliedFieldLabel('基礎速度（Tempo）', 6)}</span>
                   <strong style="color:var(--accent);">${state.bpm} BPM</strong>
                 </div>
                 <input type="range" min="50" max="165" value="${state.bpm}"
                        oninput="state.bpm=Number(this.value); this.previousElementSibling.lastElementChild.textContent=this.value+' BPM'; updateSummaryBox();" />
               </div>
-              <div class="section-label" style="font-size:13px;">拍號與基礎律動</div>
+              <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('拍號與基礎律動', 7)}</div>
               <div class="pill-group" style="margin-bottom:12px;">
                 ${["4/4 拍（Rubato 彈性律動）", "4/4 拍（UK Garage 2-Step 碎拍）", "4/4 拍（Disco-Pop 律動）", "4/4 拍（慵懶 Swing 搖擺感）", "3/4 拍（浪漫派圓舞曲感）"].map(ts => `
                   <button class="pill-btn ${state.timeSignature === ts ? 'active' : ''}"
@@ -2267,13 +2275,13 @@
                 `).join("")}
               </div>
               ${isAdvMode() ? `
-                <div class="section-label" style="font-size:13px;">微時間律動感（Groove Pocket）</div>
+                <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('微時間律動感（Groove Pocket）', 8)}</div>
                 <input type="text" class="text-input" value="${escapeHtml(state.groovePocket)}" oninput="state.groovePocket=this.value;" />
               ` : ''}
             </div>
 
             <div class="info-card">
-              <h4>🎭 核心情緒氛圍與張力推進曲線</h4>
+              <h4>🎭 ${renderAppliedFieldLabel('核心情緒氛圍（可複選）', 9)}</h4>
               ${renderOptionAiBadge([9, 10])}
               <div class="pill-group" style="margin-bottom:12px;">
                 ${allMoods.map(m => {
@@ -2282,7 +2290,7 @@
                 }).join("")}
               </div>
               ${isAdvMode() ? `
-                <div class="section-label" style="font-size:13px;">全曲情緒張力推進曲線（Emotional Arc）</div>
+                <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('全曲情緒張力推進曲線（Emotional Arc）', 10)}</div>
                 <input type="text" class="text-input" value="${escapeHtml(state.emotionalArc)}" oninput="state.emotionalArc=this.value;" />
               ` : ''}
             </div>
@@ -2293,13 +2301,13 @@
             ${renderOptionAiBadge([11, 12, 13])}
             <div class="two-col">
               <div>
-                <div class="section-label" style="font-size:13px;">主調性與調式色彩</div>
+                <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('主調性與調式色彩', 11)}</div>
                 <input type="text" class="text-input" value="${escapeHtml(state.keyHarmony)}"
                        oninput="state.keyHarmony=this.value; updateSummaryBox();" />
               </div>
               ${isAdvMode() ? `
                 <div>
-                  <div class="section-label" style="font-size:13px;">核心和弦進行級數（Chord Progression）</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('核心和弦進行級數（Chord Progression）', 12)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.chordProgression)}"
                          oninput="state.chordProgression=this.value;" />
                 </div>
@@ -2312,7 +2320,7 @@
               }).join("")}
             </div>
             ${isAdvMode() ? `
-              <div class="section-label" style="font-size:13px;">旋律線條輪廓與音程跳進（Melody Contour & Intervals）</div>
+              <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('旋律線條輪廓與音程跳進（Melody Contour & Intervals）', 13)}</div>
               <input type="text" class="text-input" value="${escapeHtml(state.melodyContour)}" oninput="state.melodyContour=this.value;" />
             ` : ''}
           </div>
@@ -2345,7 +2353,7 @@
           ${renderGlobalAppliedBanner()}
           ${isLyricMode() ? `
             <div class="section-block info-card">
-              <h4>🎤 人聲聲線、共鳴比例、唱腔與合音編排（含歌詞模式專屬）</h4>
+              <h4>🎤 ${renderAppliedFieldLabel('人聲聲線與演唱技巧', 14)}</h4>
               ${renderOptionAiBadge([14, 15, 16, 17])}
               <div class="pill-group" style="margin-bottom:12px;">
                 ${vocalPresets.map(v => `
@@ -2359,7 +2367,7 @@
               ${isAdvMode() ? `
                 <div class="two-col" style="margin-top:8px;">
                   <div class="slider-row">
-                    <div class="slider-header"><span>胸腔共鳴比例（Chest Resonance）</span><strong style="color:var(--accent);">${state.chestRatio}%</strong></div>
+                    <div class="slider-header"><span>${renderAppliedFieldLabel('胸腔共鳴比例與音域跨度', 15)}</span><strong style="color:var(--accent);">${state.chestRatio}%</strong></div>
                     <input type="range" min="20" max="95" value="${state.chestRatio}"
                            oninput="state.chestRatio=Number(this.value); this.previousElementSibling.lastElementChild.textContent=this.value+'%';" />
                   </div>
@@ -2370,11 +2378,11 @@
                 </div>
                 <div class="two-col">
                   <div>
-                    <div class="section-label" style="font-size:13px;">細部唱腔與裝飾音技巧（Vibrato / Melisma）</div>
+                    <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('細部唱腔與裝飾音技巧（Vibrato / Melisma）', 16)}</div>
                     <input type="text" class="text-input" value="${escapeHtml(state.vocalTechniques)}" oninput="state.vocalTechniques=this.value;" />
                   </div>
                   <div>
-                    <div class="section-label" style="font-size:13px;">咬字發音與語氣表情（Diction & Articulation）</div>
+                    <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('咬字發音與和聲疊錄層次', 17)}</div>
                     <input type="text" class="text-input" value="${escapeHtml(state.vocalDiction)}" oninput="state.vocalDiction=this.value;" />
                   </div>
                 </div>
@@ -2390,21 +2398,21 @@
               ${renderOptionAiBadge([14, 15, 16, 17])}
               <div class="two-col">
                 <div>
-                  <div class="section-label" style="font-size:13px;">核心主奏樂器與音色型號（Lead Solo Instrument）</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('核心主奏樂器與音色型號（Lead Solo Instrument）', 14)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.leadInstrument)}" oninput="state.leadInstrument=this.value; updateSummaryBox();" />
                 </div>
                 <div>
-                  <div class="section-label" style="font-size:13px;">演奏技法與觸鍵／運弓表情（Articulation）</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('演奏技法與觸鍵／運弓表情（Articulation）', 15)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.playingArticulation)}" oninput="state.playingArticulation=this.value;" />
                 </div>
               </div>
               <div class="two-col">
                 <div>
-                  <div class="section-label" style="font-size:13px;">副旋律與聲部對位設計（Counter-Melody & Polyphony）</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('副旋律與聲部對位設計（Counter-Melody & Polyphony）', 16)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.counterMelody)}" oninput="state.counterMelody=this.value;" />
                 </div>
                 <div>
-                  <div class="section-label" style="font-size:13px;">編曲織體密度演變（Arrangement Density）</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('編曲織體密度演變（Arrangement Density）', 17)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.arrangementDensity)}" oninput="state.arrangementDensity=this.value;" />
                 </div>
               </div>
@@ -2412,7 +2420,7 @@
           `}
 
           <div class="section-block info-card">
-            <h4>🎼 核心伴奏樂器編制與低音／打擊組</h4>
+            <h4>🎼 ${renderAppliedFieldLabel('核心伴奏樂器編制', 18)}</h4>
             ${renderOptionAiBadge([18, 19])}
             <div class="pill-group" style="margin-bottom:12px;">
               ${instrumentPool.map(inst => {
@@ -2423,7 +2431,7 @@
             ${isAdvMode() ? `
               <div class="two-col" style="margin-top:8px;">
                 <div>
-                  <div class="section-label" style="font-size:13px;">低音線條與打擊節奏組（Bassline & Percussion）</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('低音線條與打擊節奏組（Bassline & Percussion）', 19)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.bassAndPercussion)}" oninput="state.bassAndPercussion=this.value;" />
                 </div>
                 <div>
@@ -2436,7 +2444,7 @@
 
           ${isAdvMode() ? `
             <div class="section-block info-card">
-              <h4>🎛️ 高階混音年代聲學、立體聲場與動態落差</h4>
+              <h4>🎛️ ${renderAppliedFieldLabel('高階混音年代聲學與殘響深度', 20)}</h4>
               ${renderOptionAiBadge([20, 21])}
               <input type="text" class="text-input" value="${escapeHtml(state.mixingStyle)}" oninput="state.mixingStyle=this.value;" />
               <div class="slider-row">
@@ -2446,7 +2454,7 @@
               </div>
               <div class="two-col">
                 <div>
-                  <div class="section-label" style="font-size:13px;">立體聲場定位與擺位（Stereo Imaging）</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('立體聲場定位與動態對比', 21)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.stereoImaging)}" oninput="state.stereoImaging=this.value;" />
                 </div>
                 <div>
@@ -2470,7 +2478,7 @@
 
           ${renderGlobalAppliedBanner()}
           <div class="section-block info-card">
-            <h4>📐 曲式結構時間軸、記憶點動機（Hook／Motif）與高潮設計</h4>
+            <h4>📐 ${renderAppliedFieldLabel('曲式結構動態時間軸（Song Form）', 22)}</h4>
             ${renderOptionAiBadge([22, 23, 24, 25])}
             <div class="pill-group" style="margin-bottom:12px;">
               ${state.formStructure.map((part, idx) => `
@@ -2478,15 +2486,15 @@
               `).join("")}
             </div>
             ${isAdvMode() ? `
-              <div class="section-label" style="font-size:13px;">全曲段落時間軸與小節配置（Section Timeline）</div>
+              <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('全曲段落時間軸與小節配置（Section Timeline）', 23)}</div>
               <input type="text" class="text-input" value="${escapeHtml(state.sectionTimeline)}" oninput="state.sectionTimeline=this.value;" />
               <div class="two-col">
                 <div>
-                  <div class="section-label" style="font-size:13px;">核心記憶點（Hook）或主題動機（Motif）發展</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('核心記憶點（Hook）或主題動機（Motif）發展', 24)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.hookAndMotif)}" oninput="state.hookAndMotif=this.value;" />
                 </div>
                 <div>
-                  <div class="section-label" style="font-size:13px;">全曲最高潮（Climax）編曲與和聲引爆設計</div>
+                  <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('全曲最高潮（Climax）編曲與和聲引爆設計', 25)}</div>
                   <input type="text" class="text-input" value="${escapeHtml(state.climaxDesign)}" oninput="state.climaxDesign=this.value;" />
                 </div>
               </div>
@@ -2496,14 +2504,14 @@
           ${isLyricMode() ? `
             <div class="section-block info-card">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-                <h4 style="margin:0;">✍️ 同風格新詞工作區與押韻聲韻設計</h4>
+                <h4 style="margin:0;">✍️ ${renderAppliedFieldLabel('同風格新詞工作區', 27)}</h4>
                 <button class="btn-primary" onclick="generateStyleMatchedLyrics(true)">✨ 依原曲格律重新生成新歌詞</button>
               </div>
               ${renderOptionAiBadge([26, 27])}
               ${isAdvMode() ? `
                 <div class="two-col" style="margin-bottom:8px;">
                   <div>
-                    <div class="section-label" style="font-size:13px;">詞曲句式與對仗格律（Lyric Pattern）</div>
+                    <div class="section-label" style="font-size:13px;">${renderAppliedFieldLabel('詞曲句式格律與押韻聲韻', 26)}</div>
                     <input type="text" class="text-input" value="${escapeHtml(state.lyricPattern)}" oninput="state.lyricPattern=this.value;" />
                   </div>
                   <div>
@@ -2517,7 +2525,7 @@
             </div>
           ` : `
             <div class="section-block info-card">
-              <h4>🎼 純演奏曲動態張力與聲部輪替指引</h4>
+              <h4>🎼 ${renderAppliedFieldLabel('純演奏曲動態張力與聲部輪替指引', 26)}</h4>
               ${renderOptionAiBadge([26])}
               <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.65;">
                 系統已為純演奏曲《${escapeHtml(state.songTitle)}》整合主奏樂器（${escapeHtml(state.leadInstrument)}）、副旋律對位（${escapeHtml(state.counterMelody)}）與織體演變（${escapeHtml(state.arrangementDensity)}），可直接於下一步複製至 Suno / Udio 生成純音樂。
