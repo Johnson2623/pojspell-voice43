@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v24 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v25 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v24</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v25</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -2553,7 +2553,25 @@
           </div>
 
           ${renderGlobalAppliedBanner()}
-          ${renderOptionAiBadge([0, 1, 26, 27])}
+          ${renderOptionAiBadge([0, 1, 4, 5, 26, 27])}
+
+          <div class="section-block info-card" style="border:1px solid rgba(255,109,51,0.45); background:linear-gradient(135deg, rgba(255,109,51,0.08) 0%, #161616 100%);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+              <h4 style="margin:0; color:var(--accent);">🎯 已套用之主題靈感關鍵詞與創作核心</h4>
+              <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="goStep(1)">✏️ 返回步驟 1 增減關鍵詞</button>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center; font-size:13.5px;">
+              <div><span style="color:var(--text-secondary);">${isLyricMode() ? '目標新歌名' : '目標新曲名稱'}：</span><strong style="color:#fff;">《${escapeHtml(state.songTitle)}》</strong></div>
+              <div><span style="color:var(--text-secondary);">主題分類：</span><strong style="color:#fff;">${escapeHtml(state.themeCategory)}</strong></div>
+              <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
+                <span style="color:var(--text-secondary);">主題靈感庫已選（${state.selectedKeywords.length} 個）：</span>
+                ${state.selectedKeywords.length
+                  ? state.selectedKeywords.map(k => `<span class="pill-btn active" style="padding:3px 10px; font-size:12.5px; cursor:default;">✓ ${escapeHtml(k)}</span>`).join("")
+                  : '<span style="color:#888;">（尚未勾選關鍵詞）</span>'}
+              </div>
+            </div>
+          </div>
+
           <div class="two-col section-block">
             <div class="info-card">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -2646,6 +2664,7 @@
   function buildFullDeliverableText() {
     if (!isLyricMode()) {
       return `[Instrumental Master Blueprint for "${state.songTitle}"]\n` +
+        `Theme & Keywords: [${state.themeCategory}] ${state.selectedKeywords.join(", ")}\n` +
         `Style: ${buildSunoStylePrompt()}\n` +
         `Timeline: ${state.sectionTimeline}\n` +
         `Motif & Hook: ${state.hookAndMotif}\n` +
@@ -2654,6 +2673,7 @@
         state.formStructure.map((s, i) => `[Section ${i + 1}: ${s}]\n(Lead: ${state.leadInstrument} | Counter: ${state.counterMelody} | Density: ${state.arrangementDensity})`).join("\n\n");
     }
     return `《${state.songTitle}》\n` +
+      `主題分類與靈感關鍵詞：【${state.themeCategory}】${state.selectedKeywords.join("、")}\n` +
       `Style Tags: ${buildSunoStylePrompt()}\n` +
       `Motif & Climax: ${state.hookAndMotif} ｜ ${state.climaxDesign}\n` +
       `----------------------------------------\n` +
