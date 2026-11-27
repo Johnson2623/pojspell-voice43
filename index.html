@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 跨界音樂元素工作站 v18 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
+  <title>AI 跨界音樂元素工作站 v19 | Gemini 3.1 Pro 深度解析 × 四大曲風重混</title>
   <style>
     :root {
       --bg-main: #111111;
@@ -706,7 +706,7 @@
   <div class="utility-bar">
     <div class="brand-badge">
       <span class="brand-dot"></span>
-      <span><strong>AI 跨界音樂元素工作站 v18</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
+      <span><strong>AI 跨界音樂元素工作站 v19</strong> ｜ Gemini 3.1 Pro 深度解析 × 四大曲風重混</span>
     </div>
     <div class="utility-actions">
       <button class="btn-accent-outline" onclick="openGuideModal('prompt')">📖 使用指南 / 萬用提取指令</button>
@@ -1144,7 +1144,8 @@
     isAnalyzingGemini: false,
     lastAppliedReport: null,
     reportExpanded: true,
-    geminiAppliedTitle: null
+    geminiAppliedTitle: null,
+    geminiAppliedKeywords: null
   };
 
   let fileAudioElement = null;
@@ -1736,6 +1737,7 @@
         if (sl.newStyleMatchedLyrics) state.generatedLyrics = sl.newStyleMatchedLyrics;
       }
 
+      uploadedAudio.geminiAppliedKeywords = state.selectedKeywords.join("、");
       uploadedAudio.lastAppliedReport = [];
       rebuildAppliedReport();
       uploadedAudio.reportExpanded = true;
@@ -2210,10 +2212,9 @@
           </div>
 
           <div class="section-block">
-            <div class="section-label">
-              主題靈感庫
-              <span class="section-hint">先選分類，再點選關鍵詞加入故事（已選 ${state.selectedKeywords.length} 個）</span>
-            </div>
+            <div class="section-label">${(isAdvMode() && uploadedAudio.geminiAppliedKeywords)
+              ? `主題靈感庫 已經套用Gemini AI 深度解析 <span style="color:var(--accent); font-weight:700;">${escapeHtml(uploadedAudio.geminiAppliedKeywords)}</span> <span class="section-hint">（已選 ${state.selectedKeywords.length} 個）</span>`
+              : `主題靈感庫 <span class="section-hint">先選分類，再點選關鍵詞加入故事（已選 ${state.selectedKeywords.length} 個）</span>`}</div>
             <div class="pill-group" style="margin-bottom:12px;">
               ${catNames.map(cat => `
                 <button class="pill-btn ${state.themeCategory === cat ? 'active' : ''}"
